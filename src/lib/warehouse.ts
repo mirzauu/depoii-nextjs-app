@@ -271,21 +271,35 @@ export async function contractors(q: Q) {
   const totals = await queryOne<{ n: string; val: string }>(`select count(distinct p.contractor_name)::text as n, coalesce(sum(p.valuation),0)::text as val from warehouse.normalized_permits p where ${where}`, params);
   const totalVal = Number(totals?.val || 0);
   const rows = await query(
-    `select p.contractor_name as name, count(*)::text as permits, coalesce(sum(p.valuation),0)::text as val,
-            (array_agg(p.probable_roof_system order by p.valuation desc))[1] as roof_system,
-            (array_agg(p.jurisdiction order by p.valuation desc))[1] as jurisdiction,
-            (array_agg(p.contractor_license))[1] as license,
-            array_agg(p.id order by p.issue_date desc nulls last) as recent_ids,
+    `with top_contractors as (
+       select p.contractor_name as name,
+              count(*)::text as permits,
+              coalesce(sum(p.valuation),0)::text as val,
+              (array_agg(p.probable_roof_system order by p.valuation desc))[1] as roof_system,
+              (array_agg(p.jurisdiction order by p.valuation desc))[1] as jurisdiction,
+              (array_agg(p.contractor_license))[1] as license
+       from warehouse.normalized_permits p
+       where ${where}
+       group by p.contractor_name
+       order by sum(p.valuation) desc
+       limit $${params.length + 1} offset $${params.length + 2}
+     )
+     select tc.*,
+            (select array_agg(p2.id) from (
+               select id from warehouse.normalized_permits p2
+               where p2.contractor_name = tc.name
+               order by p2.issue_date desc nulls last
+               limit 10
+            ) p2) as recent_ids,
             c.id as cid, c.website_url, c.hq_address, c.phone_number, c.year_founded::text as founded,
             c.crew_capacity_estimate, c.manufacturer_certifications, c.leadership, c.m_and_a_profile,
             c.rcat_profile_url, c.rcat_license_number, c.rcat_license_type, c.rcat_member_since,
             c.bbb_profile_url, c.bbb_rating, c.bbb_accredited, c.linkedin_company_url
-     from warehouse.normalized_permits p
-     left join warehouse.canonical_contractors c on lower(c.canonical_name) = lower(p.contractor_name)
-     where ${where} group by p.contractor_name, c.id, c.website_url, c.hq_address, c.phone_number, c.year_founded,
-       c.crew_capacity_estimate, c.manufacturer_certifications, c.leadership, c.m_and_a_profile, c.rcat_profile_url,
-       c.rcat_license_number, c.rcat_license_type, c.rcat_member_since, c.bbb_profile_url, c.bbb_rating, c.bbb_accredited, c.linkedin_company_url
-     order by sum(p.valuation) desc limit $${params.length + 1} offset $${params.length + 2}`, [...params, limit, offset]);
+     from top_contractors tc
+     left join warehouse.canonical_contractors c on lower(c.canonical_name) = lower(tc.name)
+     order by tc.val::numeric desc`,
+    [...params, limit, offset],
+  );
   const parse = (v: unknown) => { try { return typeof v === "string" ? JSON.parse(v) : v; } catch { return v; } };
   return {
     total_contractors: Number(totals?.n || 0), total_industry_valuation_usd: totalVal,
