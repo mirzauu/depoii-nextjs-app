@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { Briefcase, ChevronDown, ChevronsLeft, ChevronsRight, House, Info, Layers, Search, Shield, Users, type LucideIcon } from "lucide-react";
 import { cn } from "cn";
 import { DepoiiMark } from "./depoii-logo";
-import { useMe } from "@/components/use-me";
+import { useMe } from "@/hooks/use-me";
 
 type NavLink = { href: string; label: string; match?: string[]; engine?: boolean };
 type NavGroup = { id: string; label: string; icon: LucideIcon; items: NavLink[]; match?: string[] };

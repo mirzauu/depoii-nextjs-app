@@ -1,7 +1,7 @@
 import { createHash, createHmac, randomBytes, randomInt, scryptSync, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { recordActivity } from "@/lib/activity";
-import { query, queryOne, withClient } from "@/lib/pg";
+import { pgConfigured, query, queryOne, withClient } from "@/lib/pg";
 import { sendMail, smtpConfigured } from "@/lib/mail";
 
 const COOKIE = "depoii_session";
@@ -113,6 +113,7 @@ async function ensureSuperAdmin(): Promise<void> {
 }
 
 export async function ensurePilotOrg(): Promise<void> {
+  if (!pgConfigured()) return;
   const existing = await queryOne<{ n: string }>(`select count(*)::text as n from app.users`);
   if (Number(existing?.n || 0) === 0) {
     const orgId = randomBytes(8).toString("hex");
@@ -135,6 +136,7 @@ async function accountBy(sql: string, param: string): Promise<AccountRow | undef
 }
 
 export async function signIn(email: string, password: string): Promise<SignInResult> {
+  if (!pgConfigured()) return { error: "Database not configured yet. Set DATABASE_URL in .env." };
   await ensurePilotOrg();
   const row = await accountBy(`lower(u.email) = lower($1)`, email.trim());
   if (!row || !row.password_hash || !passwordMatches(password, row.password_hash)) {
@@ -164,6 +166,7 @@ async function completeSignIn(row: AccountRow, action: string): Promise<SignInRe
 }
 
 export async function requestLoginOtp(emailInput: string): Promise<{ ok: true } | { error: string }> {
+  if (!pgConfigured()) return { error: "Database not configured yet. Set DATABASE_URL in .env." };
   await ensurePilotOrg();
   const email = emailInput.trim().toLowerCase();
   if (!email.includes("@")) return { error: "Enter a valid email address." };
@@ -214,6 +217,7 @@ export async function requestLoginOtp(emailInput: string): Promise<{ ok: true } 
 }
 
 export async function verifyLoginOtp(emailInput: string, codeInput: string): Promise<SignInResult> {
+  if (!pgConfigured()) return { error: "Database not configured yet. Set DATABASE_URL in .env." };
   await ensurePilotOrg();
   const email = emailInput.trim().toLowerCase();
   const code = codeInput.trim().replace(/\s+/g, "");
@@ -559,6 +563,7 @@ export function sessionToken(user: SessionUser) {
 
 export async function readSessionToken(token: string | undefined): Promise<SessionUser | null> {
   if (!token || !token.includes(".")) return null;
+  if (!pgConfigured()) return null;
   const [payload, mac] = token.split(".");
   const expected = sign(payload);
   const a = Buffer.from(mac);
@@ -571,11 +576,16 @@ export async function readSessionToken(token: string | undefined): Promise<Sessi
     return null;
   }
   if (!body.id || !body.exp || body.exp < Date.now()) return null;
-  const row = await accountBy(`u.id = $1`, body.id);
-  if (!row || blockedReason(row)) return null;
-  const seen = row.last_seen_at ? Date.parse(row.last_seen_at) : 0;
-  if (!seen || Date.now() - seen > 60_000) await rememberVisit(row.id, false);
-  return sessionFrom(row);
+  try {
+    const row = await accountBy(`u.id = $1`, body.id);
+    if (!row || blockedReason(row)) return null;
+    const seen = row.last_seen_at ? Date.parse(row.last_seen_at) : 0;
+    if (!seen || Date.now() - seen > 60_000) await rememberVisit(row.id, false);
+    return sessionFrom(row);
+  } catch (err) {
+    console.warn("[auth] readSessionToken lookup failed:", (err as Error)?.message || err);
+    return null;
+  }
 }
 
 export async function requireUser(): Promise<SessionUser> {

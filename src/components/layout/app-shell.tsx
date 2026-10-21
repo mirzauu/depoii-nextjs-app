@@ -11,7 +11,7 @@ import { useDepoiiState } from "./depoii-provider";
 import { ContractorIndex } from "@/components/contractor-link";
 import { DepoiiLoader, DepoiiMark } from "./depoii-logo";
 import { AccountMenu, ENGINE_PATHS, FLAT_NAV, Sidebar, isActive } from "./sidebar";
-import { useMe } from "@/components/use-me";
+import { useMe } from "@/hooks/use-me";
 import { ThemeToggle } from "./theme-toggle";
 
 const selectClass = "h-8 w-full min-w-0 rounded-md border border-border bg-background px-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring";
