@@ -84,12 +84,12 @@ export function CitySelect({ className }: { className?: string }) {
         className={cn(selectClass, "flex items-center justify-between gap-2 text-left")}
       >
         <span className="truncate" suppressHydrationWarning>
-          {jurisdiction || "Choose a city"}
+          {jurisdiction ? jurisdiction.split(",")[0] : "Choose a city"}
         </span>
         <ChevronDown className="size-3.5 shrink-0 opacity-60" />
       </button>
       {open && (
-        <div className="absolute top-full right-0 z-50 mt-1 w-[20rem] rounded-md border border-border bg-background p-2 shadow-lg">
+        <div className="absolute top-full right-0 z-50 mt-1 w-64 max-w-[90vw] rounded-md border border-border bg-background p-2 shadow-lg">
           <label className="flex items-center gap-2 rounded-md border border-border px-2">
             <Search className="size-3.5 shrink-0" />
             <span className="sr-only">Search cities and counties</span>
@@ -286,7 +286,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur print:hidden">
+        <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur print:hidden">
           <div className="flex items-center gap-3 px-4 py-2.5 lg:px-6">
             <Link href="/" className="flex items-center gap-2 lg:hidden" suppressHydrationWarning>
               <DepoiiMark className="size-7 text-foreground" />
@@ -299,15 +299,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <nav className="flex gap-1 overflow-x-auto px-3 pb-2 lg:hidden">
-            {mobileNav.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn("shrink-0 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground", isActive(path, link) && "border-foreground/30 bg-muted text-foreground")}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {mobileNav.map((link) => {
+              const fromParam = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("from") : null;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn("shrink-0 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground", isActive(path, link, fromParam) && "border-foreground/30 bg-muted text-foreground")}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
         </header>
         <main className="flex-1">

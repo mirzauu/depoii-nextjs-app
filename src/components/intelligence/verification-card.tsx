@@ -32,12 +32,12 @@ export function VerificationBadge({ status, score }: { status: string; score?: n
       className={cn(
         "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium",
         ok
-          ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+          ? "border-[#B4E4D6]/40 bg-[#B4E4D6]/10 text-[#B4E4D6]"
           : active
-          ? "border-sky-500/40 bg-sky-500/10 text-sky-600 dark:text-sky-400"
+          ? "border-[#FFF6A9]/40 bg-[#FFF6A9]/10 text-[#FFF6A9]"
           : none
           ? "border-border text-muted-foreground"
-          : "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400",
+          : "border-[#FFCA88]/40 bg-[#FFCA88]/10 text-[#FFCA88]",
       )}
     >
       {ok || active ? <Check className="size-3" /> : none ? <Minus className="size-3" /> : <X className="size-3" />}
@@ -50,7 +50,7 @@ export function VerificationBadge({ status, score }: { status: string; score?: n
 function Check_({ pass, title, children, href }: { pass: boolean | null; title: string; children: React.ReactNode; href?: string }) {
   return (
     <li className="flex gap-3 py-2">
-      <span className={cn("mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full", pass == null ? "bg-muted text-muted-foreground" : pass ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-amber-500/15 text-amber-600 dark:text-amber-400")}>
+      <span className={cn("mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full", pass == null ? "bg-muted text-muted-foreground" : pass ? "bg-[#B4E4D6]/15 text-[#B4E4D6]" : "bg-[#FFCA88]/15 text-[#FFCA88]")}>
         {pass == null ? <Minus className="size-3" /> : pass ? <Check className="size-3" /> : <X className="size-3" />}
       </span>
       <div className="min-w-0 text-sm">

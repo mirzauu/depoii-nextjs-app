@@ -40,7 +40,7 @@ export function LandingPage({ formMode = "api" }: { formMode?: FormMode }) {
               <span className="text-lg font-bold tracking-tight">Depoii</span>
             </a>
             <p className="mt-2 max-w-xs text-sm text-muted-foreground">
-              Know which commercial roofs are worth the drive
+              Commercial Intelligence — know when, where, and why
             </p>
             <a
               href="mailto:hello@depoii.com"

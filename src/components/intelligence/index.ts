@@ -7,3 +7,4 @@ export * from "./permit-contacts-card";
 export * from "./proof-card";
 export * from "./depoii-map";
 export * from "./badges";
+export * from "./lead-contacts-card";

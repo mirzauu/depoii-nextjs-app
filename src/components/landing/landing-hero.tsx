@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { DepoiiMark } from "@/components/depoii-logo";
 import {
   applyLandingDesktopLayout,
@@ -147,14 +148,16 @@ export function LandingHero() {
         className="landing-hero relative h-[200vh] max-lg:h-auto max-lg:min-h-dvh"
       >
         <div className="sticky top-0 h-dvh overflow-hidden max-lg:relative max-lg:h-auto max-lg:min-h-dvh max-lg:overflow-visible">
-          <div
-            className="pointer-events-none absolute inset-0 z-0"
-            style={{
-              backgroundImage: "url(/landing/hero-roof.jpg)",
-              backgroundSize: "cover",
-              backgroundPosition: "center 45%",
-            }}
-          />
+          <div className="pointer-events-none absolute inset-0 z-0">
+            <Image
+              src="/landing/hero-roof.jpg"
+              alt="Commercial roofs in Dallas Fort Worth"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-[center_45%]"
+            />
+          </div>
           <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(248,250,252,0.88)_0%,rgba(248,250,252,0.45)_32%,rgba(15,23,42,0.15)_58%,rgba(15,23,42,0.55)_100%)]" />
 
           <header className="relative z-50 mx-auto flex w-full max-w-6xl items-center justify-between px-5 pt-5 sm:px-8 sm:pt-6">
@@ -188,8 +191,8 @@ export function LandingHero() {
             <p className="text-sm font-medium tracking-wide text-neutral-700">
               For Dallas–Fort Worth commercial roofers
             </p>
-            <h1 className="mt-3 max-w-[16ch] text-[2.15rem] leading-[1.08] font-bold tracking-tight text-neutral-950 sm:text-[3.1rem] md:text-[3.4rem]">
-              Know which commercial roofs are worth the drive
+            <h1 className="mt-3 max-w-[18ch] text-[2.15rem] leading-[1.08] font-bold tracking-tight text-neutral-950 sm:text-[3.1rem] md:text-[3.4rem]">
+              Commercial Intelligence — know when, where, and why
             </h1>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-neutral-700 sm:text-base">
               Hail reports, county appraisal records, and city permit searches for DFW — each fact with

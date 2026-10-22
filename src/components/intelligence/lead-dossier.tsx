@@ -84,12 +84,12 @@ export function LeadDossier({ parcelId }: { parcelId: string }) {
         <div>
           <h3 className="text-sm font-semibold">Why it is strong</h3>
           <ul className="mt-2 space-y-1.5 text-sm">
-            {d.strong.map((reason) => <li key={reason} className="text-emerald-200/90">+ {reason}</li>)}
+            {d.strong.map((reason) => <li key={reason} className="text-[#B4E4D6] font-medium">+ {reason}</li>)}
             {!d.strong.length && <li className="text-muted-foreground">None recorded.</li>}
           </ul>
           <h3 className="mt-4 text-sm font-semibold">Risks and objections</h3>
           <ul className="mt-2 space-y-1.5 text-sm">
-            {d.weak.map((reason) => <li key={reason} className="text-amber-200/90">− {reason}</li>)}
+            {d.weak.map((reason) => <li key={reason} className="text-[#FFCA88] font-medium">− {reason}</li>)}
             {!d.weak.length && <li className="text-muted-foreground">None recorded.</li>}
           </ul>
         </div>

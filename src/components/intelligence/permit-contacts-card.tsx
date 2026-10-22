@@ -23,17 +23,17 @@ const ROLE_CONFIG: Record<
   },
   owner_rep: {
     label: "Property Owner / Rep",
-    badgeClass: "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 dark:text-emerald-300",
+    badgeClass: "border-[#B4E4D6]/40 bg-[#B4E4D6]/10 text-[#B4E4D6]",
     desc: "Named building owner or asset manager",
   },
   contractor: {
     label: "Prior Roofing Contractor",
-    badgeClass: "border-amber-500/40 bg-amber-500/10 text-amber-400 dark:text-amber-300",
+    badgeClass: "border-[#FFCA88]/40 bg-[#FFCA88]/10 text-[#FFCA88]",
     desc: "Contractor on prior commercial filing",
   },
   architect: {
     label: "Architect / Engineer",
-    badgeClass: "border-purple-500/40 bg-purple-500/10 text-purple-400 dark:text-purple-300",
+    badgeClass: "border-[#FFF6A9]/40 bg-[#FFF6A9]/10 text-[#FFF6A9]",
     desc: "Design professional listed on permit",
   },
   unknown: {
@@ -93,7 +93,7 @@ export function PermitContactsCard({ permits, className }: PermitContactsCardPro
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2 text-base">
-              <UserCheck className="h-4 w-4 text-emerald-400" />
+              <UserCheck className="h-4 w-4 text-[#B4E4D6]" />
               Verified Permit Contacts
             </CardTitle>
             <CardDescription className="text-xs">
@@ -101,7 +101,7 @@ export function PermitContactsCard({ permits, className }: PermitContactsCardPro
             </CardDescription>
           </div>
           {contacts.length > 0 && (
-            <Badge variant="outline" className="border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+            <Badge variant="outline" className="border-[#B4E4D6]/30 bg-[#B4E4D6]/10 text-[#B4E4D6]">
               {contacts.length} {contacts.length === 1 ? "contact" : "contacts"}
             </Badge>
           )}

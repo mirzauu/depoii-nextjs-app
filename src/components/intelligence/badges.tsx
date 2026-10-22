@@ -5,27 +5,28 @@ import type { Provenance, SwathTier } from "@/lib/types";
 const PROV: Record<Provenance, { label: string; cls: string; title: string }> = {
   "source-record": {
     label: "Source record",
-    cls: "border-emerald-500/40 bg-emerald-500/10 text-emerald-300",
+    cls: "border-neutral-700/60 bg-neutral-900/80 text-neutral-300",
     title: "Copied from a named source. This is not a certification.",
   },
   "radar-modeled": {
     label: "Radar-indicated",
-    cls: "border-sky-500/40 bg-sky-500/10 text-sky-300",
+    cls: "border-neutral-700/60 bg-neutral-900/80 text-neutral-300",
     title: "NEXRAD MESH / HDA estimate. Not ground-measured until field-verified.",
   },
   "depoii-modeled": {
     label: "Depoii modeled",
-    cls: "border-violet-500/40 bg-violet-500/10 text-violet-300",
+    cls: "border-neutral-700/60 bg-neutral-900/80 text-neutral-300",
     title: "Inferred by Depoii. Confirm in the field before relying on it.",
   },
 };
 
-const pill = "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium whitespace-nowrap";
+const pill = "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium whitespace-nowrap";
 
 export function ProvenanceBadge({ kind, className }: { kind: Provenance; className?: string }) {
   const p = PROV[kind];
   return (
     <span title={p.title} className={cn(pill, p.cls, className)}>
+      <span className="size-1.5 rounded-full bg-neutral-400" />
       {p.label}
     </span>
   );
@@ -33,13 +34,15 @@ export function ProvenanceBadge({ kind, className }: { kind: Provenance; classNa
 
 export function TierBadge({ tier, hail }: { tier: SwathTier; hail?: number }) {
   const map = {
-    core: "border-red-500/50 bg-red-500/15 text-red-300",
-    envelope: "border-amber-500/50 bg-amber-500/15 text-amber-300",
-    outside: "border-border bg-muted text-muted-foreground",
+    core: { cls: "border-[#DE7272]/30 bg-[#DE7272]/10 text-[#DE7272]", dot: "bg-[#DE7272]" },
+    envelope: { cls: "border-[#FFCA88]/30 bg-[#FFCA88]/10 text-[#FFCA88]", dot: "bg-[#FFCA88]" },
+    outside: { cls: "border-neutral-800 bg-neutral-900/60 text-neutral-400", dot: "bg-neutral-600" },
   } as const;
+  const cfg = map[tier];
   const label = tier === "core" ? "Core swath" : tier === "envelope" ? "Outer envelope" : "Outside swath";
   return (
-    <span className={cn(pill, map[tier])}>
+    <span className={cn(pill, cfg.cls)}>
+      <span className={cn("size-1.5 rounded-full", cfg.dot)} />
       {label}
       {hail ? ` · ${hail}"` : ""}
     </span>
@@ -47,15 +50,22 @@ export function TierBadge({ tier, hail }: { tier: SwathTier; hail?: number }) {
 }
 
 export function TdiBadge({ tdi }: { tdi: TdiWindow }) {
-  const cls =
-    tdi.status === "closed"
-      ? "border-border bg-muted text-muted-foreground"
-      : tdi.status === "urgent"
-        ? "border-red-500/50 bg-red-500/15 text-red-300"
-        : "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+  const isUrgent = tdi.status === "urgent";
+  const isClosed = tdi.status === "closed";
   return (
-    <span className={cn(pill, cls)} title={`24-month advisory window ends ${tdi.deadline}`}>
-      {tdi.status === "closed" ? "Window elapsed" : `${tdi.daysRemaining}d left`}
+    <span
+      className={cn(
+        pill,
+        isClosed
+          ? "border-neutral-800 bg-neutral-900/60 text-neutral-400"
+          : isUrgent
+            ? "border-[#DE7272]/30 bg-[#DE7272]/10 text-[#DE7272]"
+            : "border-neutral-700/60 bg-neutral-900/80 text-neutral-300"
+      )}
+      title={`24-month advisory window ends ${tdi.deadline}`}
+    >
+      <span className={cn("size-1.5 rounded-full", isClosed ? "bg-neutral-600" : isUrgent ? "bg-[#DE7272]" : "bg-[#B4E4D6]")} />
+      {isClosed ? "Window elapsed" : `${tdi.daysRemaining}d left`}
     </span>
   );
 }

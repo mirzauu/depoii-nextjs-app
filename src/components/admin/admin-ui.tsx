@@ -6,6 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { UserLoginLinkCard } from "./user-login-link-card";
+
+export { UserLoginLinkCard };
+export type { LoginLinkStatus } from "./user-login-link-card";
 
 export const field = "h-8 rounded-md border border-border bg-background px-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
@@ -14,6 +18,9 @@ export const ACTIONS: { id: string; label: string }[] = [
   { id: "auth.sign_up", label: "Signed up" },
   { id: "auth.link_sign_in", label: "Opened sign-in link" },
   { id: "user.login_link", label: "Created sign-in link" },
+  { id: "user.login_link_deactivate", label: "Deactivated sign-in link" },
+  { id: "user.login_link_reactivate", label: "Reactivated sign-in link" },
+  { id: "user.login_link_update", label: "Updated sign-in link" },
   { id: "user.login_link_revoke", label: "Turned off sign-in link" },
   { id: "org.create", label: "Created organization" },
   { id: "org.rename", label: "Renamed organization" },
@@ -70,6 +77,17 @@ export type AdminOrg = {
   members: number;
   leads: number;
   outcomes: number;
+  subscriptionTier?: string;
+  maxActiveClaims?: number;
+  activeSubscriptions?: {
+    territory_id: string;
+    territory_name: string;
+    tier: string;
+    starts_at: string;
+    ends_at: string | null;
+    is_trial: boolean;
+    trial_days_left: number | null;
+  }[];
 };
 
 export function when(value: string) {
@@ -92,6 +110,7 @@ export function detailText(detail: Record<string, unknown>) {
 
 export async function adminFetch<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
+    cache: "no-store",
     ...init,
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
   });
@@ -186,6 +205,12 @@ function UserEditor({
         >
           {user.platformRole === "superadmin" ? "Revoke super admin" : "Grant super admin"}
         </Button>
+      </div>
+      <div className="pt-2">
+        <UserLoginLinkCard
+          user={{ id: user.id, name: user.name, email: user.email, orgName: user.orgName, disabled: user.disabled }}
+          compact
+        />
       </div>
     </div>
   );

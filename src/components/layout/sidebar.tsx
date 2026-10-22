@@ -12,7 +12,7 @@ type NavLink = { href: string; label: string; match?: string[]; engine?: boolean
 type NavGroup = { id: string; label: string; icon: LucideIcon; items: NavLink[]; match?: string[] };
 
 export const TOP: (NavLink & { icon: LucideIcon })[] = [
-  { href: "/", label: "Home", icon: House },
+  { href: "/", label: "Overview", icon: House },
 ];
 
 export const GROUPS: NavGroup[] = [
@@ -21,6 +21,8 @@ export const GROUPS: NavGroup[] = [
     label: "Leads",
     icon: Briefcase,
     items: [
+      { href: "/territory", label: "Territory Explorer", match: ["/territory"] },
+      { href: "/claims", label: "My Claims", match: ["/claims"] },
       { href: "/pipeline", label: "Opportunity Pipeline", match: ["/parcels", "/property"] },
       { href: "/roof-aging", label: "Roof Aging Alarm", engine: true },
       { href: "/map", label: "Hail Map", engine: true },
@@ -34,13 +36,6 @@ export const GROUPS: NavGroup[] = [
       { href: "/permits", label: "Permit", engine: true },
       { href: "/buildings", label: "Building", engine: true },
       { href: "/contractors", label: "Contractors", match: ["/contractors"], engine: true },
-    ],
-  },
-  {
-    id: "more",
-    label: "More",
-    icon: Layers,
-    items: [
       { href: "/competitors", label: "Leaderboard", engine: true },
     ],
   },
@@ -57,7 +52,7 @@ export const GROUPS: NavGroup[] = [
 
 export const FLAT_NAV: NavLink[] = [...TOP, ...GROUPS.flatMap((g) => g.items)];
 
-export const ENGINE_PATHS = [...TOP.filter((i) => i.engine).map((i) => i.href), ...GROUPS.flatMap((g) => g.items).filter((i) => i.engine).map((i) => i.href), "/pipeline", "/team", "/outcomes", "/buildings", "/settings", "/login", "/admin", "/parcels", "/contractors", "/jobsites", "/multiphase", "/capital", "/dark-market", "/storm-targets", "/competitors", "/map"];
+export const ENGINE_PATHS = [...TOP.filter((i) => i.engine).map((i) => i.href), ...GROUPS.flatMap((g) => g.items).filter((i) => i.engine).map((i) => i.href), "/territory", "/claims", "/pipeline", "/team", "/outcomes", "/buildings", "/settings", "/login", "/admin", "/parcels", "/contractors", "/jobsites", "/multiphase", "/capital", "/dark-market", "/storm-targets", "/competitors", "/map"];
 
 export const SidebarPreview = createContext<{ path: string; go: (href: string) => void } | null>(null);
 
@@ -85,16 +80,18 @@ function NavTo({ href, className, title, onClick, children }: { href: string; cl
   );
 }
 
-export function isActive(path: string, link: NavLink) {
+export function isActive(path: string, link: NavLink, fromParam?: string | null) {
   if (link.href === "/") return path === "/";
+  if (link.href === "/pipeline" && fromParam === "roof-aging") return false;
+  if (link.href === "/roof-aging" && fromParam === "roof-aging" && (path.startsWith("/parcels") || path.startsWith("/property"))) return true;
   return [link.href, ...(link.match ?? [])].some((p) => path === p || path.startsWith(`${p}/`));
 }
 
-function groupActive(path: string, group: NavGroup) {
-  return group.items.some((i) => isActive(path, i)) || (group.match ?? []).some((p) => path.startsWith(p));
+function groupActive(path: string, group: NavGroup, fromParam?: string | null) {
+  return group.items.some((i) => isActive(path, i, fromParam)) || (group.match ?? []).some((p) => path.startsWith(p));
 }
 
-const GROUPS_KEY = "depoii:nav-groups";
+const GROUPS_KEY = "depoii:nav-groups-v3";
 const RAIL_KEY = "depoii:sidebar";
 const DEFAULT_OPEN = Object.fromEntries(GROUPS.map((group) => [group.id, true]));
 
@@ -174,19 +171,28 @@ export function Sidebar() {
   const [navReady, setNavReady] = useState(false);
   const logoTimer = useRef(0);
 
+  const [fromParam, setFromParam] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      setFromParam(sp.get("from"));
+    }
+  }, [path]);
+
   useEffect(() => {
     setNavReady(true);
     setCollapsed(localStorage.getItem(RAIL_KEY) === "collapsed");
     try {
       const saved = JSON.parse(localStorage.getItem(GROUPS_KEY) || "null");
-      if (saved && typeof saved === "object") setOpen((o) => ({ ...saved, ...Object.fromEntries(Object.entries(o).filter(([, v]) => v)) }));
+      if (saved && typeof saved === "object") setOpen((prev) => ({ ...prev, ...saved }));
     } catch {}
   }, []);
 
   useEffect(() => {
-    const current = GROUPS.find((g) => groupActive(path, g));
+    const current = GROUPS.find((g) => groupActive(path, g, fromParam));
     if (current) setOpen((o) => (o[current.id] ? o : { ...o, [current.id]: true }));
-  }, [path]);
+  }, [path, fromParam]);
 
   useEffect(() => {
     localStorage.setItem(GROUPS_KEY, JSON.stringify(open));
@@ -241,7 +247,7 @@ export function Sidebar() {
         {TOP.map((link) => {
           const Icon = link.icon;
           return (
-            <NavTo key={link.href} href={link.href} title={link.label} className={cn(row, isActive(path, link) && "bg-muted font-medium text-foreground")}>
+            <NavTo key={link.href} href={link.href} title={link.label} className={cn(row, isActive(path, link, fromParam) && "bg-muted font-medium text-foreground")}>
               <Icon className="size-4 shrink-0" />
               <span className={fade}>{link.label}</span>
             </NavTo>
@@ -253,7 +259,7 @@ export function Sidebar() {
         {GROUPS.map((group) => {
           const Icon = group.icon;
           const expanded = !collapsed && !!open[group.id];
-          const here = groupActive(path, group);
+          const here = groupActive(path, group, fromParam);
           return (
             <div key={group.id}>
               <button type="button" onClick={() => onGroup(group.id)} title={group.label} aria-expanded={expanded} className={cn(row, collapsed && here && "bg-muted text-foreground", !collapsed && here && "text-foreground")}>
@@ -270,7 +276,7 @@ export function Sidebar() {
                         href={item.href}
                         className={cn(
                           "w-full rounded-md py-1.5 pr-3 pl-9 text-left text-sm whitespace-nowrap text-muted-foreground hover:bg-muted hover:text-foreground",
-                          isActive(path, item) && "bg-muted font-medium text-foreground",
+                          isActive(path, item, fromParam) && "bg-muted font-medium text-foreground",
                         )}
                       >
                         {item.label}
@@ -285,7 +291,7 @@ export function Sidebar() {
 
         {navReady && me?.platformRole === "superadmin" && (
           <div className="mt-auto border-t border-border pt-2">
-            <NavTo href={adminLink.href} title={adminLink.label} className={cn(row, isActive(path, adminLink) && "bg-muted font-medium text-foreground")}>
+            <NavTo href={adminLink.href} title={adminLink.label} className={cn(row, isActive(path, adminLink, fromParam) && "bg-muted font-medium text-foreground")}>
               <Shield className="size-4 shrink-0" />
               <span className={fade}>{adminLink.label}</span>
             </NavTo>

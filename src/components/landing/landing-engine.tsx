@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import {
   Building2,
   CloudLightning,
@@ -161,7 +162,7 @@ export function LandingEngine() {
 
         <div className="absolute top-[12%] left-1/2 z-10 flex w-56 -translate-x-1/2 flex-col items-center text-center">
           <DepoiiMark animated className="size-28 text-neutral-950" />
-          <h2 className="mt-5 text-3xl font-bold tracking-tight text-neutral-950">Depoii</h2>
+          <h3 className="mt-5 text-3xl font-bold tracking-tight text-neutral-950">Depoii</h3>
           <p className="mt-1 text-[11px] font-semibold tracking-[0.22em] text-sky-800 uppercase">
             AI Engine
           </p>
@@ -182,7 +183,7 @@ export function LandingEngine() {
       <div className="relative mx-auto flex min-h-[85dvh] max-w-lg flex-col items-center justify-center gap-8 px-5 py-14 lg:hidden">
         <div className="flex flex-col items-center text-center">
           <DepoiiMark animated className="size-24 text-neutral-950" />
-          <h2 className="mt-4 text-2xl font-bold tracking-tight text-neutral-950">Depoii</h2>
+          <h3 className="mt-4 text-2xl font-bold tracking-tight text-neutral-950">Depoii</h3>
           <p className="mt-1 text-[11px] font-semibold tracking-[0.22em] text-sky-800 uppercase">
             AI Engine
           </p>
@@ -288,12 +289,15 @@ function LeadCard() {
       <p className="px-3 pt-3 text-[10px] font-semibold tracking-[0.18em] text-sky-800 uppercase">
         Top lead
       </p>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/landing/aerials/dcad-16850.jpg"
-        alt="Satellite aerial of 16850 Dallas Pkwy"
-        className="mt-2 aspect-[16/10] w-full object-cover"
-      />
+      <div className="relative mt-2 aspect-[16/10] w-full overflow-hidden">
+        <Image
+          src="/landing/aerials/dcad-16850.jpg"
+          alt="Satellite aerial view of commercial roof at 16850 Dallas Pkwy"
+          fill
+          sizes="(max-width: 768px) 100vw, 320px"
+          className="object-cover"
+        />
+      </div>
       <div className="space-y-2 p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">

@@ -30,7 +30,7 @@ export const SPIRAL_BLOCKS: SpiralBlock[] = Array.from({ length: ARMS * STEPS },
   };
 });
 
-export function spiralSvg(fill: string, background?: string) {
+export function spiralSvg(fill: string = "#ffffff", background?: string) {
   const bg = background ? `<rect x="-50" y="-50" width="100" height="100" rx="22" fill="${background}"/>` : "";
   const blocks = SPIRAL_BLOCKS.map((b) => `<rect x="${-b.w / 2}" y="${-b.h / 2}" width="${b.w}" height="${b.h}" rx="0.6" transform="translate(${b.x} ${b.y}) rotate(${b.angle})"/>`).join("");
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100">${bg}<g fill="${fill}">${blocks}</g></svg>`;
@@ -38,7 +38,7 @@ export function spiralSvg(fill: string, background?: string) {
 
 export function DepoiiMark({ className, animated = false, title = "Depoii" }: { className?: string; animated?: boolean; title?: string }) {
   return (
-    <svg viewBox="-50 -50 100 100" role="img" aria-label={title} className={cn("shrink-0", animated && "depoii-spin", className)}>
+    <svg viewBox="-50 -50 100 100" role="img" aria-label={title} className={cn("shrink-0 text-foreground", animated && "depoii-spin", className)}>
       <g fill="currentColor">
         {SPIRAL_BLOCKS.map((b) => (
           <rect

@@ -363,7 +363,7 @@ export function LandingMock({ scene }: { scene: TourScene }) {
 }
 
 const MOCK_TABS: { href: TourScene["path"]; label: string; icon: LucideIcon }[] = [
-  { href: "/", label: "Home", icon: House },
+  { href: "/", label: "Overview", icon: House },
   { href: "/pipeline", label: "Pipeline", icon: Briefcase },
   { href: "/map", label: "Map", icon: MapIcon },
   { href: "/roof-aging", label: "Aging", icon: Ruler },
@@ -1559,7 +1559,7 @@ function MockStub({ path, onHome }: { path: string; onHome: () => void }) {
         onClick={onHome}
         className="mt-2 inline-flex h-8 items-center rounded-md border border-border px-3 text-xs hover:bg-muted"
       >
-        Back to Home
+        Back to Overview
       </button>
     </div>
   );

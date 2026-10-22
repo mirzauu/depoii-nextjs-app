@@ -251,11 +251,11 @@ export function DepoiiProvider({ children }: { children: React.ReactNode }) {
     [payload, parcels, permits, weights],
   );
   const visibleOutcomes = useMemo(() => {
-    // Without a live parcel roll (engine/local pages), show every logged outcome.
-    if (!parcels.length) return outcomes;
+    // Without a live parcel roll or on /outcomes page, show every logged outcome.
+    if (!parcels.length || path === "/outcomes") return outcomes;
     const ids = new Set(parcels.map((p) => p.id));
     return outcomes.filter((o) => ids.has(o.parcelId));
-  }, [outcomes, parcels]);
+  }, [outcomes, parcels, path]);
 
   const value: DepoiiState = {
     ready: Boolean(payload),

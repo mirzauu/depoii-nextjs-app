@@ -86,7 +86,7 @@ export function ProofCard({ o, compact = false }: { o: Opportunity; compact?: bo
             label="Permit Contacts"
             prov="source-record"
             value={
-              <span className="inline-flex items-center gap-1.5 text-emerald-400">
+              <span className="inline-flex items-center gap-1.5 text-[#B4E4D6]">
                 <UserCheck className="h-4 w-4" />
                 {(o.resolvingPermit?.contacts?.length ?? 0) + o.permits.reduce((acc, p) => acc + (p.contacts?.length ?? 0), 0)} direct contact{((o.resolvingPermit?.contacts?.length ?? 0) + o.permits.reduce((acc, p) => acc + (p.contacts?.length ?? 0), 0)) > 1 ? "s" : ""} on file
               </span>
