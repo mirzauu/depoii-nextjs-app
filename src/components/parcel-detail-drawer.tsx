@@ -16,7 +16,7 @@ import { RoofTimeline } from "@/components/roof-timeline";
 import { useEngine } from "@/components/use-engine";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { mapParcelDossier } from "@/lib/engine-api";
-import { num, usd } from "@/lib/format";
+import { num, usd, shortDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 interface ParcelDetailDrawerProps {
@@ -439,8 +439,7 @@ export function ParcelDetailDrawer({
                         <div className="flex flex-wrap items-baseline justify-between gap-2">
                           <p className="font-medium">{pm.permitNumber || "Permit"}</p>
                           <p className="text-xs text-muted-foreground">
-                            {[pm.issued, pm.status].filter(Boolean).join(" · ")}
-                          </p>
+          {[pm.issued ? shortDate(pm.issued) : null, pm.status].filter(Boolean).join(" · ")}                 </p>
                         </div>
                         <p className="text-xs text-muted-foreground">
                           {[pm.roofSystem, pm.valuation ? pm.valuation : null].filter(Boolean).join(" · ")}

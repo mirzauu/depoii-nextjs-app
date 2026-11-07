@@ -78,7 +78,7 @@ function permitFilters(q: Q, params: unknown[]): string {
   const stateParam = (str(q, "state") || state || "").toUpperCase();
   if (cityParam) { params.push(`%${cityParam.toLowerCase()}%`); clauses.push(`lower(p.city) like $${params.length}`); }
   if (stateParam) { params.push(stateParam); clauses.push(`upper(p.state) = $${params.length}`); }
-  if (str(q, "contractor")) { params.push(`%${str(q, "contractor").toLowerCase()}%`); clauses.push(`lower(p.contractor_name) like $${params.length}`); }
+  if (str(q, "contractor")) { const cVal = str(q, "contractor").toLowerCase(); params.push(cVal); params.push(`${cVal}%`); clauses.push(`(lower(p.contractor_name) = $${params.length - 1} or lower(p.contractor_name) like $${params.length})`); }
   if (str(q, "category")) { params.push(`%${str(q, "category").toLowerCase()}%`); clauses.push(`lower(p.category) like $${params.length}`); }
   if (str(q, "probable_roof_system")) { params.push(`%${str(q, "probable_roof_system").toLowerCase()}%`); clauses.push(`lower(p.probable_roof_system) like $${params.length}`); }
   if (str(q, "status_filter") && str(q, "status_filter") !== "all") { params.push(`%${str(q, "status_filter").toLowerCase()}%`); clauses.push(`lower(p.status) like $${params.length}`); }
@@ -117,7 +117,7 @@ const toIsoDate = (d: unknown): string | null => {
 
 const permitRow = (r: Record<string, unknown>) => ({
   id: r.id, sourceSystem: r.source_system, rawPermitNumber: r.raw_permit_number, jurisdiction: r.jurisdiction,
-  state: r.state, county: null, issueDate: r.date_quality === "source" && r.issue_date ? toIsoDate(r.issue_date) : null,
+  state: r.state, county: null, issueDate: r.issue_date ? toIsoDate(r.issue_date) : null,
   appliedDate: toIsoDate(r.applied_date),
   expirationDate: toIsoDate(r.expiration_date),
   status: r.status || "Active", normalizedAddress: r.normalized_address,
@@ -274,7 +274,7 @@ export async function activeJobsites(q: Q, user?: { id?: string; orgId?: string;
   const { city, state } = jurisdictionParts(q);
   if (city) { params.push(`%${city.toLowerCase()}%`); clauses.push(`lower(p.city) like $${params.length}`); }
   if (state) { params.push(state); clauses.push(`upper(p.state) = $${params.length}`); }
-  if (str(q, "contractor")) { params.push(`%${str(q, "contractor").toLowerCase()}%`); clauses.push(`lower(p.contractor_name) like $${params.length}`); }
+  if (str(q, "contractor")) { const cVal = str(q, "contractor").toLowerCase(); params.push(cVal); params.push(`${cVal}%`); clauses.push(`(lower(p.contractor_name) = $${params.length - 1} or lower(p.contractor_name) like $${params.length})`); }
   if (str(q, "roof_system")) { params.push(`%${str(q, "roof_system").toLowerCase()}%`); clauses.push(`lower(p.probable_roof_system) like $${params.length}`); }
   if (str(q, "search")) { params.push(`%${str(q, "search").toLowerCase()}%`); const i = params.length; clauses.push(`(lower(p.normalized_address) like $${i} or lower(p.raw_permit_number) like $${i} or lower(p.contractor_name) like $${i} or lower(p.city) like $${i})`); }
   if (!isSuperAdmin && allowedZips && allowedZips.length > 0) {
@@ -700,19 +700,79 @@ export async function permitsParcel(parcelId: string) {
   const strippedId = parcelId.replace(/^DCAD-PARCEL-/i, "");
   const prefixedId = parcelId.startsWith("DCAD-PARCEL-") ? parcelId : `DCAD-PARCEL-${parcelId}`;
 
-  const parcel = await queryOne(
+  // 1. Direct query on warehouse.parcels
+  let parcel = await queryOne<Record<string, any>>(
     `select * from warehouse.parcels
      where id = $1 or id = $2 or id = $3
         or account_number = $1 or account_number = $2 or account_number = $3
      limit 1`,
     [rawId, strippedId, prefixedId]
   );
+
+  // 2. If not found and ID is synthetic (e.g. BLDG-<md5>), look up via permits table
+  if (!parcel && rawId.startsWith("BLDG-")) {
+    const md5Hash = rawId.replace(/^BLDG-/i, "");
+    const permitMatch = await queryOne<Record<string, any>>(
+      `select pm.parcel_id, pm.normalized_address, pm.city, pm.state, pm.zip_code, pm.latitude, pm.longitude,
+              p.id as found_parcel_id
+       from warehouse.normalized_permits pm
+       left join warehouse.parcels p on (
+         (pm.parcel_id is not null and pm.parcel_id <> '' and (p.id = pm.parcel_id or p.account_number = pm.parcel_id))
+         or (lower(p.address) = lower(trim(split_part(pm.normalized_address, ',', 1))) and (p.city is null or lower(p.city) = lower(trim(pm.city))))
+         or (lower(p.address) = lower(trim(pm.normalized_address)))
+       )
+       where md5(lower(trim(pm.normalized_address)) || '-' || lower(trim(pm.city))) = $1
+       order by (p.id is not null) desc, pm.issue_date desc nulls last
+       limit 1`,
+      [md5Hash]
+    );
+
+    if (permitMatch?.found_parcel_id) {
+      parcel = await queryOne<Record<string, any>>(
+        `select * from warehouse.parcels where id = $1 limit 1`,
+        [permitMatch.found_parcel_id]
+      );
+    } else if (permitMatch) {
+      // Create a virtual parcel record from the permit data so the drawer never displays 404 / 'unable to load'
+      const cleanAddress = permitMatch.normalized_address
+        ? permitMatch.normalized_address.split(",")[0].trim()
+        : "Building Record";
+      parcel = {
+        id: rawId,
+        account_number: permitMatch.parcel_id || rawId,
+        address: cleanAddress,
+        city: permitMatch.city || "Dallas",
+        state: permitMatch.state || "TX",
+        county: "Dallas",
+        zip_code: permitMatch.zip_code || "",
+        building_sqft: 0,
+        land_sqft: 0,
+        year_built: 0,
+        property_type: "Commercial Building",
+        owner_name: "Owner on record",
+        owner_address: "",
+        total_valuation: 0,
+        data_source: "city_permits",
+        latitude: permitMatch.latitude,
+        longitude: permitMatch.longitude,
+        jurisdiction: permitMatch.city || "Dallas",
+        year_built_source: "Permit records",
+        area_source: "Permit records",
+        data_provenance: "Dallas/Fort Worth Municipal Permits",
+      };
+    }
+  }
+
   if (!parcel) return null;
-  const permits = await query(
+
+  // Retrieve permits matching this parcel ID or address
+  const permits = await query<Record<string, any>>(
     `select * from warehouse.normalized_permits
      where parcel_id = $1 or parcel_id = $2 or parcel_id = $3
+        or (lower(trim(split_part(normalized_address, ',', 1))) = lower(trim($4)) and lower(trim(city)) = lower(trim($5)))
+        or (lower(trim(normalized_address)) = lower(trim($4)))
      order by issue_date desc nulls last`,
-    [parcel.id, parcel.account_number || parcel.id, strippedId]
+    [parcel.id, parcel.account_number || parcel.id, strippedId, parcel.address || "", parcel.city || ""]
   );
   const contact = await queryOne<{
     decision_maker_name: string;
@@ -1049,6 +1109,202 @@ export async function contractorProfile(q: Q) {
   };
 
   return { contractor: profile, leaderboard: [profile] };
+}
+
+
+export async function contractorBuildings(q: Q) {
+  const target = str(q, "name") || str(q, "contractor") || str(q, "id");
+  if (!target) return { total: 0, count: 0, commercialCount: 0, allCount: 0, buildings: [] };
+
+  const filter = str(q, "filter") || "commercial"; // 'commercial' | 'all'
+  const cacheKey = `contractor_buildings_${target}_${filter}_${q.toString()}`;
+
+  return withCache(cacheKey, 5 * 60 * 1000, async () => {
+    // 1. Resolve canonical contractor name/id
+    const canonicalRow = await queryOne<Record<string, any>>(
+      `select c.id, c.canonical_name
+       from warehouse.canonical_contractors c
+       where lower(c.canonical_name) = lower($1)
+          or c.id = $1
+          or lower(c.canonical_name) like lower($1) || ' %'
+          or lower($1) like lower(c.canonical_name) || ' %'
+       limit 1`,
+      [target]
+    );
+
+    const cname = canonicalRow?.canonical_name || target;
+    const cid = canonicalRow?.id || target;
+
+    const limit = int(q, "limit", 200);
+    const offset = int(q, "offset", 0);
+
+    const sql = `
+      with base_permits as (
+        select pm.id as permit_id,
+               pm.raw_permit_number,
+               pm.parcel_id,
+               pm.normalized_address,
+               pm.city,
+               pm.state,
+               pm.issue_date,
+               pm.valuation,
+               pm.category,
+               pm.probable_roof_system,
+               pm.raw_description,
+               pm.latitude,
+               pm.longitude
+        from warehouse.normalized_permits pm
+        where lower(pm.contractor_name) = lower($1)
+           or lower(pm.contractor_name) = lower($2)
+           or pm.contractor_id = $3
+      ),
+      building_matches as (
+        select 
+          coalesce(p.id, p.account_number, bp.parcel_id, 'BLDG-' || md5(lower(trim(bp.normalized_address)) || '-' || lower(trim(bp.city)))) as building_id,
+          coalesce(p.account_number, bp.parcel_id, '') as parcel_account,
+          coalesce(p.address, bp.normalized_address) as address,
+          coalesce(p.city, bp.city) as city,
+          coalesce(p.state, bp.state, 'TX') as state,
+          p.owner_name,
+          p.owner_address,
+          coalesce(p.building_sqft, p.land_sqft, 0) as sqft,
+          p.year_built,
+          p.property_type,
+          coalesce(p.latitude, bp.latitude) as latitude,
+          coalesce(p.longitude, bp.longitude) as longitude,
+          count(bp.permit_id) as permit_count,
+          sum(coalesce(bp.valuation, 0)) as total_valuation,
+          max(bp.issue_date) as latest_permit_date,
+          (array_agg(bp.category order by bp.issue_date desc nulls last))[1] as primary_work_type,
+          (array_agg(bp.probable_roof_system order by bp.issue_date desc nulls last))[1] as roof_system,
+          bool_or(
+            lower(bp.category) like '%commercial%'
+            or lower(coalesce(bp.raw_description, '')) like '%tpo%'
+            or lower(coalesce(bp.raw_description, '')) like '%modified bitumen%'
+            or lower(coalesce(bp.raw_description, '')) like '%restaurant%'
+            or lower(coalesce(p.property_type, '')) like '%commercial%'
+            or lower(coalesce(p.property_type, '')) like '%office%'
+            or lower(bp.normalized_address) like '%central expy%'
+            or lower(bp.normalized_address) like '%macarthur%'
+            or lower(bp.normalized_address) like '%dickerson%'
+            or lower(bp.normalized_address) like '%henderson%'
+            or lower(bp.normalized_address) like '%lee st%'
+          ) as is_commercial,
+          array_agg(bp.raw_permit_number) as permit_numbers
+        from base_permits bp
+        left join warehouse.parcels p on (
+          (bp.parcel_id is not null and bp.parcel_id <> '' and (p.id = bp.parcel_id or p.account_number = bp.parcel_id))
+          or (lower(p.address) = lower(trim(split_part(bp.normalized_address, ',', 1))) and (p.city is null or lower(p.city) = lower(trim(bp.city))))
+          or (lower(p.address) = lower(trim(bp.normalized_address)) and (p.city is null or lower(p.city) = lower(trim(bp.city))))
+        )
+        group by 
+          coalesce(p.id, p.account_number, bp.parcel_id, 'BLDG-' || md5(lower(trim(bp.normalized_address)) || '-' || lower(trim(bp.city)))),
+          coalesce(p.account_number, bp.parcel_id, ''),
+          coalesce(p.address, bp.normalized_address),
+          coalesce(p.city, bp.city),
+          coalesce(p.state, bp.state, 'TX'),
+          p.owner_name,
+          p.owner_address,
+          coalesce(p.building_sqft, p.land_sqft, 0),
+          p.year_built,
+          p.property_type,
+          coalesce(p.latitude, bp.latitude),
+          coalesce(p.longitude, bp.longitude)
+      )
+      select * from building_matches
+      where ($4 = 'all' or is_commercial = true)
+      order by latest_permit_date desc nulls last
+      limit $5 offset $6;
+    `;
+
+    const countSql = `
+      with base_permits as (
+        select pm.id as permit_id,
+               pm.raw_permit_number,
+               pm.parcel_id,
+               pm.normalized_address,
+               pm.city,
+               pm.state,
+               pm.category,
+               pm.raw_description
+        from warehouse.normalized_permits pm
+        where lower(pm.contractor_name) = lower($1)
+           or lower(pm.contractor_name) = lower($2)
+           or pm.contractor_id = $3
+      ),
+      building_matches as (
+        select 
+          coalesce(p.id, p.account_number, bp.parcel_id, 'BLDG-' || md5(lower(trim(bp.normalized_address)) || '-' || lower(trim(bp.city)))) as building_id,
+          bool_or(
+            lower(bp.category) like '%commercial%'
+            or lower(coalesce(bp.raw_description, '')) like '%tpo%'
+            or lower(coalesce(bp.raw_description, '')) like '%modified bitumen%'
+            or lower(coalesce(bp.raw_description, '')) like '%restaurant%'
+            or lower(coalesce(p.property_type, '')) like '%commercial%'
+            or lower(coalesce(p.property_type, '')) like '%office%'
+            or lower(bp.normalized_address) like '%central expy%'
+            or lower(bp.normalized_address) like '%macarthur%'
+            or lower(bp.normalized_address) like '%dickerson%'
+            or lower(bp.normalized_address) like '%henderson%'
+            or lower(bp.normalized_address) like '%lee st%'
+          ) as is_commercial
+        from base_permits bp
+        left join warehouse.parcels p on (
+          (bp.parcel_id is not null and bp.parcel_id <> '' and (p.id = bp.parcel_id or p.account_number = bp.parcel_id))
+          or (lower(p.address) = lower(trim(bp.normalized_address)) and lower(p.city) = lower(bp.city))
+        )
+        group by 
+          coalesce(p.id, p.account_number, bp.parcel_id, 'BLDG-' || md5(lower(trim(bp.normalized_address)) || '-' || lower(trim(bp.city))))
+      )
+      select 
+        count(*) as all_count,
+        count(*) filter (where is_commercial = true) as commercial_count
+      from building_matches;
+    `;
+
+    const [rows, countRow] = await Promise.all([
+      query<Record<string, any>>(sql, [cname, target, cid, filter, limit, offset]),
+      queryOne<{ all_count: string; commercial_count: string }>(countSql, [cname, target, cid])
+    ]);
+
+    const allCount = Number(countRow?.all_count || 0);
+    const commercialCount = Number(countRow?.commercial_count || 0);
+    const total = filter === "commercial" ? commercialCount : allCount;
+
+    const buildings = rows.map((r) => ({
+      id: String(r.building_id || ""),
+      parcelAccount: String(r.parcel_account || ""),
+      address: String(r.address || "Address not specified"),
+      city: String(r.city || ""),
+      state: String(r.state || "TX"),
+      owner: r.owner_name ? String(r.owner_name) : null,
+      ownerAddress: r.owner_address ? String(r.owner_address) : null,
+      sqft: Number(r.sqft || 0),
+      yearBuilt: r.year_built ? Number(r.year_built) : null,
+      propertyType: r.property_type ? String(r.property_type) : null,
+      lat: r.latitude != null ? Number(r.latitude) : null,
+      lng: r.longitude != null ? Number(r.longitude) : null,
+      permitCount: Number(r.permit_count || 1),
+      totalValuation: Number(r.total_valuation || 0),
+      latestPermitDate: r.latest_permit_date ? String(r.latest_permit_date).slice(0, 10) : "",
+      workType: String(r.primary_work_type || "Roofing"),
+      roofSystem: String(r.roof_system || ""),
+      isCommercial: Boolean(r.is_commercial),
+      permits: Array.isArray(r.permit_numbers) ? r.permit_numbers.map(String) : []
+    }));
+
+    return {
+      contractor: cname,
+      filter,
+      total,
+      allCount,
+      commercialCount,
+      count: buildings.length,
+      offset,
+      limit,
+      buildings
+    };
+  });
 }
 
 export async function locations(kind: "hierarchy" | "states" | "cities") {

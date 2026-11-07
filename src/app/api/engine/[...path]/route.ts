@@ -12,7 +12,7 @@ const READ_PATHS = [
   /^parcels(\/(search|dallas|tarrant|dark-market\/overdue|browse))?$/,
   /^parcels\/browse\/[^/]+$/,
   /^parcels\/[^/]+$/,
-  /^contractors\/(leaderboard|directory|profile)$/,
+  /^contractors\/(leaderboard|directory|profile|buildings)$/,
   /^storms\/(active-swaths|live-alerts|hail-events)$/,
   /^intelligence\/unresolved-exposure$/,
   /^intelligence\/leads\/ranked$/,
@@ -55,6 +55,7 @@ async function localGet(path: string[], q: URLSearchParams, user?: AuthUser | nu
     case "contractors/leaderboard":
     case "contractors/directory": return wh.contractors(q);
     case "contractors/profile": return wh.contractorProfile(q);
+    case "contractors/buildings": return wh.contractorBuildings(q);
     case "locations/hierarchy": return wh.locations("hierarchy");
     case "locations/states": return wh.locations("states");
     case "locations/cities": return wh.locations("cities");
