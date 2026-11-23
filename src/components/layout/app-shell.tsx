@@ -285,7 +285,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   if (path === "/login" || path === "/welcome") return <main className="min-h-screen">{children}</main>;
   return (
     <WalkthroughProvider>
-      <div className="flex min-h-screen bg-[#171714] text-[#FAFAF8] print:block">
+      <div className="flex min-h-screen bg-background text-foreground print:block">
         <Sidebar />
 
         <div className="flex min-w-0 flex-1 flex-col">
@@ -305,8 +305,8 @@ export function PageHeader({ eyebrow, title, description, actions }: { eyebrow?:
   return (
     <div className="flex flex-col gap-3 px-4 pt-6 pb-4 sm:flex-row sm:items-end sm:justify-between lg:px-8">
       <div className="space-y-1">
-        {eyebrow && <p className="text-xs font-medium uppercase tracking-widest text-red-400">{eyebrow}</p>}
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        {eyebrow && <p className="text-xs font-medium uppercase tracking-widest text-red-500 dark:text-red-400">{eyebrow}</p>}
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">{title}</h1>
         {description && <p className="max-w-3xl text-sm text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}

@@ -859,3 +859,159 @@ export function cookieName() {
 export function cookieMaxAge() {
   return WEEK;
 }
+
+export function googleAuthConfigured(): boolean {
+  return Boolean(process.env.GOOGLE_CLIENT_ID?.trim() && process.env.GOOGLE_CLIENT_SECRET?.trim());
+}
+
+export function signAuthPayload(payload: string): string {
+  return sign(payload);
+}
+
+export function verifyAuthPayload(payload: string, mac: string): boolean {
+  if (!payload || !mac) return false;
+  const expected = sign(payload);
+  const a = Buffer.from(mac);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
+
+let googleAuthSchemaEnsured = false;
+export async function ensureGoogleAuthSchema(): Promise<void> {
+  if (googleAuthSchemaEnsured || !pgConfigured()) return;
+  try {
+    await query(`alter table app.users add column if not exists google_id text`);
+    await query(`alter table app.users add column if not exists avatar_url text`);
+    googleAuthSchemaEnsured = true;
+  } catch {
+    googleAuthSchemaEnsured = true;
+  }
+}
+
+export type GoogleProfileInput = {
+  email: string;
+  name?: string;
+  googleId: string;
+  avatarUrl?: string;
+};
+
+export async function signInWithGoogleProfile(input: GoogleProfileInput): Promise<SignInResult> {
+  if (!pgConfigured()) return { error: "Database not configured yet. Set DATABASE_URL in .env." };
+  await ensurePilotOrg();
+  await ensureGoogleAuthSchema();
+
+  const email = input.email.trim().toLowerCase();
+  if (!email || !email.includes("@")) return { error: "A valid email address is required from Google." };
+
+  // 1. Check if user already exists
+  const existingRow = await accountBy(`lower(u.email) = $1`, email);
+  if (existingRow) {
+    const blocked = blockedReason(existingRow);
+    if (blocked) return { error: blocked };
+
+    try {
+      await query(
+        `update app.users set
+           google_id = coalesce(google_id, $1),
+           avatar_url = coalesce($2, avatar_url)
+         where id = $3`,
+        [input.googleId, input.avatarUrl || null, existingRow.id],
+      );
+    } catch {}
+
+    return completeSignIn(existingRow, "auth.google_sign_in");
+  }
+
+  // 2. Check if a team invite is pending for this email
+  const now = new Date().toISOString();
+  const invite = await queryOne<{
+    id: string;
+    org_id: string;
+    email: string;
+    name: string;
+    role: string;
+    expires_at: string;
+  }>(
+    `select id, org_id, email, name, role, expires_at
+     from app.team_invites
+     where lower(email) = $1 and status = 'pending' and expires_at > $2`,
+    [email, now],
+  );
+
+  if (invite) {
+    const { role, roleId } = await resolveOrgRole(invite.org_id, invite.role);
+    const userId = await withClient(async (client) => {
+      await client.query("begin");
+      try {
+        const newId = await createUser(
+          invite.org_id,
+          invite.email,
+          randomBytes(24).toString("base64url"),
+          input.name || invite.name || email,
+          role,
+          roleId,
+        );
+        await client.query(`update app.team_invites set status = 'accepted' where id = $1`, [invite.id]);
+        try {
+          await client.query(
+            `update app.users set google_id = $1, avatar_url = $2 where id = $3`,
+            [input.googleId, input.avatarUrl || null, newId],
+          );
+        } catch {}
+        await client.query("commit");
+        return newId;
+      } catch (err) {
+        await client.query("rollback");
+        throw err;
+      }
+    });
+
+    const newRow = await accountBy(`u.id = $1`, userId);
+    if (!newRow) return { error: "Failed to create invited account." };
+    return completeSignIn(newRow, "auth.google_invite_accept");
+  }
+
+  // 3. Optional open signup if explicitly configured via GOOGLE_ALLOW_OPEN_SIGNUP
+  const allowOpenSignup = process.env.GOOGLE_ALLOW_OPEN_SIGNUP === "true" || process.env.GOOGLE_ALLOW_OPEN_SIGNUP === "1";
+  if (allowOpenSignup) {
+    const orgId = randomBytes(8).toString("hex");
+    const orgName = input.name ? `${input.name}'s Org` : "Personal Workspace";
+    const nowIso = new Date().toISOString();
+    const userId = await withClient(async (client) => {
+      await client.query("begin");
+      try {
+        await client.query(
+          `insert into app.orgs (id, name, disabled, created_at, subscription_tier, max_active_claims, max_monthly_claims)
+           values ($1,$2,0,$3,'pro_territory',15,50)`,
+          [orgId, orgName, nowIso],
+        );
+        const newId = await createUser(
+          orgId,
+          email,
+          randomBytes(24).toString("base64url"),
+          input.name || email,
+          "owner",
+        );
+        try {
+          await client.query(
+            `update app.users set google_id = $1, avatar_url = $2 where id = $3`,
+            [input.googleId, input.avatarUrl || null, newId],
+          );
+        } catch {}
+        await client.query("commit");
+        return newId;
+      } catch (err) {
+        await client.query("rollback");
+        throw err;
+      }
+    });
+    const createdRow = await accountBy(`u.id = $1`, userId);
+    if (!createdRow) return { error: "Failed to create account." };
+    return completeSignIn(createdRow, "auth.google_sign_up");
+  }
+
+  return {
+    error: `No Depoii account found for ${email}. Please ask your administrator to invite you.`,
+  };
+}

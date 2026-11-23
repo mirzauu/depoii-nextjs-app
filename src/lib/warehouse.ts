@@ -72,7 +72,13 @@ function jurisdictionParts(q: Q): { city?: string; state?: string } {
 }
 
 function permitFilters(q: Q, params: unknown[]): string {
-  const clauses = [BASE_WHERE];
+  const trade = (str(q, "trade_category") || str(q, "trade")).toLowerCase();
+  const tradeFilter = trade
+    ? `p.trade_category = '${trade.replace(/[^a-z_]/g, "")}'`
+    : ROOFING_SQL;
+
+  const baseClause = `lower(coalesce(p.contractor_name,'')) not like '%licensed%' and lower(coalesce(p.contractor_name,'')) not like '%unknown%' and lower(coalesce(p.normalized_address,'')) not like '%commercial corridor%' and ${tradeFilter}`;
+  const clauses = [baseClause];
   const { city, state } = jurisdictionParts(q);
   const cityParam = str(q, "city") || city;
   const stateParam = (str(q, "state") || state || "").toUpperCase();
@@ -126,6 +132,9 @@ const permitRow = (r: Record<string, unknown>) => ({
   parcelId: r.geo_quality === "source_point" || r.geo_quality === "geocoded" ? r.parcel_id : null,
   valuation: r.valuation != null ? Number(r.valuation) : 0, valuationFormatted: (r.valuation_formatted as string) || "",
   category: r.category || "Commercial Re-Roof",
+  tradeCategory: (r.trade_category as string) || "roofing",
+  tradeSubdiscipline: (r.trade_subdiscipline as string) || null,
+  tradeMetadata: (r.trade_metadata as Record<string, any>) || {},
   rawDescription: r.raw_description || "Commercial roofing work.", squareFootage: r.square_footage != null ? Number(r.square_footage) : null,
   probableRoofSystem: r.probable_roof_system || "Unspecified", contractorName: r.contractor_name || "Contractor on File",
   contractorLicense: r.contractor_license || null, contractorPhone: r.contractor_phone || null, isHailStormWindow: Boolean(r.is_hail_storm_window),
@@ -765,54 +774,56 @@ export async function permitsParcel(parcelId: string) {
 
   if (!parcel) return null;
 
-  // Retrieve permits matching this parcel ID or address
-  const permits = await query<Record<string, any>>(
-    `select * from warehouse.normalized_permits
-     where parcel_id = $1 or parcel_id = $2 or parcel_id = $3
-        or (lower(trim(split_part(normalized_address, ',', 1))) = lower(trim($4)) and lower(trim(city)) = lower(trim($5)))
-        or (lower(trim(normalized_address)) = lower(trim($4)))
-     order by issue_date desc nulls last`,
-    [parcel.id, parcel.account_number || parcel.id, strippedId, parcel.address || "", parcel.city || ""]
-  );
-  const contact = await queryOne<{
-    decision_maker_name: string;
-    decision_maker_title: string;
-    organization_name: string;
-    phone_number: string;
-    phone_type: string;
-    email_address: string;
-    email_status: string;
-    website_url: string;
-    logo_url: string;
-    tenant_or_facility_name: string;
-    confidence: string;
-    source_system: string;
-    source_url: string;
-  }>(
-    `select * from warehouse.lead_contacts where parcel_id = $1 or account_number = $2 or parcel_id = $3 limit 1`,
-    [parcel.id, parcel.account_number, parcelId]
-  );
-  const officers = await query<{
-    person_name: string;
-    title_raw: string;
-    person_role: string;
-    address: string;
-  }>(
-    `select person_name, title_raw, person_role, address from warehouse.owner_persons where lower(owner_name_normalized) = lower($1) limit 5`,
-    [parcel.owner_name]
-  );
-  const entity = await queryOne<{
-    entity_legal_name: string;
-    taxpayer_id: string;
-    sos_file_number: string;
-    sos_status: string;
-    registered_agent_name: string;
-    registered_agent_address: string;
-    mailing_address: string;
-  }>(
-    `select * from warehouse.owner_entities where lower(owner_name_normalized) = lower($1)`,
-    [parcel.owner_name]
-  );
+  // Retrieve permits, contacts, officers and entity in parallel with index-optimized queries
+  const cleanAddr = parcel.address ? parcel.address.split(",")[0].trim() : "";
+  const [permits, contact, officers, entity] = await Promise.all([
+    query<Record<string, any>>(
+      `select * from warehouse.normalized_permits
+       where parcel_id = $1 or parcel_id = $2
+          or (coalesce($3,'') <> '' and lower(trim(normalized_address)) = lower(trim($3)))
+       order by issue_date desc nulls last limit 50`,
+      [parcel.id, parcel.account_number || parcel.id, cleanAddr]
+    ),
+    queryOne<{
+      decision_maker_name: string;
+      decision_maker_title: string;
+      organization_name: string;
+      phone_number: string;
+      phone_type: string;
+      email_address: string;
+      email_status: string;
+      website_url: string;
+      logo_url: string;
+      tenant_or_facility_name: string;
+      confidence: string;
+      source_system: string;
+      source_url: string;
+    }>(
+      `select * from warehouse.lead_contacts where parcel_id = $1 or account_number = $2 or parcel_id = $3 limit 1`,
+      [parcel.id, parcel.account_number, parcelId]
+    ),
+    parcel.owner_name ? query<{
+      person_name: string;
+      title_raw: string;
+      person_role: string;
+      address: string;
+    }>(
+      `select person_name, title_raw, person_role, address from warehouse.owner_persons where lower(owner_name_normalized) = lower(trim($1)) limit 5`,
+      [parcel.owner_name]
+    ) : Promise.resolve([]),
+    parcel.owner_name ? queryOne<{
+      entity_legal_name: string;
+      taxpayer_id: string;
+      sos_file_number: string;
+      sos_status: string;
+      registered_agent_name: string;
+      registered_agent_address: string;
+      mailing_address: string;
+    }>(
+      `select * from warehouse.owner_entities where lower(owner_name_normalized) = lower(trim($1)) limit 1`,
+      [parcel.owner_name]
+    ) : Promise.resolve(null),
+  ]);
 
   return {
     ...parcelRowBase(parcel),
@@ -877,11 +888,20 @@ export async function permitsParcel(parcelId: string) {
 }
 
 function parcelRowBase(r: Record<string, unknown>) {
+  const sourceLinks = (r.source_links && typeof r.source_links === "object" ? r.source_links : {}) as Record<string, any>;
+  const dcadLink = typeof sourceLinks.dcad === "string" && sourceLinks.dcad.startsWith("http") ? sourceLinks.dcad : "";
+  const accelaLink = typeof sourceLinks.accela === "string" && sourceLinks.accela.startsWith("http") ? sourceLinks.accela : "";
   return {
     id: r.id, address: r.address, city: r.city, county: r.county || "", state: r.state, zip_code: r.zip_code || "",
     building_sqft: Number(r.building_sqft || 0), land_sqft: Number(r.land_sqft || 0), year_built: Number(r.year_built || 0),
     property_type: r.property_type || "", owner_name: r.owner_name || "", total_valuation: Number(r.total_valuation || 0),
     data_source: r.data_source || "", latitude: r.latitude, longitude: r.longitude,
+    source_links: sourceLinks,
+    sourceLinks: sourceLinks,
+    cad_url: dcadLink,
+    cadUrl: dcadLink,
+    accela_url: accelaLink,
+    accelaUrl: accelaLink,
   };
 }
 
@@ -1387,7 +1407,7 @@ function parcelFilters(q: Q, params: unknown[], alias = "p"): string {
     }
   }
   if (q.get("has_contact") === "true") {
-    clauses.push(`exists(select 1 from warehouse.lead_contacts lc where (lc.parcel_id = ${alias}.id or lc.account_number = ${alias}.account_number) and lc.email_status = 'VERIFIED' and lc.confidence = 'HIGH')`);
+    clauses.push(`coalesce(${alias}.has_contact, false) = true`);
   }
   if (q.get("released") === "true") {
     clauses.push(`exists(select 1 from warehouse.released_leads r where r.parcel_id = ${alias}.id)`);
@@ -1461,12 +1481,18 @@ export async function parcelsSearch(q: Q, user?: { id?: string; orgId?: string; 
   else if (sortBy === "val_desc") orderBy = "p.total_valuation desc nulls last";
 
   const limit = int(q, "limit", 50), offset = int(q, "offset", 0);
-  const total = await queryOne<{ n: string }>(`select count(*)::text as n from warehouse.parcels p where ${where}`, params);
-  const rows = await query(
-    `select p.*, owner_address, stories, 
+  const countKey = `parcelsSearch:count:${where}:${JSON.stringify(params)}`;
+  const totalPromise = withCache(countKey, 5 * 60 * 1000, () =>
+    queryOne<{ n: string }>(`select count(*)::text as n from warehouse.parcels p where ${where}`, params)
+  );
+  const rowsPromise = query(
+    `select p.id, p.address, p.city, p.county, p.state, p.zip_code, p.building_sqft, p.land_sqft, p.year_built,
+            p.property_type, p.owner_name, p.owner_address, p.stories, p.total_valuation, p.data_source,
+            p.latitude, p.longitude, p.source_links,
             exists(select 1 from warehouse.released_leads r where r.parcel_id = p.id) as released,
-            exists(select 1 from warehouse.lead_contacts lc where (lc.parcel_id = p.id or lc.account_number = p.account_number) and lc.email_status = 'VERIFIED' and lc.confidence = 'HIGH') as has_contact
+            coalesce(p.has_contact, false) as has_contact
      from warehouse.parcels p where ${where} order by ${orderBy} limit $${params.length + 1} offset $${params.length + 2}`, [...params, limit, offset]);
+  const [total, rows] = await Promise.all([totalPromise, rowsPromise]);
   return { total: Number(total?.n || 0), source: "Depoii data engine", parcels: rows.map(parcelRowBase), no_active_territory: false };
 }
 
@@ -1519,12 +1545,18 @@ export async function parcelsBrowse(q: Q, user?: { id?: string; orgId?: string; 
   const where = clauses.join(" and ");
 
   const limit = int(q, "limit", 50), offset = int(q, "offset", 0);
-  const total = await queryOne<{ n: string }>(`select count(*)::text as n from warehouse.parcels p where ${where}`, params);
-  const rows = await query(
-    `select p.*, owner_address, stories, 
+  const countKey = `parcelsBrowse:count:${where}:${JSON.stringify(params)}`;
+  const totalPromise = withCache(countKey, 5 * 60 * 1000, () =>
+    queryOne<{ n: string }>(`select count(*)::text as n from warehouse.parcels p where ${where}`, params)
+  );
+  const rowsPromise = query(
+    `select p.id, p.address, p.city, p.county, p.state, p.zip_code, p.building_sqft, p.land_sqft, p.year_built,
+            p.property_type, p.owner_name, p.owner_address, p.stories, p.total_valuation, p.data_source,
+            p.latitude, p.longitude, p.source_links,
             exists(select 1 from warehouse.released_leads r where r.parcel_id = p.id) as released,
-            exists(select 1 from warehouse.lead_contacts lc where (lc.parcel_id = p.id or lc.account_number = p.account_number) and lc.email_status = 'VERIFIED' and lc.confidence = 'HIGH') as has_contact
+            coalesce(p.has_contact, false) as has_contact
      from warehouse.parcels p where ${where} order by p.building_sqft desc nulls last limit $${params.length + 1} offset $${params.length + 2}`, [...params, limit, offset]);
+  const [total, rows] = await Promise.all([totalPromise, rowsPromise]);
   return {
     total: Number(total?.n || 0), source: "Depoii data engine",
     parcels: rows.map((r) => ({ 
@@ -1539,53 +1571,62 @@ export async function parcelsBrowse(q: Q, user?: { id?: string; orgId?: string; 
 }
 
 export async function parcelBrowseDetail(id: string) {
-  const r = await queryOne(`select p.*, exists(select 1 from warehouse.released_leads rl where rl.parcel_id = p.id) as released from warehouse.parcels p where p.id = $1 or p.account_number = $1`, [id]);
+  const r = await queryOne(`select p.*, exists(select 1 from warehouse.released_leads rl where rl.parcel_id = p.id) as released from warehouse.parcels p where p.id = $1 or p.account_number = $1 limit 1`, [id]);
   if (!r) return null;
-  const permits = await query(`select * from warehouse.normalized_permits where parcel_id = $1 or (coalesce($2,'') <> '' and lower(trim(normalized_address)) = lower(trim($2)) and ($3 = '' or lower(trim(coalesce(city,''))) = lower(trim($3)))) order by issue_date desc nulls last limit 50`, [r.id, r.address || "", r.city || ""]);
-  const evidence = await query<{ field_name: string; stored_value: string }>(`select field_name, stored_value from warehouse.lead_evidence where parcel_id = $1`, [r.id]);
+
+  const cleanAddr = r.address ? r.address.split(",")[0].trim() : "";
+  const [permits, evidence, contact, officers, entity] = await Promise.all([
+    query(
+      `select * from warehouse.normalized_permits 
+       where parcel_id = $1 or (coalesce($2,'') <> '' and lower(trim(normalized_address)) = lower(trim($2))) 
+       order by issue_date desc nulls last limit 50`,
+      [r.id, cleanAddr]
+    ),
+    query<{ field_name: string; stored_value: string }>(
+      `select field_name, stored_value from warehouse.lead_evidence where parcel_id = $1`,
+      [r.id]
+    ),
+    queryOne<{
+      decision_maker_name: string;
+      decision_maker_title: string;
+      organization_name: string;
+      phone_number: string;
+      phone_type: string;
+      email_address: string;
+      email_status: string;
+      website_url: string;
+      logo_url: string;
+      tenant_or_facility_name: string;
+      confidence: string;
+      source_system: string;
+      source_url: string;
+    }>(
+      `select * from warehouse.lead_contacts where parcel_id = $1 or account_number = $2 or parcel_id = $3 limit 1`,
+      [r.id, r.account_number, id]
+    ),
+    r.owner_name ? query<{
+      person_name: string;
+      title_raw: string;
+      person_role: string;
+      address: string;
+    }>(
+      `select person_name, title_raw, person_role, address from warehouse.owner_persons where lower(owner_name_normalized) = lower(trim($1)) limit 5`,
+      [r.owner_name]
+    ) : Promise.resolve([]),
+    r.owner_name ? queryOne<{
+      entity_legal_name: string;
+      taxpayer_id: string;
+      sos_file_number: string;
+      sos_status: string;
+      registered_agent_name: string;
+      registered_agent_address: string;
+      mailing_address: string;
+    }>(
+      `select * from warehouse.owner_entities where lower(owner_name_normalized) = lower(trim($1)) limit 1`,
+      [r.owner_name]
+    ) : Promise.resolve(null),
+  ]);
   const ev = Object.fromEntries(evidence.map((e) => [e.field_name, e.stored_value]));
-
-  const contact = await queryOne<{
-    decision_maker_name: string;
-    decision_maker_title: string;
-    organization_name: string;
-    phone_number: string;
-    phone_type: string;
-    email_address: string;
-    email_status: string;
-    website_url: string;
-    logo_url: string;
-    tenant_or_facility_name: string;
-    confidence: string;
-    source_system: string;
-    source_url: string;
-  }>(
-    `select * from warehouse.lead_contacts where parcel_id = $1 or account_number = $2 or parcel_id = $3 limit 1`,
-    [r.id, r.account_number, id]
-  );
-
-  const officers = r.owner_name ? await query<{
-    person_name: string;
-    title_raw: string;
-    person_role: string;
-    address: string;
-  }>(
-    `select person_name, title_raw, person_role, address from warehouse.owner_persons where lower(trim(owner_name_normalized)) = lower(trim($1)) limit 5`,
-    [r.owner_name]
-  ) : [];
-
-  const entity = r.owner_name ? await queryOne<{
-    entity_legal_name: string;
-    taxpayer_id: string;
-    sos_file_number: string;
-    sos_status: string;
-    registered_agent_name: string;
-    registered_agent_address: string;
-    mailing_address: string;
-  }>(
-    `select * from warehouse.owner_entities where lower(trim(owner_name_normalized)) = lower(trim($1)) limit 1`,
-    [r.owner_name]
-  ) : null;
 
   const contactsList: Array<{
     role: string;
@@ -1860,3 +1901,289 @@ export async function darkMarket(q: Q, user?: { id?: string; orgId?: string; pla
     }),
   };
 }
+
+export async function queryOwnersDirectory(q: Q) {
+  const clauses: string[] = ["1=1"];
+  const params: unknown[] = [];
+
+  const search = str(q, "search");
+  if (search) {
+    params.push(`%${search}%`);
+    clauses.push(`(o.canonical_name ILIKE $${params.length} OR o.normalized_name ILIKE $${params.length} OR o.headquarters_city ILIKE $${params.length})`);
+  }
+
+  const entityType = str(q, "entity_type");
+  if (entityType && entityType !== "all") {
+    params.push(entityType);
+    clauses.push(`o.entity_type = $${params.length}`);
+  }
+
+  const minProps = int(q, "min_properties", 0);
+  if (minProps > 0) {
+    params.push(minProps);
+    clauses.push(`o.total_properties >= $${params.length}`);
+  }
+
+  const minSqft = int(q, "min_sqft", 0);
+  if (minSqft > 0) {
+    params.push(minSqft);
+    clauses.push(`o.total_building_sqft >= $${params.length}`);
+  }
+
+  const hasAgingRoofs = str(q, "has_aging_roofs") === "true";
+  if (hasAgingRoofs) {
+    clauses.push(`o.aging_roofs_count > 0`);
+  }
+
+  const where = clauses.join(" AND ");
+  const limit = int(q, "limit", 50);
+  const offset = int(q, "offset", 0);
+
+  const sortBy = str(q, "sort_by");
+  let orderSql = "ORDER BY o.total_properties DESC, o.total_building_sqft DESC";
+  if (sortBy === "sqft_desc") orderSql = "ORDER BY o.total_building_sqft DESC";
+  else if (sortBy === "valuation_desc") orderSql = "ORDER BY o.total_assessed_valuation DESC";
+  else if (sortBy === "aging_roofs_desc") orderSql = "ORDER BY o.aging_roofs_count DESC";
+  else if (sortBy === "name_asc") orderSql = "ORDER BY o.canonical_name ASC";
+
+  const totalsPromise = queryOne<{ count: string; total_sqft: string; total_val: string }>(
+    `SELECT 
+       count(*)::text as count, 
+       coalesce(sum(o.total_building_sqft), 0)::text as total_sqft,
+       coalesce(sum(o.total_assessed_valuation), 0)::text as total_val
+     FROM warehouse.canonical_owners o
+     WHERE ${where}`,
+    params
+  );
+
+  const rowsPromise = query<Record<string, any>>(
+    `SELECT 
+       o.*,
+       (
+         SELECT json_agg(json_build_object(
+           'id', c.id,
+           'fullName', c.full_name,
+           'title', c.title,
+           'roleCategory', c.role_category,
+           'email', c.email,
+           'emailStatus', c.email_status,
+           'phone', c.phone,
+           'phoneType', c.phone_type,
+           'linkedinUrl', c.linkedin_url,
+           'isPrimaryDecisionMaker', c.is_primary_decision_maker
+         ))
+         FROM warehouse.owner_contacts c
+         WHERE c.owner_id = o.id
+       ) as contacts
+     FROM warehouse.canonical_owners o
+     WHERE ${where}
+     ${orderSql}
+     LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
+    [...params, limit, offset]
+  );
+
+  const [totals, rows] = await Promise.all([totalsPromise, rowsPromise]);
+
+  const totalCount = Number(totals?.count || 0);
+  const totalSqft = Number(totals?.total_sqft || 0);
+  const totalVal = Number(totals?.total_val || 0);
+
+  return {
+    total_owners: totalCount,
+    total_portfolio_sqft: totalSqft,
+    total_portfolio_valuation_usd: totalVal,
+    limit,
+    offset,
+    owners: rows.map((r) => {
+      const val = Number(r.total_assessed_valuation || 0);
+      const sqft = Number(r.total_building_sqft || 0);
+      const sqftFormatted = sqft >= 1e6 ? `${(sqft / 1e6).toFixed(2)}M sq ft` : `${sqft.toLocaleString()} sq ft`;
+      const valFormatted = val >= 1e6 ? `$${(val / 1e6).toFixed(2)}M` : `$${Math.trunc(val).toLocaleString()}`;
+      return {
+        id: r.id,
+        // CamelCase
+        canonicalName: r.canonical_name,
+        normalizedName: r.normalized_name,
+        entityType: r.entity_type,
+        headquartersAddress: r.headquarters_address || "",
+        headquartersCity: r.headquarters_city || "Dallas",
+        headquartersState: r.headquarters_state || "TX",
+        headquartersZip: r.headquarters_zip || "",
+        websiteUrl: r.website_url || "",
+        linkedinUrl: r.linkedin_url || "",
+        logoUrl: r.logo_url || "",
+        managementFirm: r.management_firm || "",
+        totalProperties: Number(r.total_properties || 0),
+        totalBuildingSqft: sqft,
+        totalBuildingSqftFormatted: sqftFormatted,
+        totalAssessedValuation: val,
+        totalAssessedValuationFormatted: valFormatted,
+        agingRoofsCount: Number(r.aging_roofs_count || 0),
+        hailExposedCount: Number(r.hail_exposed_count || 0),
+        contacts: r.contacts || [],
+        hasContacts: Array.isArray(r.contacts) && r.contacts.length > 0,
+        // Snake_case aliases for 100% interoperability
+        canonical_name: r.canonical_name,
+        normalized_name: r.normalized_name,
+        entity_type: r.entity_type,
+        headquarters_address: r.headquarters_address || "",
+        headquarters_city: r.headquarters_city || "Dallas",
+        headquarters_state: r.headquarters_state || "TX",
+        headquarters_zip: r.headquarters_zip || "",
+        website_url: r.website_url || "",
+        linkedin_url: r.linkedin_url || "",
+        logo_url: r.logo_url || "",
+        management_firm: r.management_firm || "",
+        total_properties: Number(r.total_properties || 0),
+        total_building_sqft: sqft,
+        total_building_sqft_formatted: sqftFormatted,
+        total_assessed_valuation: val,
+        total_assessed_valuation_formatted: valFormatted,
+        aging_roofs_count: Number(r.aging_roofs_count || 0),
+        hail_exposed_count: Number(r.hail_exposed_count || 0),
+        has_contacts: Array.isArray(r.contacts) && r.contacts.length > 0,
+      };
+    }),
+  };
+}
+
+export async function ownerProfile(idOrName: string) {
+  if (!idOrName) return { owner: null };
+
+  const owner = await queryOne<Record<string, any>>(
+    `SELECT o.*
+     FROM warehouse.canonical_owners o
+     WHERE o.id = $1 OR lower(o.canonical_name) = lower($1)
+     LIMIT 1`,
+    [idOrName]
+  );
+
+  if (!owner) return { owner: null };
+
+  const contacts = await query<Record<string, any>>(
+    `SELECT *
+     FROM warehouse.owner_contacts
+     WHERE owner_id = $1
+     ORDER BY is_primary_decision_maker DESC, created_at ASC`,
+    [owner.id]
+  );
+
+  const parcels = await query<Record<string, any>>(
+    `SELECT 
+       p.id, p.address, p.city, p.county, p.state, p.zip_code,
+       p.building_sqft, p.year_built, p.roof_age_years, p.last_reroof_date,
+       p.last_reroof_permit_no, p.total_valuation, p.latitude, p.longitude
+     FROM warehouse.parcels p
+     WHERE p.canonical_owner_id = $1 OR trim(p.owner_name) = $2
+     ORDER BY coalesce(p.building_sqft, 0) DESC
+     LIMIT 100`,
+    [owner.id, owner.canonical_name]
+  );
+
+  const val = Number(owner.total_assessed_valuation || 0);
+  const sqft = Number(owner.total_building_sqft || 0);
+
+  return {
+    owner: {
+      id: owner.id,
+      canonicalName: owner.canonical_name,
+      normalizedName: owner.normalized_name,
+      entityType: owner.entity_type,
+      headquartersAddress: owner.headquarters_address || "",
+      headquartersCity: owner.headquarters_city || "Dallas",
+      headquartersState: owner.headquarters_state || "TX",
+      headquartersZip: owner.headquarters_zip || "",
+      websiteUrl: owner.website_url || "",
+      linkedinUrl: owner.linkedin_url || "",
+      logoUrl: owner.logo_url || "",
+      managementFirm: owner.management_firm || "",
+      totalProperties: Number(owner.total_properties || parcels.length || 0),
+      totalBuildingSqft: sqft,
+      totalBuildingSqftFormatted: sqft >= 1e6 ? `${(sqft / 1e6).toFixed(2)}M sq ft` : `${sqft.toLocaleString()} sq ft`,
+      totalAssessedValuation: val,
+      totalAssessedValuationFormatted: val >= 1e6 ? `$${(val / 1e6).toFixed(2)}M` : `$${Math.trunc(val).toLocaleString()}`,
+      agingRoofsCount: Number(owner.aging_roofs_count || 0),
+      hailExposedCount: Number(owner.hail_exposed_count || 0),
+      contacts: contacts.map((c) => ({
+        id: c.id,
+        fullName: c.full_name,
+        firstName: c.first_name,
+        lastName: c.last_name,
+        title: c.title,
+        roleCategory: c.role_category,
+        email: c.email,
+        emailStatus: c.email_status,
+        phone: c.phone,
+        phoneType: c.phone_type,
+        linkedinUrl: c.linkedin_url,
+        isPrimaryDecisionMaker: Boolean(c.is_primary_decision_maker),
+      })),
+      parcels: parcels.map((p) => {
+        const age = p.roof_age_years ?? (new Date().getFullYear() - Number(p.year_built || 0));
+        return {
+          id: p.id,
+          address: p.address,
+          city: p.city,
+          state: p.state,
+          zipCode: p.zip_code,
+          buildingSqft: Number(p.building_sqft || 0),
+          yearBuilt: Number(p.year_built || 0),
+          roofAgeYears: age,
+          lastReroofDate: p.last_reroof_date || null,
+          lastReroofPermitNo: p.last_reroof_permit_no || null,
+          totalValuation: Number(p.total_valuation || 0),
+          lat: Number(p.latitude || 0),
+          lng: Number(p.longitude || 0),
+        };
+      }),
+    },
+  };
+}
+
+export async function queryTradeStats() {
+  const stats = await query<{
+    id: string;
+    display_name: string;
+    description: string;
+    typical_lifespan_years: number;
+    priority_rank: number;
+    total_permits: string;
+    total_pipeline_valuation: string;
+    active_contractors: string;
+  }>(`
+    SELECT 
+      tc.id,
+      tc.display_name,
+      tc.description,
+      tc.typical_lifespan_years,
+      tc.priority_rank,
+      count(np.id)::text as total_permits,
+      coalesce(sum(np.valuation), 0)::text as total_pipeline_valuation,
+      count(distinct np.contractor_name)::text as active_contractors
+    FROM warehouse.trade_categories tc
+    LEFT JOIN warehouse.normalized_permits np ON np.trade_category = tc.id
+    GROUP BY tc.id, tc.display_name, tc.description, tc.typical_lifespan_years, tc.priority_rank
+    ORDER BY tc.priority_rank ASC
+  `);
+
+  return {
+    trades: stats.map((s) => ({
+      id: s.id,
+      displayName: s.display_name,
+      description: s.description,
+      typicalLifespanYears: s.typical_lifespan_years,
+      priorityRank: s.priority_rank,
+      totalPermits: Number(s.total_permits || 0),
+      totalPipelineValuation: Number(s.total_pipeline_valuation || 0),
+      activeContractors: Number(s.active_contractors || 0),
+    })),
+  };
+}
+
+export async function queryTradePermits(trade: string, q: Q = new URLSearchParams()) {
+  const params = new URLSearchParams(q.toString());
+  params.set("trade_category", trade);
+  return permitsSearch(params);
+}
+
+

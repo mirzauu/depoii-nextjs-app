@@ -19,7 +19,7 @@ export function ScopeFilter({ jurisdiction, all, onChange }: { jurisdiction: str
   const city = jurisdiction.split(",")[0];
   return (
     <Filter label="Location">
-      <div className="grid grid-cols-2 gap-1 rounded-lg border border-neutral-300 border-border bg-neutral-100 dark:bg-[#171714] p-1">
+      <div className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-muted/60 dark:bg-[#171714] p-1">
         <button
           type="button"
           onClick={() => onChange(false)}
@@ -65,8 +65,8 @@ export function FilterRail({
   activeCount?: number;
 }) {
   return (
-    <aside className="w-full shrink-0 border-b border-border border-border bg-neutral-50/80 dark:bg-[#131310] p-3.5 text-xs lg:w-64 lg:border-r lg:border-b-0 lg:sticky lg:top-0 lg:h-[calc(100vh-3.5rem)] lg:overflow-y-auto z-10 flex flex-col">
-      <div className="sticky top-0 bg-neutral-50 dark:bg-[#131310] z-20 flex items-center justify-between pb-2.5 mb-3 border-b border-border border-border shrink-0 -mt-3.5 pt-3.5">
+    <aside className="w-full shrink-0 border-b border-border bg-sidebar p-3.5 text-xs lg:w-64 lg:border-r lg:border-b-0 lg:sticky lg:top-0 lg:h-[calc(100vh-3.5rem)] lg:overflow-y-auto z-10 flex flex-col">
+      <div className="sticky top-0 bg-sidebar z-20 flex items-center justify-between pb-2.5 mb-3 border-b border-border shrink-0 -mt-3.5 pt-3.5">
         <div className="flex items-center gap-1.5 font-semibold text-neutral-800 dark:text-neutral-200 text-xs">
           <FilterIcon className="size-3.5 text-neutral-500 dark:text-neutral-400" />
           <span>{title}</span>
@@ -132,7 +132,7 @@ export function EngineLayout({
   fullHeight?: boolean;
 }) {
   return (
-    <div className={cn("flex flex-col lg:flex-row bg-background dark:bg-[#131310] text-foreground dark:text-neutral-200 antialiased font-sans", fullHeight ? "h-[calc(100vh-3.5rem)] overflow-hidden" : "min-h-[calc(100vh-3.5rem)]")}>
+    <div className={cn("flex flex-col lg:flex-row bg-background text-foreground dark:text-neutral-200 antialiased font-sans", fullHeight ? "h-[calc(100vh-3.5rem)] overflow-hidden" : "min-h-[calc(100vh-3.5rem)]")}>
       {filters && (
         <FilterRail onReset={onResetFilters} activeCount={activeFiltersCount}>
           {filters}
@@ -140,7 +140,7 @@ export function EngineLayout({
       )}
       <section className={cn("min-w-0 flex-1 flex flex-col", fullHeight && "h-full overflow-hidden")}>
         {!hideHeader && (
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border border-border bg-background dark:bg-[#171714] px-5 py-3.5 z-10 shrink-0">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background px-5 py-3.5 z-10 shrink-0">
             <div>
               <div className="text-sm font-semibold tracking-tight text-foreground dark:text-white">{title}</div>
               {subtitle && <p className="text-xs font-medium text-rose-600 dark:text-[#DE7272] mt-0.5">{subtitle}</p>}
@@ -216,7 +216,7 @@ const RISK: Record<string, { cls: string; dot: string }> = {
 export function RiskBadge({ value }: { value: string }) {
   if (!value) return <span className="text-muted-foreground">—</span>;
   const key = Object.keys(RISK).find((k) => value.toUpperCase().includes(k));
-  const cfg = key ? RISK[key] : { cls: "border-border bg-neutral-900/60 text-muted-foreground", dot: "bg-neutral-600" };
+  const cfg = key ? RISK[key] : { cls: "border-border bg-muted text-muted-foreground", dot: "bg-muted-foreground" };
   return (
     <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium whitespace-nowrap", cfg.cls)}>
       <span className={cn("size-1.5 rounded-full shrink-0", cfg.dot)} />

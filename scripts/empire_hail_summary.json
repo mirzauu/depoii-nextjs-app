@@ -1,0 +1,359 @@
+{
+  "2100 ROSS AVE": {
+    "address": "2100 Ross Ave",
+    "roof_age": 8,
+    "install_date": "2018-01-05",
+    "hail_events": [
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1.75,
+        "location": "3 SSE Dallas",
+        "distance_miles": "3.79",
+        "remark": ""
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1.75,
+        "location": "3 SSE Dallas",
+        "distance_miles": "3.79",
+        "remark": ""
+      }
+    ]
+  },
+  "208 N MARKET ST": {
+    "address": "208 N MARKET ST",
+    "roof_age": 7,
+    "install_date": "2019-08-29",
+    "hail_events": [
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1.75,
+        "location": "3 SSE Dallas",
+        "distance_miles": "3.89",
+        "remark": ""
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1.75,
+        "location": "3 SSE Dallas",
+        "distance_miles": "3.89",
+        "remark": ""
+      }
+    ]
+  },
+  "2500 N HASKELL AVE": {
+    "address": "2500 N HASKELL AVE",
+    "roof_age": 6,
+    "install_date": "2020-06-17",
+    "hail_events": [
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1.75,
+        "location": "3 SSE Dallas",
+        "distance_miles": "4.47",
+        "remark": ""
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1.75,
+        "location": "3 SSE Dallas",
+        "distance_miles": "4.47",
+        "remark": ""
+      }
+    ]
+  },
+  "3131 TURTLE CREEK BLVD": {
+    "address": "3131 TURTLE CREEK BLVD",
+    "roof_age": 8,
+    "install_date": "2018-11-16",
+    "hail_events": [
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1.75,
+        "location": "3 SSE Dallas",
+        "distance_miles": "5.00",
+        "remark": ""
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1.75,
+        "location": "3 SSE Dallas",
+        "distance_miles": "5.00",
+        "remark": ""
+      }
+    ]
+  },
+  "11300 N CENTRAL EXPY": {
+    "address": "11300 N CENTRAL EXPY",
+    "roof_age": null,
+    "install_date": null,
+    "hail_events": [
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1.25,
+        "location": "Buckingham",
+        "distance_miles": "3.37",
+        "remark": "Delayed report. Hail between 1 and 1.25 inches fell in near East Spring Valley Road and South Lois Lane in Richardson. Time estimated by radar."
+      },
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1.25,
+        "location": "Buckingham",
+        "distance_miles": "3.39",
+        "remark": "Delayed report. Hail between 1 and 1.25 inches fell in near East Spring Valley Road and South Lois Lane in Richardson. Time estimated by radar."
+      },
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1.25,
+        "location": "Buckingham",
+        "distance_miles": "3.43",
+        "remark": "Delayed report. Hail between 1 and 1.25 inches fell in near East Spring Valley Road and South Lois Lane in Richardson. Time estimated by radar."
+      },
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1,
+        "location": "4 SE Buckingham",
+        "distance_miles": "4.10",
+        "remark": "Report from mPING."
+      },
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1,
+        "location": "4 SE Buckingham",
+        "distance_miles": "4.10",
+        "remark": "Report from mPING."
+      },
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1,
+        "location": "4 SE Buckingham",
+        "distance_miles": "4.20",
+        "remark": "Report from mPING."
+      }
+    ]
+  },
+  "13657 JUPITER RD": {
+    "address": "13657 JUPITER RD",
+    "roof_age": 7,
+    "install_date": "2019-04-09",
+    "hail_events": [
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1.25,
+        "location": "2 SE Richardson",
+        "distance_miles": "4.58",
+        "remark": "Report from mPING."
+      },
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1.25,
+        "location": "Buckingham",
+        "distance_miles": "4.71",
+        "remark": "Delayed report. Hail between 1 and 1.25 inches fell in near East Spring Valley Road and South Lois Lane in Richardson. Time estimated by radar."
+      }
+    ]
+  },
+  "5525 LBJ FWY": {
+    "address": "5525 LBJ FWY",
+    "roof_age": 6,
+    "install_date": "2020-01-14",
+    "hail_events": [
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1.25,
+        "location": "Buckingham",
+        "distance_miles": "4.99",
+        "remark": "Delayed report. Hail between 1 and 1.25 inches fell in near East Spring Valley Road and South Lois Lane in Richardson. Time estimated by radar."
+      },
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1,
+        "location": "4 SW Buckingham",
+        "distance_miles": "3.19",
+        "remark": "Report from mPING."
+      }
+    ]
+  },
+  "6535 SKILLMAN ST": {
+    "address": "6535 SKILLMAN ST",
+    "roof_age": 6,
+    "install_date": "2020-01-31",
+    "hail_events": [
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1,
+        "location": "4 SE Buckingham",
+        "distance_miles": "2.69",
+        "remark": "Report from mPING."
+      },
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1,
+        "location": "4 SW Buckingham",
+        "distance_miles": "2.83",
+        "remark": "Report from mPING."
+      }
+    ]
+  },
+  "151 REGAL ROW": {
+    "address": "151 Regal Row",
+    "roof_age": 8,
+    "install_date": "2018-08-01",
+    "hail_events": [
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "2.72",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "2.72",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      }
+    ]
+  },
+  "8301 WESTCHESTER DR": {
+    "address": "8301 Westchester Dr",
+    "roof_age": 8,
+    "install_date": "2018-01-12",
+    "hail_events": [
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1,
+        "location": "4 SW Buckingham",
+        "distance_miles": "3.29",
+        "remark": "Report from mPING."
+      }
+    ]
+  },
+  "3901 PIPESTONE RD": {
+    "address": "3901 Pipestone Rd",
+    "roof_age": 8,
+    "install_date": "2018-05-14",
+    "hail_events": [
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "3.37",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "3.37",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      }
+    ]
+  },
+  "3631 W DAVIS ST": {
+    "address": "3631 W Davis St",
+    "roof_age": null,
+    "install_date": null,
+    "hail_events": [
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "3.37",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "3.37",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "3.44",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "3.44",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "4.46",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "4.46",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      }
+    ]
+  },
+  "3870 LA REUNION PKWY": {
+    "address": "3870 La Reunion Pkwy",
+    "roof_age": 6,
+    "install_date": "2020-03-25",
+    "hail_events": [
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "3.38",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "3.38",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      }
+    ]
+  },
+  "5401 N CENTRAL EXPY": {
+    "address": "5401 N CENTRAL EXPY",
+    "roof_age": 7,
+    "install_date": "2019-07-18",
+    "hail_events": [
+      {
+        "storm_date": "2026-04-27",
+        "hail_size_inches": 1,
+        "location": "4 SW Buckingham",
+        "distance_miles": "4.73",
+        "remark": "Report from mPING."
+      }
+    ]
+  },
+  "1341 W MOCKINGBIRD LN": {
+    "address": "1341 W Mockingbird Ln",
+    "roof_age": 56,
+    "install_date": null,
+    "hail_events": [
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "4.86",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      },
+      {
+        "storm_date": "2025-03-25",
+        "hail_size_inches": 1,
+        "location": "5 SSE Irving",
+        "distance_miles": "4.86",
+        "remark": "Pea to quarter size hail fell for 5 minutes."
+      }
+    ]
+  }
+}

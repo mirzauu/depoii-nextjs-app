@@ -85,7 +85,7 @@ function RoofAgingAgedSkeletonRows() {
             }}
           >
             {/* Checkbox */}
-            <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)]">
+            <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)]">
               <div
                 style={{ animationDelay: delay }}
                 className="size-3.5 mx-auto rounded border border-neutral-300 dark:border-neutral-700 bg-neutral-200/70 dark:bg-neutral-800/80 animate-pulse"
@@ -93,7 +93,7 @@ function RoofAgingAgedSkeletonRows() {
             </td>
 
             {/* Address (Sticky Left) */}
-            <td className="sticky left-12 z-10 bg-[#171714] px-4 py-2 h-14 align-middle whitespace-nowrap min-w-[300px]">
+            <td className="sticky left-12 z-10 bg-background dark:bg-[#171714] px-4 py-2 h-14 align-middle whitespace-nowrap min-w-[300px]">
               <div
                 style={{ animationDelay: delay }}
                 className={`h-4 rounded bg-neutral-200 dark:bg-neutral-800/90 animate-pulse ${row.addrW}`}
@@ -717,9 +717,9 @@ export default function RoofAgingPage() {
   }
 
   return (
-    <div data-tour="roof-aging-container" className="flex h-[calc(100vh-3.5rem)] flex-col bg-[#171714] text-[#FAFAF8] overflow-hidden font-sans text-xs select-none">
+    <div data-tour="roof-aging-container" className="flex h-[calc(100vh-3.5rem)] flex-col bg-background text-foreground overflow-hidden font-sans text-xs select-none">
       {/* Top Header Section - Fixed */}
-      <div className="shrink-0 border-b border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-3.5 z-20 text-[#FAFAF8]">
+      <div className="shrink-0 border-b border-border bg-background px-5 py-3.5 z-20 text-foreground">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-0.5">
             <div className="flex items-center gap-3">
@@ -776,7 +776,7 @@ export default function RoofAgingPage() {
       )}
 
       {/* Action & Filter Sub-Bar - Fixed */}
-      <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-2.5 text-xs z-20 text-[#FAFAF8]">
+      <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background px-5 py-2.5 text-xs z-20 text-foreground">
         {/* Left Side: Toggle Sidebar & Search */}
         <div className="flex items-center gap-2.5">
           <button
@@ -846,10 +846,10 @@ export default function RoofAgingPage() {
       <div className="flex flex-1 min-h-0 overflow-hidden">
         {/* Left Filter Sidebar - Fixed */}
         {!hideFilters && (
-          <aside className="w-80 shrink-0 border-r border-[rgba(250,250,248,0.08)] bg-[#171714] text-[#B9B9B2] flex flex-col justify-between overflow-hidden">
+          <aside className="w-80 shrink-0 border-r border-border bg-background text-muted-foreground flex flex-col justify-between overflow-hidden">
             <div className="flex-1 overflow-y-auto p-4 space-y-4 [scrollbar-width:thin]">
               {/* Segmented Count Tabs: Aged vs Never */}
-              <div className="grid grid-cols-2 gap-1 rounded-lg border border-[rgba(250,250,248,0.08)] bg-[#1F1F1B] p-0.5 text-center">
+              <div className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-muted/60 p-0.5 text-center">
                 <button
                   type="button"
                   onClick={() => {
@@ -888,7 +888,7 @@ export default function RoofAgingPage() {
               {/* Accordion Filter Items */}
               <div className="space-y-2.5">
                 {/* 1. Jurisdiction / Location */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("jurisdiction")}
@@ -1006,7 +1006,7 @@ export default function RoofAgingPage() {
                 </div>
 
                 {/* 2. Permit History Filter (Permit vs No Permit) */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("permit")}
@@ -1066,7 +1066,7 @@ export default function RoofAgingPage() {
                 </div>
 
                 {/* 3. Minimum Roof Age */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("age")}
@@ -1114,7 +1114,7 @@ export default function RoofAgingPage() {
 
                 {/* 3. Risk Tier (Aged Cohort Only) */}
                 {record === "aged" && (
-                  <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                  <div className="rounded-lg border border-border bg-card p-2.5">
                     <button
                       type="button"
                       onClick={() => toggleSection("risk")}
@@ -1167,7 +1167,7 @@ export default function RoofAgingPage() {
 
                 {/* 4. Min Historical Value (Aged Cohort Only) */}
                 {record === "aged" && (
-                  <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                  <div className="rounded-lg border border-border bg-card p-2.5">
                     <button
                       type="button"
                       onClick={() => toggleSection("value")}
@@ -1209,7 +1209,7 @@ export default function RoofAgingPage() {
 
                 {/* 5. Owner Scope (Dark Market / Never Only) */}
                 {record === "never" && (
-                  <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                  <div className="rounded-lg border border-border bg-card p-2.5">
                     <button
                       type="button"
                       onClick={() => toggleSection("owner")}
@@ -1268,11 +1268,11 @@ export default function RoofAgingPage() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="border-t border-[rgba(250,250,248,0.08)] p-3 bg-[#171714]">
+            <div className="border-t border-border p-3 bg-sidebar">
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="w-full rounded-md border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-3 py-2 text-xs font-medium text-[#FAFAF8] hover:bg-[#23231E] transition-colors cursor-pointer select-none"
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer select-none"
               >
                 Clear All Filters
               </button>
@@ -1369,9 +1369,9 @@ export default function RoofAgingPage() {
               ) : (
                 <table className="w-full min-w-max border-collapse text-left text-xs">
                   {/* Sticky Table Header */}
-                  <thead className="apollo-th sticky top-0 z-20 bg-[#171714] text-[#B9B9B2] font-medium text-[11px] uppercase tracking-wider border-b border-[rgba(250,250,248,0.08)]">
+                  <thead className="apollo-th sticky top-0 z-20 bg-background dark:bg-[#171714] text-muted-foreground font-medium text-[11px] uppercase tracking-wider border-b border-border">
                     <tr>
-                      <th className="w-12 px-4 py-2.5 text-center sticky left-0 z-20 bg-[#171714]">
+                      <th className="w-12 px-4 py-2.5 text-center sticky left-0 z-20 bg-background dark:bg-[#171714]">
                         <button
                           type="button"
                           onClick={toggleSelectAll}
@@ -1386,7 +1386,7 @@ export default function RoofAgingPage() {
                           )}
                         </button>
                       </th>
-                      <th className="sticky left-12 z-20 bg-[#171714] px-4 py-2.5 min-w-[300px] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider">
+                      <th className="sticky left-12 z-20 bg-background dark:bg-[#171714] px-4 py-2.5 min-w-[300px] text-muted-foreground uppercase text-[11px] font-medium tracking-wider">
                         Address
                       </th>
                       <th className="px-4 py-2.5 text-right min-w-[90px]">Age</th>
@@ -1414,14 +1414,14 @@ export default function RoofAgingPage() {
                         <tr
                           key={r.id}
                           className={cn(
-                            "apollo-row h-14 group border-b border-[rgba(250,250,248,0.06)] transition-colors cursor-pointer",
+                            "apollo-row h-14 group border-b border-border transition-colors cursor-pointer",
                             isSelected
-                              ? "bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                              : "bg-[#171714] hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                              ? "bg-muted/80 hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                              : "bg-background hover:bg-muted/50 dark:bg-[#171714] dark:hover:bg-[rgb(35,35,30)] text-foreground"
                           )}
                         >
                           {/* Selection Checkbox */}
-                          <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)]">
+                          <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)]">
                             <button
                               type="button"
                               onClick={() => toggleSelectOne(r.id)}
@@ -1436,7 +1436,7 @@ export default function RoofAgingPage() {
                           </td>
 
                           {/* Address (Sticky Left) */}
-                          <td className="sticky left-12 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)] px-4 py-2 h-14 align-middle text-[12px] font-medium min-w-[300px] text-[#FAFAF8]">
+                          <td className="sticky left-12 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)] px-4 py-2 h-14 align-middle text-[12px] font-medium min-w-[300px] text-foreground">
                             <div className="flex items-center gap-1.5 flex-wrap max-w-[260px]">
                               <button
                                 type="button"
@@ -1644,9 +1644,9 @@ export default function RoofAgingPage() {
               ) : (
                 <table className="w-full min-w-max border-collapse text-left text-xs">
                   {/* Sticky Table Header */}
-                  <thead className="apollo-th sticky top-0 z-20 bg-[#171714] text-[#B9B9B2] font-medium text-[11px] uppercase tracking-wider border-b border-[rgba(250,250,248,0.08)]">
+                  <thead className="apollo-th sticky top-0 z-20 bg-background dark:bg-[#171714] text-muted-foreground font-medium text-[11px] uppercase tracking-wider border-b border-border">
                     <tr>
-                      <th className="w-12 px-4 py-2.5 text-center sticky left-0 z-20 bg-[#171714]">
+                      <th className="w-12 px-4 py-2.5 text-center sticky left-0 z-20 bg-background dark:bg-[#171714]">
                         <button
                           type="button"
                           onClick={toggleSelectAll}
@@ -1661,7 +1661,7 @@ export default function RoofAgingPage() {
                           )}
                         </button>
                       </th>
-                      <th className="sticky left-12 z-20 bg-[#171714] px-4 py-2.5 min-w-[300px] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider">
+                      <th className="sticky left-12 z-20 bg-background dark:bg-[#171714] px-4 py-2.5 min-w-[300px] text-muted-foreground uppercase text-[11px] font-medium tracking-wider">
                         Address
                       </th>
                       <th className="px-4 py-2.5 min-w-[260px]">Owner / Entity</th>
@@ -1688,14 +1688,14 @@ export default function RoofAgingPage() {
                         <tr
                           key={p.parcelId}
                           className={cn(
-                            "apollo-row h-14 group border-b border-[rgba(250,250,248,0.06)] transition-colors cursor-pointer",
+                            "apollo-row h-14 group border-b border-border transition-colors cursor-pointer",
                             isSelected
-                              ? "bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                              : "bg-[#171714] hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                              ? "bg-muted/80 hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                              : "bg-background hover:bg-muted/50 dark:bg-[#171714] dark:hover:bg-[rgb(35,35,30)] text-foreground"
                           )}
                         >
                           {/* Selection Checkbox */}
-                          <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)]">
+                          <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)]">
                             <button
                               type="button"
                               onClick={() => toggleSelectOne(p.parcelId)}
@@ -1710,7 +1710,7 @@ export default function RoofAgingPage() {
                           </td>
 
                           {/* Address (Sticky Left) */}
-                          <td className="sticky left-12 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)] px-4 py-2 h-14 align-middle text-[12px] font-medium min-w-[300px] text-[#FAFAF8]">
+                          <td className="sticky left-12 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)] px-4 py-2 h-14 align-middle text-[12px] font-medium min-w-[300px] text-foreground">
                             <div className="flex items-center gap-1.5 flex-wrap max-w-[260px]">
                               <button
                                 type="button"
@@ -1916,10 +1916,10 @@ export default function RoofAgingPage() {
           </div>
 
           {/* Bottom Pagination Bar - Fixed */}
-          <div className="shrink-0 flex items-center justify-between border-t border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-3 text-xs text-[#B9B9B2] z-10">
+          <div className="shrink-0 flex items-center justify-between border-t border-border bg-background px-5 py-3 text-xs text-muted-foreground z-10">
             <div>
               {isLoading ? (
-                <div className="flex items-center gap-2 text-[#FAFAF8]">
+                <div className="flex items-center gap-2 text-foreground">
                   <span className="size-2 rounded-full bg-[#B4E4D6] animate-ping" />
                   <span className="font-medium text-xs">Streaming {jurisdiction} roof aging alarms...</span>
                 </div>
@@ -1928,7 +1928,7 @@ export default function RoofAgingPage() {
                   <span>
                     {isLocked ? "0 of 0 roofs" : `${from}–${to} of ${num(total)} roofs`}
                   </span>
-                  <span className="text-[#B9B9B2] ml-2 hidden sm:inline">
+                  <span className="text-muted-foreground ml-2 hidden sm:inline">
                     · Territory: {isLocked ? zoneNameDisplay : jurisdiction}
                   </span>
                 </>
@@ -1936,14 +1936,14 @@ export default function RoofAgingPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[#B9B9B2] mr-2">
+              <span className="text-muted-foreground mr-2">
                 {isLoading ? "..." : isLocked ? "1 / 1" : `Page ${pageIndex + 1} of ${pageCount}`}
               </span>
               <button
                 type="button"
                 disabled={isLoading || isLocked || pageIndex === 0}
                 onClick={() => setOffset(Math.max(0, offset - LIMIT))}
-                className="rounded border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-2.5 py-1 text-[#FAFAF8] hover:bg-[#23231E] disabled:opacity-30 transition-colors cursor-pointer select-none"
+                className="rounded border border-border bg-background px-2.5 py-1 text-foreground hover:bg-muted disabled:opacity-30 transition-colors cursor-pointer select-none"
               >
                 Previous
               </button>
@@ -1951,7 +1951,7 @@ export default function RoofAgingPage() {
                 type="button"
                 disabled={isLoading || isLocked || pageIndex >= pageCount - 1}
                 onClick={() => setOffset(offset + LIMIT)}
-                className="rounded border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-2.5 py-1 text-[#FAFAF8] hover:bg-[#23231E] disabled:opacity-30 transition-colors cursor-pointer select-none"
+                className="rounded border border-border bg-background px-2.5 py-1 text-foreground hover:bg-muted disabled:opacity-30 transition-colors cursor-pointer select-none"
               >
                 Next
               </button>

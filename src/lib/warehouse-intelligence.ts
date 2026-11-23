@@ -164,16 +164,25 @@ export async function leadDossier(parcelId: string) {
   const strippedId = parcelId.replace(/^DCAD-PARCEL-/i, "");
   const prefixedId = parcelId.startsWith("DCAD-PARCEL-") ? parcelId : `DCAD-PARCEL-${parcelId}`;
 
-  const r = await queryOne(
+  let r = await queryOne(
     `select l.*, p.building_sqft as parcel_sqft, p.year_built as parcel_year_built
      from warehouse.scored_parcel_leads l
      left join warehouse.parcels p on (p.id = l.parcel_id or p.account_number = l.parcel_id)
-     where l.parcel_id = $1 or l.parcel_id = $2 or l.parcel_id = $3
-        or p.id = $1 or p.id = $2 or p.id = $3
-        or p.account_number = $1 or p.account_number = $2 or p.account_number = $3
+     where l.parcel_id in ($1, $2, $3)
      limit 1`,
     [rawId, strippedId, prefixedId]
   );
+
+  if (!r) {
+    r = await queryOne(
+      `select l.*, p.building_sqft as parcel_sqft, p.year_built as parcel_year_built
+       from warehouse.parcels p
+       inner join warehouse.scored_parcel_leads l on (l.parcel_id = p.id or l.parcel_id = p.account_number)
+       where p.id in ($1, $2, $3) or p.account_number in ($1, $2, $3)
+       limit 1`,
+      [rawId, strippedId, prefixedId]
+    );
+  }
 
   if (r) {
     let evidence: Record<string, unknown> = {};
@@ -208,9 +217,8 @@ export async function leadDossier(parcelId: string) {
   const p = await queryOne(
     `select p.*, lc.decision_maker_name, lc.decision_maker_title, lc.organization_name, lc.website_url, lc.phone_number, lc.email_address
      from warehouse.parcels p
-     left join warehouse.lead_contacts lc on (lc.parcel_id = p.id or lc.parcel_id = p.account_number)
-     where p.id = $1 or p.id = $2 or p.id = $3
-        or p.account_number = $1 or p.account_number = $2 or p.account_number = $3
+     left join warehouse.lead_contacts lc on (lc.parcel_id = p.id or lc.account_number = p.account_number)
+     where p.id in ($1, $2, $3) or p.account_number in ($1, $2, $3)
      limit 1`,
     [rawId, strippedId, prefixedId]
   );

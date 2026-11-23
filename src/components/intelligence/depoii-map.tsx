@@ -17,7 +17,9 @@ export interface MapPoint {
   title: string;
 }
 
-const BASE_STYLE = "https://tiles.openfreemap.org/styles/dark";
+const BASE_STYLE_DARK = "https://tiles.openfreemap.org/styles/dark";
+const BASE_STYLE_LIGHT = "https://tiles.openfreemap.org/styles/positron";
+const getBaseStyle = () => (typeof document !== "undefined" && document.documentElement.classList.contains("dark")) ? BASE_STYLE_DARK : BASE_STYLE_LIGHT;
 
 function swathData(storm: Storm | null) {
   if (!storm) return featureCollection([]);
@@ -79,7 +81,7 @@ export function DepoiiMap({
         if (cancelled || !el.current) return;
         // Turbopack does not place maplibre-gl-worker.mjs next to the bundled chunk, so the default worker URL 404s.
         maplibregl.setWorkerUrl("/vendor/maplibre/maplibre-gl-worker.mjs");
-        const m = new maplibregl.Map({ container: el.current, style: BASE_STYLE, center: [-97.33, 32.75], zoom: 10, attributionControl: { compact: true } });
+        const m = new maplibregl.Map({ container: el.current, style: getBaseStyle(), center: [-97.33, 32.75], zoom: 10, attributionControl: { compact: true } });
         map.current = m;
         m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
         m.on("error", (event) => {

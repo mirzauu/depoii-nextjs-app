@@ -130,9 +130,9 @@ export default function ContractorsBrowsePage() {
   const pageCount = Math.max(1, Math.ceil(total / LIMIT));
 
   return (
-    <div className="flex h-[calc(100dvh-53px)] max-h-[calc(100dvh-53px)] flex-col bg-[#171714] text-[#FAFAF8] antialiased font-sans overflow-hidden">
+    <div className="flex h-[calc(100dvh-53px)] max-h-[calc(100dvh-53px)] flex-col bg-background text-foreground antialiased font-sans overflow-hidden">
       {/* Top Header Row - Fixed */}
-      <div className="shrink-0 border-b border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-3 z-20 shrink-0 text-[#FAFAF8]">
+      <div className="shrink-0 border-b border-border bg-background px-5 py-3 z-20 shrink-0 text-foreground">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-0.5">
             <div className="flex items-center gap-3">
@@ -155,7 +155,7 @@ export default function ContractorsBrowsePage() {
       </div>
 
       {/* Action & Filter Sub-Bar - Fixed */}
-      <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-2.5 text-xs z-20 shrink-0 text-[#FAFAF8]">
+      <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background px-5 py-2.5 text-xs z-20 shrink-0 text-foreground">
         {/* Left Side: Toggle Sidebar & Search */}
         <div className="flex items-center gap-2.5">
           <button
@@ -230,10 +230,10 @@ export default function ContractorsBrowsePage() {
       <div className="flex flex-1 min-h-0 overflow-hidden relative">
         {/* Left Filter Sidebar */}
         {!hideFilters && (
-          <aside className="w-80 shrink-0 border-r border-[rgba(250,250,248,0.08)] bg-[#171714] text-[#B9B9B2] flex flex-col justify-between overflow-hidden">
+          <aside className="w-80 shrink-0 border-r border-border bg-background text-muted-foreground flex flex-col justify-between overflow-hidden">
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {/* Segmented Filter Pills */}
-              <div className="flex rounded-lg border border-[rgba(250,250,248,0.08)] bg-[#1F1F1B] p-1 text-xs">
+              <div className="flex rounded-lg border border-border bg-[#1F1F1B] p-1 text-xs">
                 <button
                   type="button"
                   onClick={() => {
@@ -285,7 +285,7 @@ export default function ContractorsBrowsePage() {
               {/* Accordion Filter Cards */}
               <div className="space-y-2 text-xs">
                 {/* 1. Jurisdiction */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("jurisdiction")}
@@ -344,7 +344,7 @@ export default function ContractorsBrowsePage() {
                 </div>
 
                 {/* 2. Roof System */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("roof")}
@@ -380,7 +380,7 @@ export default function ContractorsBrowsePage() {
                 </div>
 
                 {/* 3. Min Permits */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("permits")}
@@ -427,7 +427,7 @@ export default function ContractorsBrowsePage() {
                 </div>
 
                 {/* 4. Min Valuation */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("volume")}
@@ -474,7 +474,7 @@ export default function ContractorsBrowsePage() {
                 </div>
 
                 {/* 5. Contact Details */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("contact")}
@@ -530,11 +530,11 @@ export default function ContractorsBrowsePage() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="border-t border-[rgba(250,250,248,0.08)] p-3 bg-[#171714]">
+            <div className="border-t border-border p-3 bg-sidebar">
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="w-full rounded-md border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-3 py-2 text-xs font-medium text-[#FAFAF8] hover:bg-[#23231E] transition-colors cursor-pointer select-none"
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer select-none"
               >
                 Clear All Filters
               </button>
@@ -543,7 +543,7 @@ export default function ContractorsBrowsePage() {
         )}
 
         {/* Right Table Container */}
-        <main className="min-w-0 flex-1 flex flex-col justify-between overflow-x-auto bg-[#171714] text-[#FAFAF8]">
+        <main className="min-w-0 flex-1 flex flex-col justify-between overflow-x-auto bg-background text-foreground">
           {/* Table Scroll Area */}
           <div className="min-w-0 flex-1 overflow-auto relative">
             {page.loading && !page.data ? (
@@ -566,9 +566,9 @@ export default function ContractorsBrowsePage() {
               </div>
             ) : (
               <table className="w-full min-w-max text-left text-xs border-collapse">
-                <thead className="sticky top-0 z-20 bg-[#171714]">
-                  <tr className="apollo-th h-[39px] border-b border-[rgba(250,250,248,0.08)] bg-[#171714] text-[11px] font-medium uppercase tracking-wider text-[#B9B9B2]">
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
+                <thead className="sticky top-0 z-20 bg-background dark:bg-[#171714]">
+                  <tr className="apollo-th h-[39px] border-b border-border bg-background text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
                       <input
                         type="checkbox"
                         checked={allSelected}
@@ -578,19 +578,19 @@ export default function ContractorsBrowsePage() {
                         className="size-3.5 rounded border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground dark:text-white focus:ring-0 cursor-pointer disabled:opacity-40"
                       />
                     </th>
-                    <th className="sticky left-12 top-0 z-30 bg-[#171714] px-4 py-2.5 font-medium text-[#B9B9B2] whitespace-nowrap border-b border-[rgba(250,250,248,0.08)] uppercase text-[11px] tracking-wider min-w-[340px]">
+                    <th className="sticky left-12 top-0 z-30 bg-background dark:bg-[#171714] px-4 py-2.5 font-medium text-muted-foreground whitespace-nowrap border-b border-border uppercase text-[11px] tracking-wider min-w-[340px]">
                       Contractor
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[260px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[260px]">
                       Roof System
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 text-right whitespace-nowrap min-w-[130px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 text-right whitespace-nowrap min-w-[130px]">
                       Permits
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 text-right whitespace-nowrap min-w-[150px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 text-right whitespace-nowrap min-w-[150px]">
                       Market Share
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[160px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[160px]">
                       Total Volume
                     </th>
                   </tr>
@@ -603,14 +603,14 @@ export default function ContractorsBrowsePage() {
                         key={c.id}
                         onClick={() => router.push(`/contractors/${encodeURIComponent(c.name)}`)}
                         className={cn(
-                          "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-[rgba(250,250,248,0.06)]",
+                          "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-border",
                           isRowSelected
-                            ? "bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                            : "bg-[#171714] hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                            ? "bg-muted/80 hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                            : "bg-background hover:bg-muted/50 dark:bg-[#171714] dark:hover:bg-[rgb(35,35,30)] text-foreground"
                         )}
                       >
                         {/* Checkbox with active row indicator */}
-                        <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)]">
+                        <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)]">
                           <input
                             type="checkbox"
                             checked={isRowSelected}
@@ -625,8 +625,8 @@ export default function ContractorsBrowsePage() {
                         <td className={cn(
                           "sticky left-12 z-10 px-4 py-2 h-14 align-middle text-[12px] font-medium whitespace-nowrap min-w-[340px] transition-colors duration-150",
                           isRowSelected
-                            ? "bg-[rgba(255,255,255,0.06)] group-hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                            : "bg-[#171714] group-hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                            ? "bg-muted/80 group-hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:group-hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                            : "bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)] text-foreground"
                         )}>
                         <div className="flex items-center gap-2.5">
                           <RealLogo
@@ -641,27 +641,27 @@ export default function ContractorsBrowsePage() {
                             }
                           />
                           <div className="min-w-0">
-                            <span className="font-semibold text-[#FAFAF8] group-hover:text-amber-300 transition-colors block truncate">
+                            <span className="font-semibold text-foreground group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors block truncate">
                               {c.name}
                             </span>
                             {(c.phone || c.hq) && (
-                              <p className="mt-0.5 max-w-sm truncate text-[11px] text-[#B9B9B2]">
+                              <p className="mt-0.5 max-w-sm truncate text-[11px] text-muted-foreground">
                                 {[c.phone, c.hq].filter(Boolean).join(" · ")}
                               </p>
                             )}
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[260px] whitespace-nowrap text-[#FAFAF8]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[260px] whitespace-nowrap text-foreground">
                         {c.roofSystem || "—"}
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[130px] text-right font-mono tabular-nums whitespace-nowrap font-medium text-[#FAFAF8]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[130px] text-right font-mono tabular-nums whitespace-nowrap font-medium text-foreground">
                         {num(c.permits)}
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[150px] text-right font-mono tabular-nums whitespace-nowrap text-[#B9B9B2]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[150px] text-right font-mono tabular-nums whitespace-nowrap text-muted-foreground">
                         {c.share > 0 ? pct(c.share, 1) : "—"}
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[160px] pr-4 text-right font-mono tabular-nums whitespace-nowrap font-semibold text-[#FAFAF8]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[160px] pr-4 text-right font-mono tabular-nums whitespace-nowrap font-semibold text-foreground">
                         {c.valuationLabel || (c.valuation ? usd(c.valuation, true) : "—")}
                       </td>
                     </tr>
@@ -673,22 +673,22 @@ export default function ContractorsBrowsePage() {
           </div>
 
           {/* Bottom Fixed Pagination Bar */}
-          <div className="shrink-0 flex items-center justify-between border-t border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-3 text-xs text-[#B9B9B2] z-10">
+          <div className="shrink-0 flex items-center justify-between border-t border-border bg-background px-5 py-3 text-xs text-muted-foreground z-10">
             <div>
               <span>
-                Showing <strong className="text-[#FAFAF8] font-medium">{from}–{to}</strong> of <strong className="text-[#FAFAF8] font-medium">{num(total)}</strong> records
+                Showing <strong className="text-foreground font-medium">{from}–{to}</strong> of <strong className="text-foreground font-medium">{num(total)}</strong> records
               </span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[#B9B9B2] mr-2">
+              <span className="text-muted-foreground mr-2">
                 Page {pageIndex + 1} of {pageCount}
               </span>
               <button
                 type="button"
                 disabled={offset === 0}
                 onClick={() => setOffset(Math.max(0, offset - LIMIT))}
-                className="rounded border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-2.5 py-1 text-[#FAFAF8] hover:bg-[#23231E] disabled:opacity-30 cursor-pointer select-none transition-colors"
+                className="rounded border border-border bg-background px-2.5 py-1 text-foreground hover:bg-muted disabled:opacity-30 cursor-pointer select-none transition-colors"
               >
                 Previous
               </button>
@@ -696,7 +696,7 @@ export default function ContractorsBrowsePage() {
                 type="button"
                 disabled={offset + LIMIT >= total}
                 onClick={() => setOffset(offset + LIMIT)}
-                className="rounded border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-2.5 py-1 text-[#FAFAF8] hover:bg-[#23231E] disabled:opacity-30 cursor-pointer select-none transition-colors"
+                className="rounded border border-border bg-background px-2.5 py-1 text-foreground hover:bg-muted disabled:opacity-30 cursor-pointer select-none transition-colors"
               >
                 Next
               </button>

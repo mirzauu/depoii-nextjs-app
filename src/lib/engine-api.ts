@@ -576,9 +576,20 @@ export interface EngineParcel {
   source: string;
   lat: number | null;
   lng: number | null;
+  sourceLinks?: {
+    dcad?: string;
+    accela?: string;
+    tad?: string;
+    [key: string]: string | undefined;
+  };
+  cadUrl?: string;
+  accelaUrl?: string;
 }
 
 export function mapParcel(row: Row): EngineParcel {
+  const rawLinks = (row.sourceLinks || row.source_links || {}) as Record<string, unknown>;
+  const dcad = typeof rawLinks.dcad === "string" && rawLinks.dcad.startsWith("http") ? rawLinks.dcad : (str(row, ["cadUrl", "cad_url"]) || undefined);
+  const accela = typeof rawLinks.accela === "string" && rawLinks.accela.startsWith("http") ? rawLinks.accela : (str(row, ["accelaUrl", "accela_url"]) || undefined);
   return {
     id: str(row, ["id", "parcelId", "parcel_id"]),
     address: str(row, ["address"]),
@@ -593,6 +604,13 @@ export function mapParcel(row: Row): EngineParcel {
     source: str(row, ["data_source", "dataSource"]),
     lat: coord(row, ["latitude"]),
     lng: coord(row, ["longitude"]),
+    sourceLinks: {
+      ...(typeof rawLinks === "object" ? (rawLinks as Record<string, string>) : {}),
+      ...(dcad ? { dcad } : {}),
+      ...(accela ? { accela } : {}),
+    },
+    cadUrl: dcad,
+    accelaUrl: accela,
   };
 }
 
@@ -675,10 +693,20 @@ export interface BrowseParcel {
   sources?: BrowseSource[];
   mapsUrl?: string;
   cadUrl?: string;
+  accelaUrl?: string;
+  sourceLinks?: {
+    dcad?: string;
+    accela?: string;
+    tad?: string;
+    [key: string]: string | undefined;
+  };
   permitPortalUrl?: string;
 }
 
 export function mapBrowseParcel(row: Row): BrowseParcel {
+  const rawLinks = (row.sourceLinks || row.source_links || {}) as Record<string, unknown>;
+  const dcad = typeof rawLinks.dcad === "string" && rawLinks.dcad.startsWith("http") ? rawLinks.dcad : (str(row, ["cadUrl", "cad_url"]) || undefined);
+  const accela = typeof rawLinks.accela === "string" && rawLinks.accela.startsWith("http") ? rawLinks.accela : (str(row, ["accelaUrl", "accela_url"]) || undefined);
   return {
     id: str(row, ["id", "parcelId", "parcel_id"]),
     address: str(row, ["address"]),
@@ -703,6 +731,13 @@ export function mapBrowseParcel(row: Row): BrowseParcel {
     improvementSections: str(row, ["improvement_sections", "improvementSections"]) || undefined,
     lastReroofDate: str(row, ["last_reroof_date", "lastReroofDate"]) || undefined,
     lastReroofPermitNo: str(row, ["last_reroof_permit_no", "lastReroofPermitNo"]) || undefined,
+    sourceLinks: {
+      ...(typeof rawLinks === "object" ? (rawLinks as Record<string, string>) : {}),
+      ...(dcad ? { dcad } : {}),
+      ...(accela ? { accela } : {}),
+    },
+    cadUrl: dcad,
+    accelaUrl: accela,
   };
 }
 

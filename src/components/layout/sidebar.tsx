@@ -3,14 +3,34 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { Briefcase, Building2, ChevronDown, ChevronsLeft, ChevronsRight, House, Info, Layers, Search, Shield, Trophy, type LucideIcon } from "lucide-react";
+import {
+  Building2,
+  ChevronDown,
+  ChevronsLeft,
+  ChevronsRight,
+  ClipboardCheck,
+  Clock,
+  CloudHail,
+  FileText,
+  Flame,
+  HardHat,
+  House,
+  Landmark,
+  Lock,
+  MapPin,
+  Shield,
+  Trophy,
+  Users,
+  Workflow,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "cn";
 import { DepoiiAiMark, DepoiiMark } from "./depoii-logo";
 import { useMe } from "@/hooks/use-me";
 
-type NavIcon = LucideIcon | React.ComponentType<{ className?: string; title?: string }>;
-type NavLink = { href: string; label: string; match?: string[]; engine?: boolean; badge?: string; disabled?: boolean; permission?: string };
-type NavGroup = { id: string; label: string; icon: NavIcon; items: NavLink[]; match?: string[] };
+type NavIcon = React.ComponentType<any>;
+type NavLink = { href: string; label: string; icon?: NavIcon; match?: string[]; engine?: boolean; badge?: string; disabled?: boolean; permission?: string };
+type NavGroup = { id: string; label: string; icon?: NavIcon; items: NavLink[]; match?: string[] };
 
 export const TOP: (NavLink & { icon: NavIcon })[] = [
   { href: "/", label: "Overview", icon: House, permission: "nav:overview" },
@@ -21,41 +41,39 @@ export const TOP: (NavLink & { icon: NavIcon })[] = [
 export const GROUPS: NavGroup[] = [
   {
     id: "leads",
-    label: "Targets",
-    icon: Briefcase,
+    label: "Leads",
     items: [
-      { href: "/pipeline", label: "Hot Sheet", match: ["/parcels", "/property"], permission: "nav:pipeline" },
-      { href: "/roof-aging", label: "Aging Roof", engine: true, permission: "nav:roof_aging" },
-      { href: "/map", label: "Hail Map", engine: true, permission: "nav:map" },
+      { href: "/pipeline", label: "Hot Sheet", icon: Flame, match: ["/parcels", "/property"], permission: "nav:pipeline" },
+      { href: "/roof-aging", label: "Aging Roof", icon: Clock, engine: true, permission: "nav:roof_aging" },
+      { href: "/map", label: "Hail Map", icon: CloudHail, engine: true, permission: "nav:map" },
     ],
   },
   {
     id: "prospect",
     label: "Prospect and enrich",
-    icon: Search,
     items: [
-      { href: "/permits", label: "Permit", engine: true, permission: "nav:permits" },
-      { href: "/buildings", label: "Building", engine: true, permission: "nav:buildings" },
-      { href: "/contractors", label: "Contractors", match: ["/contractors"], engine: true, permission: "nav:contractors" },
+      { href: "/buildings", label: "Property", icon: Building2, engine: true, permission: "nav:buildings" },
+      { href: "/owners", label: "Owners & REITs", icon: Landmark, engine: true, permission: "nav:owners" },
+      { href: "/contractors", label: "Contractors", icon: HardHat, match: ["/contractors"], engine: true, permission: "nav:contractors" },
+      { href: "/permits", label: "Permit", icon: FileText, engine: true, permission: "nav:permits" },
     ],
   },
   {
     id: "organization",
     label: "Organization",
-    icon: Building2,
     items: [
-      { href: "/territory", label: "Territory Explorer", match: ["/territory"], permission: "nav:territory" },
-      { href: "/claims", label: "My Claims", match: ["/claims"], permission: "nav:claims" },
-      { href: "/outcomes", label: "Field Outcomes", permission: "nav:outcomes" },
-      { href: "/team", label: "Team", permission: "nav:team" },
-      { href: "", label: "CRM", badge: "Soon", disabled: true, permission: "nav:crm" },
+      { href: "/territory", label: "Territory Explorer", icon: MapPin, match: ["/territory"], permission: "nav:territory" },
+      { href: "/claims", label: "My Claims", icon: Lock, match: ["/claims"], permission: "nav:claims" },
+      { href: "/outcomes", label: "Field Outcomes", icon: ClipboardCheck, permission: "nav:outcomes" },
+      { href: "/team", label: "Team", icon: Users, permission: "nav:team" },
+      { href: "", label: "CRM", icon: Workflow, badge: "Soon", disabled: true, permission: "nav:crm" },
     ],
   },
 ];
 
 export const FLAT_NAV: NavLink[] = [...TOP, ...GROUPS.flatMap((g) => g.items)];
 
-export const ENGINE_PATHS = [...TOP.filter((i) => i.engine).map((i) => i.href), ...GROUPS.flatMap((g) => g.items).filter((i) => i.engine).map((i) => i.href), "/territory", "/claims", "/pipeline", "/team", "/outcomes", "/crm", "/buildings", "/settings", "/login", "/admin", "/parcels", "/property", "/contractors", "/jobsites", "/multiphase", "/capital", "/dark-market", "/storm-targets", "/competitors", "/map"];
+export const ENGINE_PATHS = [...TOP.filter((i) => i.engine).map((i) => i.href), ...GROUPS.flatMap((g) => g.items).filter((i) => i.engine).map((i) => i.href), "/territory", "/claims", "/pipeline", "/team", "/outcomes", "/crm", "/buildings", "/settings", "/login", "/admin", "/parcels", "/property", "/contractors", "/jobsites", "/multiphase", "/capital", "/dark-market", "/storm-targets", "/competitors", "/map", "/owners"];
 
 export const SidebarPreview = createContext<{ path: string; go: (href: string) => void } | null>(null);
 
@@ -140,19 +158,19 @@ export function AccountMenu({ collapsed = false }: { collapsed?: boolean }) {
         title={me?.email || "Account"}
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "flex items-center rounded-lg text-[#B9B9B2] hover:bg-white/[0.05] hover:text-[#FAFAF8] transition-colors cursor-pointer",
+          "flex items-center rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors cursor-pointer",
           collapsed ? "size-9 justify-center" : "w-full gap-2.5 px-2.5 py-1.5 text-left",
         )}
       >
-        <div className="size-6 shrink-0 rounded-full bg-[#262621] text-[#FAFAF8] font-semibold text-[11px] flex items-center justify-center border border-white/10">
+        <div className="size-7 shrink-0 rounded-full bg-muted text-foreground font-semibold text-xs flex items-center justify-center border border-border">
           {initial}
         </div>
         {!collapsed && (
           <div className="flex-1 min-w-0">
-            <p className="text-[12px] font-medium text-[#FAFAF8] truncate leading-tight">
+            <p className="text-[13px] font-medium text-sidebar-foreground truncate leading-tight">
               {me?.email ? me.email.split("@")[0] : "Depoii User"}
             </p>
-            <p className="text-[10px] text-[#7D7D75] truncate leading-tight">
+            <p className="text-[11px] text-muted-foreground truncate leading-tight">
               {me?.orgName || "Free Tier"}
             </p>
           </div>
@@ -161,25 +179,25 @@ export function AccountMenu({ collapsed = false }: { collapsed?: boolean }) {
       {open && !preview && (
         <div
           className={cn(
-            "z-50 rounded-xl border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] p-1.5 text-[13px] text-[#FAFAF8] shadow-2xl",
+            "z-50 rounded-xl border border-border bg-popover p-1.5 text-[13px] text-popover-foreground shadow-2xl",
             collapsed
               ? "absolute bottom-0 left-full ml-2 w-56"
               : "absolute bottom-full left-0 mb-2 w-full min-w-[220px]"
           )}
         >
           {/* User Info Header with Email & Workspace */}
-          <div className="px-2.5 py-2 border-b border-[rgba(250,250,248,0.06)]">
+          <div className="px-2.5 py-2 border-b border-border">
             <div className="flex items-center gap-2 mb-1">
-              <div className="size-7 shrink-0 rounded-full bg-[#262621] text-[#FAFAF8] font-semibold text-[11px] flex items-center justify-center border border-white/10">
+              <div className="size-7 shrink-0 rounded-full bg-muted text-foreground font-semibold text-[11px] flex items-center justify-center border border-border">
                 {initial}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[12px] font-medium text-[#FAFAF8] truncate leading-tight">{me?.email || "User"}</p>
-                <p className="text-[10px] text-[#7D7D75] truncate leading-tight mt-0.5">{me?.orgName || "Depoii Workspace"}</p>
+                <p className="text-[12px] font-medium text-popover-foreground truncate leading-tight">{me?.email || "User"}</p>
+                <p className="text-[10px] text-muted-foreground truncate leading-tight mt-0.5">{me?.orgName || "Depoii Workspace"}</p>
               </div>
             </div>
             {me?.platformRole && (
-              <span className="inline-block mt-1 rounded bg-[#FAFAF8]/10 text-[#FAFAF8] text-[9px] font-semibold px-1.5 py-0.5 border border-white/20 uppercase tracking-wider">
+              <span className="inline-block mt-1 rounded bg-muted text-foreground text-[9px] font-semibold px-1.5 py-0.5 border border-border uppercase tracking-wider">
                 {me.platformRole}
               </span>
             )}
@@ -190,26 +208,26 @@ export function AccountMenu({ collapsed = false }: { collapsed?: boolean }) {
             <Link
               href="/settings"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-[#B9B9B2] hover:bg-white/[0.06] hover:text-[#FAFAF8] transition-colors"
+              className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
             >
               <span>Workspace settings</span>
             </Link>
           </div>
 
-          <div className="my-1 border-t border-[rgba(250,250,248,0.06)]" />
+          <div className="my-1 border-t border-border" />
 
           {/* Sign Out Action */}
           <button
             type="button"
             onClick={logout}
-            className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs text-red-400 hover:bg-white/[0.06] hover:text-red-300 transition-colors cursor-pointer"
+            className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
           >
             <span>Sign out</span>
           </button>
         </div>
       )}
       {open && preview && (
-        <div className="absolute bottom-full left-1 z-50 mb-1.5 w-44 rounded-lg border border-[rgba(250,250,248,0.1)] bg-[#1C1C18] p-2 text-xs text-[#7D7D75] shadow-xl">
+        <div className="absolute bottom-full left-1 z-50 mb-1.5 w-44 rounded-lg border border-border bg-popover p-2 text-xs text-muted-foreground shadow-xl">
           Sample workspace. Sign in for your team.
         </div>
       )}
@@ -305,84 +323,101 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed?: boolean } = {
 
   const fade = cn("overflow-hidden whitespace-nowrap transition-opacity duration-150", collapsed ? "opacity-0" : "opacity-100");
   
-  // Apollo item row styling: 28px height (h-7), 13px font, subtle hover, left accent pill on active
-  const rowBase = "group flex w-full items-center gap-2.5 h-7 px-2.5 overflow-hidden rounded-md text-[13px] font-medium whitespace-nowrap text-[#B9B9B2] hover:bg-white/[0.04] hover:text-[#FAFAF8] transition-colors relative";
-  const rowActive = "bg-white/[0.08] text-[#FAFAF8] font-medium shadow-xs before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-[2.5px] before:bg-[#FAFAF8] before:rounded-r";
+  // Apollo item row styling: 32px height (h-8), 13.5px font, subtle hover, left accent pill on active
+  const rowBase = "group flex w-full items-center gap-2.5 h-8 px-2.5 overflow-hidden rounded-md text-[13.5px] font-medium whitespace-nowrap text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors relative";
+  const rowActive = "bg-sidebar-accent text-sidebar-foreground font-medium shadow-xs before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-[2.5px] before:bg-foreground before:rounded-r";
 
   const renderGroup = (group: NavGroup) => {
-    const Icon = group.icon;
     const expanded = !collapsed && !!open[group.id];
-    const here = groupActive(path, group, fromParam);
+    const showItems = collapsed || expanded;
 
     const itemsNode = (
-      <div className={cn("grid transition-[grid-template-rows] duration-200 ease-out", expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
-        <div className="overflow-hidden" inert={!expanded}>
-          <div className="flex flex-col gap-0.5 py-0.5 pl-6">
-            {group.items.map((item) =>
-              item.disabled ? (
-                <div
-                  key={item.label}
-                  title={`${item.label} (Coming Soon)`}
-                  aria-disabled="true"
-                  className="w-full h-7 px-2.5 rounded-md text-left text-[13px] whitespace-nowrap text-[#7D7D75] cursor-not-allowed select-none flex items-center justify-between"
-                >
-                  <span className="truncate">{item.label}</span>
-                  {item.badge && (
-                    <span className="rounded-full border border-white/10 bg-white/5 px-1.5 py-0.2 text-[10px] font-medium text-[#7D7D75]">
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-              ) : (
+      <div className={cn("grid transition-[grid-template-rows] duration-200 ease-out", showItems ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
+        <div className="overflow-hidden" inert={!showItems}>
+          <div className="flex flex-col gap-0.5 py-0.5">
+            {group.items.map((item) => {
+              const ItemIcon = item.icon;
+              const active = isActive(path, item, fromParam);
+              if (item.disabled) {
+                return (
+                  <div
+                    key={item.label}
+                    title={`${item.label} (Coming Soon)`}
+                    aria-disabled="true"
+                    className={cn(
+                      rowBase,
+                      "cursor-not-allowed select-none text-muted-foreground/60 hover:bg-transparent hover:text-muted-foreground/60 justify-between",
+                    )}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      {ItemIcon && <ItemIcon className="size-[17px] shrink-0 text-muted-foreground/60" />}
+                      <span className={cn(fade, "truncate")}>{item.label}</span>
+                    </div>
+                    {item.badge && (
+                      <span className={cn(fade, "rounded-full border border-border bg-muted/60 px-1.5 py-0.2 text-[10px] font-medium text-muted-foreground")}>
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                );
+              }
+              return (
                 <NavTo
                   key={item.href}
                   href={item.href}
+                  title={item.label}
                   className={cn(
-                    "w-full h-7 px-2.5 rounded-md text-left text-[13px] font-medium whitespace-nowrap text-[#B9B9B2] hover:bg-white/[0.04] hover:text-[#FAFAF8] flex items-center justify-between transition-colors relative",
-                    isActive(path, item, fromParam) && "bg-white/[0.08] text-[#FAFAF8] font-medium shadow-xs before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-[2.5px] before:bg-[#FAFAF8] before:rounded-r",
+                    rowBase,
+                    active && rowActive,
+                    "justify-between",
                   )}
                 >
-                  <span className="truncate">{item.label}</span>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    {ItemIcon && (
+                      <ItemIcon
+                        className={cn(
+                          "size-[17px] shrink-0 transition-colors",
+                          active ? "text-sidebar-foreground" : "text-muted-foreground group-hover:text-sidebar-foreground",
+                        )}
+                      />
+                    )}
+                    <span className={cn(fade, "truncate")}>{item.label}</span>
+                  </div>
                   {item.badge && (
-                    <span className="rounded-full border border-white/10 bg-white/5 px-1.5 py-0.2 text-[10px] font-medium text-[#7D7D75]">
+                    <span className={cn(fade, "rounded-full border border-border bg-muted/60 px-1.5 py-0.2 text-[10px] font-medium text-muted-foreground")}>
                       {item.badge}
                     </span>
                   )}
                 </NavTo>
-              ),
-            )}
+              );
+            })}
           </div>
         </div>
       </div>
     );
 
-    const buttonNode = (
+    const buttonNode = !collapsed ? (
       <button
         type="button"
         onClick={() => onGroup(group.id)}
         title={group.label}
         aria-expanded={expanded}
-        className={cn(
-          rowBase,
-          "text-[#8E8E86] font-semibold text-[12px] uppercase tracking-wider",
-          collapsed && here && rowActive,
-          !collapsed && here && "text-[#FAFAF8]",
-        )}
+        className="group flex w-full items-center justify-between h-7.5 px-2.5 overflow-hidden rounded-md text-[11.5px] font-semibold uppercase tracking-wider text-muted-foreground hover:text-sidebar-foreground transition-colors cursor-pointer select-none"
       >
-        <Icon className="size-4 shrink-0 text-[#8E8E86] group-hover:text-[#FAFAF8] transition-colors" />
         <span className={cn(fade, "flex-1 text-left truncate")}>{group.label}</span>
         <ChevronDown
           className={cn(
-            "size-3 shrink-0 text-[#7D7D75] transition-transform duration-200",
+            "size-3.5 shrink-0 text-muted-foreground transition-transform duration-200",
             expanded ? "rotate-180" : "rotate-0",
-            collapsed && "opacity-0",
           )}
         />
       </button>
+    ) : (
+      <div className="my-1 border-t border-sidebar-border" />
     );
 
     return (
-      <div key={group.id} className="flex flex-col">
+      <div key={group.id} className="flex flex-col mt-2 first:mt-0">
         {buttonNode}
         {itemsNode}
       </div>
@@ -390,8 +425,8 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed?: boolean } = {
   };
 
   return (
-    <aside className={cn("sticky top-0 z-40 hidden h-screen shrink-0 flex-col border-r border-[rgba(250,250,248,0.08)] bg-[#171714] text-[#B9B9B2] transition-[width] duration-200 ease-out lg:flex print:hidden", preview && "flex! h-full", collapsed ? "w-16" : "w-[240px]")}>
-      <div className="h-12 flex items-center gap-2 px-3.5 border-b border-[rgba(250,250,248,0.06)]">
+    <aside className={cn("sticky top-0 z-40 hidden h-screen shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200 ease-out lg:flex print:hidden", preview && "flex! h-full", collapsed ? "w-16" : "w-[248px]")}>
+      <div className="h-12 flex items-center gap-2 px-3.5 border-b border-sidebar-border">
         <NavTo
           href="/"
           title="Depoii"
@@ -402,69 +437,70 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed?: boolean } = {
             logoTimer.current = window.setTimeout(() => setLogoOn(false), 1000);
           }}
         >
-          <DepoiiMark animated={logoOn} className="size-6 text-[#FAFAF8]" />
-          <span className={cn(fade, "text-[14px] font-semibold tracking-tight text-[#FAFAF8]")}>Depoii</span>
+          <DepoiiMark animated={logoOn} className="size-6 text-sidebar-foreground" />
+          <span className={cn(fade, "text-[15px] font-semibold tracking-tight text-sidebar-foreground")}>Depoii</span>
         </NavTo>
         {!collapsed && (
-          <button type="button" onClick={() => setRail(true)} title="Collapse sidebar" className="ml-auto rounded-md p-1 text-[#7D7D75] hover:bg-white/[0.04] hover:text-[#FAFAF8] transition-colors cursor-pointer">
+          <button type="button" onClick={() => setRail(true)} title="Collapse sidebar" className="ml-auto rounded-md p-1 text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors cursor-pointer">
             <ChevronsLeft className="size-3.5" />
           </button>
         )}
       </div>
       {collapsed && (
-        <button type="button" onClick={() => setRail(false)} title="Expand sidebar" className="mx-auto my-2 rounded-md p-1 text-[#7D7D75] hover:bg-white/[0.04] hover:text-[#FAFAF8] transition-colors cursor-pointer">
+        <button type="button" onClick={() => setRail(false)} title="Expand sidebar" className="mx-auto my-2 rounded-md p-1 text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors cursor-pointer">
           <ChevronsRight className="size-3.5" />
         </button>
       )}
 
-      <nav data-tour="sidebar-nav" className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-2 py-2 [scrollbar-width:thin] [scrollbar-color:#292925_transparent]">
+      <nav data-tour="sidebar-nav" className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-2 py-2">
         {/* Top items (Overview, Leaderboard, AI Assistant) with increased spacing */}
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-1">
           {visibleTop.map((link) => {
-          const Icon = link.icon;
-          if (link.disabled) {
-            return (
-              <div
-                key={link.label}
-                title={`${link.label} (Coming Soon)`}
-                aria-disabled="true"
-                className={cn(rowBase, "cursor-not-allowed select-none text-[#7D7D75] hover:bg-transparent hover:text-[#7D7D75] justify-between")}
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Icon className={cn("size-4 shrink-0", link.label === "AI Assistant" ? "text-[#FF9C6D]" : "text-[#7D7D75]")} />
-                  <span className={fade}>{link.label}</span>
+            const Icon = link.icon;
+            if (!Icon) return null;
+            if (link.disabled) {
+              return (
+                <div
+                  key={link.label}
+                  title={`${link.label} (Coming Soon)`}
+                  aria-disabled="true"
+                  className={cn(rowBase, "cursor-not-allowed select-none text-muted-foreground/60 hover:bg-transparent hover:text-muted-foreground/60 justify-between")}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Icon className={cn("size-[17px] shrink-0", link.label === "AI Assistant" ? "text-[#FF9C6D]" : "text-muted-foreground/60")} />
+                    <span className={fade}>{link.label}</span>
+                  </div>
+                  {link.badge && (
+                    <span className={cn(fade, "rounded-full border border-border bg-muted/60 px-1.5 py-0.2 text-[10px] font-medium text-muted-foreground")}>
+                      {link.badge}
+                    </span>
+                  )}
                 </div>
-                {link.badge && (
-                  <span className={cn(fade, "rounded-full border border-white/10 bg-white/5 px-1.5 py-0.2 text-[10px] font-medium text-[#7D7D75]")}>
-                    {link.badge}
-                  </span>
-                )}
-              </div>
+              );
+            }
+            return (
+              <NavTo key={link.href} href={link.href} title={link.label} className={cn(rowBase, isActive(path, link, fromParam) && rowActive)}>
+                <Icon className="size-[17px] shrink-0 text-muted-foreground group-hover:text-sidebar-foreground transition-colors" />
+                <span className={fade}>{link.label}</span>
+              </NavTo>
             );
-          }
-          return (
-            <NavTo key={link.href} href={link.href} title={link.label} className={cn(rowBase, isActive(path, link, fromParam) && rowActive)}>
-              <Icon className="size-4 shrink-0 text-[#B9B9B2] group-hover:text-[#FAFAF8] transition-colors" />
-              <span className={fade}>{link.label}</span>
-            </NavTo>
-          );
-        })}
+          })}
         </div>
 
-        {visibleGroups.length > 0 && <div className="my-2 border-t border-[rgba(250,250,248,0.06)]" />}
+        {visibleGroups.length > 0 && <div className="my-2 border-t border-sidebar-border" />}
 
         {visibleGroups.map((g) => renderGroup(g))}
 
         {navReady && me?.platformRole === "superadmin" && (
-          <div className="mt-auto border-t border-[rgba(250,250,248,0.06)] pt-2">
+          <div className="mt-auto border-t border-sidebar-border pt-2">
             <NavTo href={adminLink.href} title={adminLink.label} className={cn(rowBase, isActive(path, adminLink, fromParam) && rowActive)}>
-              <Shield className="size-4 shrink-0 text-[#B9B9B2] group-hover:text-[#FAFAF8] transition-colors" />
+              <Shield className="size-[17px] shrink-0 text-muted-foreground group-hover:text-sidebar-foreground transition-colors" />
               <span className={fade}>{adminLink.label}</span>
             </NavTo>
           </div>
         )}
       </nav>
-      <div className="border-t border-[rgba(250,250,248,0.06)] p-2 flex flex-col gap-0.5">
+      <div className="border-t border-sidebar-border p-2 flex flex-col gap-0.5">
         <AccountMenu collapsed={collapsed} />
       </div>
     </aside>

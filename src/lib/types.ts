@@ -99,6 +99,11 @@ export interface Parcel {
   permitSource?: "attom" | "engine";
   owner: string;
   ownerAddress: string;
+  canonicalOwnerId?: string;
+  hvacAgeYears?: number;
+  lastHvacDate?: string;
+  solarInstalled?: boolean;
+  pavingAgeYears?: number;
   recordUrl: string;
   /** Filled for the selected storm before the payload leaves the server. */
   tier?: SwathTier;
@@ -106,6 +111,16 @@ export interface Parcel {
   hailBasis?: string;
   hailProvenance?: Provenance;
 }
+
+export type TradeCategory = 
+  | "roofing"
+  | "hvac"
+  | "electrical_solar"
+  | "plumbing"
+  | "fire_safety"
+  | "elevators"
+  | "paving_civil"
+  | "general_construction";
 
 export type PermitKind = "reroof" | "repair" | "new-commercial";
 
@@ -150,6 +165,9 @@ export interface Permit {
   membrane?: string;
   portal: string;
   recordUrl: string;
+  tradeCategory?: TradeCategory;
+  tradeSubdiscipline?: string;
+  tradeMetadata?: Record<string, any>;
   contacts?: PermitContact[];
 }
 
@@ -159,6 +177,7 @@ export interface Contractor {
   hq: string;
   homeState: string;
   color: string;
+  primaryTrade?: TradeCategory;
 }
 
 export interface ScoreWeights {
@@ -191,3 +210,45 @@ export interface LivePayload {
   permits: Permit[];
   developments: Permit[];
 }
+
+export interface OwnerContact {
+  id: string;
+  ownerId: string;
+  fullName: string;
+  firstName?: string;
+  lastName?: string;
+  title: string;
+  roleCategory: "asset_management" | "facilities_director" | "property_manager" | "executive";
+  email?: string;
+  emailStatus?: string;
+  phone?: string;
+  phoneType?: string;
+  linkedinUrl?: string;
+  isPrimaryDecisionMaker: boolean;
+  source?: string;
+  createdAt?: string;
+}
+
+export interface CanonicalOwner {
+  id: string;
+  canonicalName: string;
+  normalizedName: string;
+  entityType: "reit" | "institutional_pe" | "property_manager" | "private_operator";
+  headquartersAddress?: string;
+  headquartersCity: string;
+  headquartersState: string;
+  headquartersZip?: string;
+  websiteUrl?: string;
+  linkedinUrl?: string;
+  logoUrl?: string;
+  managementFirm?: string;
+  totalProperties: number;
+  totalBuildingSqft: number;
+  totalAssessedValuation: number;
+  agingRoofsCount: number;
+  hailExposedCount: number;
+  contacts?: OwnerContact[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
