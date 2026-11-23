@@ -62,7 +62,7 @@ beforeEach(async () => {
     await query(`delete from warehouse.hail_reports`);
     await query(`delete from warehouse.permit_contacts`);
     await query(`delete from warehouse.live_permits`);
-    await query(`delete from warehouse.live_parcels`);
+    await query(`delete from warehouse.parcels where is_live = true`);
   }
 });
 
@@ -75,7 +75,7 @@ describe("market intelligence store", () => {
     await persistLive(payload("2026-10-06T12:00:00.000Z", "FIRST OWNER"));
     await persistLive(payload("2026-10-06T18:00:00.000Z", "SECOND OWNER"));
     const parcels = await query<{ account: string; owner: string }>(
-      `SELECT account, owner FROM warehouse.live_parcels ORDER BY account`,
+      `SELECT coalesce(live_account_id, id) as account, owner_name as owner FROM warehouse.parcels WHERE is_live = true ORDER BY account`,
     );
     expect(parcels).toEqual([
       { account: "A1", owner: "SECOND OWNER" },

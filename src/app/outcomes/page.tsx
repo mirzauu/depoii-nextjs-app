@@ -143,21 +143,21 @@ export default function OutcomesPage() {
 
       {/* SECTION 1: Active Claims Awaiting Field Inspection (The Bridge) */}
       {pendingClaims.length > 0 && (
-        <Card className="rounded-lg border-neutral-800 bg-[#0d0e14]">
-          <CardHeader className="pb-3 border-b border-neutral-800/80">
+        <Card className="rounded-lg border-border bg-card">
+          <CardHeader className="pb-3 border-b border-border/80">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <CardTitle className="text-sm font-bold text-white flex items-center gap-2">
+                <CardTitle className="text-sm font-bold text-foreground flex items-center gap-2">
                   <Clock className="size-4 text-[#FFCA88]" />
                   Active Claims Awaiting Field Inspection ({pendingClaims.length})
                 </CardTitle>
-                <CardDescription className="text-xs text-neutral-400 mt-0.5">
+                <CardDescription className="text-xs text-muted-foreground mt-0.5">
                   Properties locked to your company. Once your field crew inspects the roof, click &quot;Log Inspection Finding&quot; to calibrate the AI model.
                 </CardDescription>
               </div>
               <Link
                 href="/claims"
-                className="text-xs text-neutral-300 hover:text-white hover:underline flex items-center gap-1 font-medium shrink-0"
+                className="text-xs text-muted-foreground hover:text-foreground hover:underline flex items-center gap-1 font-medium shrink-0"
               >
                 <span>Manage Claims</span>
                 <ArrowRight className="size-3" />
@@ -168,34 +168,34 @@ export default function OutcomesPage() {
             <div className="overflow-x-auto">
               <Table className="text-xs">
                 <TableHeader>
-                  <TableRow className="border-b border-neutral-800/80 hover:bg-transparent">
-                    <TableHead className="pl-5 text-neutral-300 font-semibold">Property</TableHead>
-                    <TableHead className="text-neutral-300 font-semibold">Owner</TableHead>
-                    <TableHead className="text-right text-neutral-300 font-semibold">Footprint</TableHead>
-                    <TableHead className="text-right text-neutral-300 font-semibold">Hail Exposure</TableHead>
-                    <TableHead className="text-neutral-300 font-semibold">Exclusivity Status</TableHead>
-                    <TableHead className="pr-5 text-right text-neutral-300 font-semibold">Action</TableHead>
+                  <TableRow className="border-b border-border/80 hover:bg-transparent">
+                    <TableHead className="pl-5 text-muted-foreground font-semibold">Property</TableHead>
+                    <TableHead className="text-muted-foreground font-semibold">Owner</TableHead>
+                    <TableHead className="text-right text-muted-foreground font-semibold">Footprint</TableHead>
+                    <TableHead className="text-right text-muted-foreground font-semibold">Hail Exposure</TableHead>
+                    <TableHead className="text-muted-foreground font-semibold">Exclusivity Status</TableHead>
+                    <TableHead className="pr-5 text-right text-muted-foreground font-semibold">Action</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody className="divide-y divide-neutral-800/60">
+                <TableBody className="divide-y divide-border/60">
                   {pendingClaims.map((claim) => (
-                    <TableRow key={claim.id} className="hover:bg-[#161722]/80 transition-colors">
+                    <TableRow key={claim.id} className="hover:bg-muted/40 transition-colors">
                       <TableCell className="pl-5 py-3 font-medium">
                         <Link 
                           href={`/parcels/${claim.parcelId}`}
-                          className="text-white hover:text-neutral-200 hover:underline flex items-center gap-1 leading-snug"
+                          className="text-foreground hover:underline flex items-center gap-1 leading-snug"
                         >
                           <span>{claim.address || "Commercial Property"}</span>
                           <ExternalLink className="size-3 opacity-60" />
                         </Link>
-                        <span className="block text-[11px] text-neutral-400 mt-0.5">
+                        <span className="block text-[11px] text-muted-foreground mt-0.5">
                           {[claim.city, claim.state, claim.zipCode].filter(Boolean).join(", ")}
                         </span>
                       </TableCell>
-                      <TableCell className="py-3 text-neutral-300 max-w-48 truncate">
+                      <TableCell className="py-3 text-muted-foreground max-w-48 truncate">
                         {claim.ownerName || "Commercial Owner"}
                       </TableCell>
-                      <TableCell className="py-3 text-right font-mono text-neutral-300">
+                      <TableCell className="py-3 text-right font-mono text-muted-foreground">
                         {claim.buildingSqft ? `${num(claim.buildingSqft)} sq ft` : "—"}
                       </TableCell>
                       <TableCell className="py-3 text-right font-mono font-semibold text-[#FFCA88]">
@@ -317,7 +317,7 @@ export default function OutcomesPage() {
                         <TableCell className={`text-right font-mono ${cal.lift[f] > 0 ? "text-[#B4E4D6] font-semibold" : cal.lift[f] < 0 ? "text-[#DE7272]" : "text-muted-foreground"}`}>
                           {(cal.lift[f] * 100).toFixed(0)}%
                         </TableCell>
-                        <TableCell className="text-right font-mono font-semibold text-white">{cal.suggested[f].toFixed(2)}</TableCell>
+                        <TableCell className="text-right font-mono font-semibold text-foreground">{cal.suggested[f].toFixed(2)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -399,16 +399,16 @@ export default function OutcomesPage() {
                               "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium border",
                               isPositive(o)
                                 ? "bg-[#B4E4D6]/10 text-[#B4E4D6] border-[#B4E4D6]/20"
-                                : "bg-neutral-900/60 text-neutral-400 border-neutral-800"
+                                : "bg-muted text-muted-foreground border-border"
                             )}>
                               <span className={cn("size-1.5 rounded-full shrink-0", isPositive(o) ? "bg-[#B4E4D6]" : "bg-neutral-600")} />
                               {isPositive(o) ? "Damage verified" : "No damage / clean"}
                             </span>
                           </TableCell>
-                          <TableCell className="hidden capitalize sm:table-cell py-3 text-neutral-300">
+                          <TableCell className="hidden capitalize sm:table-cell py-3 text-muted-foreground">
                             {o.scope === "none" ? "—" : o.scope}
                           </TableCell>
-                          <TableCell className="pr-5 py-3 text-right font-mono tabular-nums font-medium text-neutral-100">
+                          <TableCell className="pr-5 py-3 text-right font-mono tabular-nums font-medium text-foreground">
                             {o.contractValue ? usd(o.contractValue) : "—"}
                           </TableCell>
                         </TableRow>

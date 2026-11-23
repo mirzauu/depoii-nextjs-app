@@ -107,7 +107,8 @@ export default function BriefPage() {
   const city = o ? o.parcel.city : p?.city || "Dallas";
   const state = o ? "Texas" : p?.state || "Texas";
   const stormName = o ? o.storm.name : d?.storm || `${city} Metro Severe Hail Swath`;
-  const stormDate = o ? o.storm.date : d?.stormDate || "2026-06-02";
+  const stormDate = o ? o.storm.date : (d?.stormDate && /^\d{4}-\d{2}-\d{2}/.test(d.stormDate) ? d.stormDate : "2026-06-02");
+  const displayStormDate = longDate(stormDate) || "June 2, 2026";
   const recipient = o ? o.parcel.owner : p?.owner || d?.owner || "Owner of record";
   const ownerAddress = o ? o.parcel.ownerAddress : p?.ownerAddress || d?.ownerMail || "No mailing address on roll";
   const cadAccount = o ? o.parcel.cadAccount : p?.account || p?.id || rawId;
@@ -116,6 +117,7 @@ export default function BriefPage() {
   const yearBuilt = o ? o.parcel.yearBuilt : p?.yearBuilt || 0;
   const membrane = o ? o.archetype.label : "Commercial Low-Slope / Built-Up / Modified Bitumen";
   const score = o ? o.score : d?.score || 88;
+
   const permitsCount = p?.permits?.length ?? 0;
   const eventTime = new Date(stormDate).getTime();
   const deadlineTime = Number.isNaN(eventTime) ? Date.now() + 680 * 86400000 : eventTime + 730 * 86400000;
@@ -178,11 +180,11 @@ export default function BriefPage() {
 
         <Section n={1} title="Executive summary">
           <p>
-            On <b>{longDate(stormDate)}</b>, the National Weather Service published hail reports and severe thunderstorm warnings covering the {city} metropolitan swath.
+            On <b>{displayStormDate}</b>, the National Weather Service published hail reports and severe thunderstorm warnings covering the {city} metropolitan swath.
             The appraisal district account for <b>{address}</b> falls directly inside a severe storm impact footprint with verified <b>{hailInches}&quot;</b> hail exposure.
           </p>
           <p>
-            Commercial municipal permit records {permitsCount > 0 ? `show ${permitsCount} logged municipal permits on file for this property.` : "indicate zero competitor re-roof permits logged to date matched to this commercial parcel."}
+            Commercial municipal permit records {permitsCount > 0 ? `show ${permitsCount} logged municipal permit${permitsCount > 1 ? "s" : ""} on file for this property.` : "indicate zero competitor re-roof permits logged to date matched to this commercial parcel."}{" "}
             This audit establishes an objective physical and structural baseline to protect building leadership and preserve manufacturer membrane warranty integrity.
           </p>
         </Section>

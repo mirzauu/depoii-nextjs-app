@@ -250,10 +250,20 @@ export function ParcelDossierView({
     }
   };
 
-  const cleanAccountId = p?.account?.replace(/^DCAD-PARCEL-/i, "") || p?.id || "";
-  const cadUrl = p?.account?.startsWith("TAD")
-    ? `https://www.tad.org/property/${encodeURIComponent(cleanAccountId)}`
-    : `https://www.dallascad.org/SearchAcct.aspx?ACCOUNTNO=${encodeURIComponent(cleanAccountId)}`;
+  const cleanAccountId = p?.account?.replace(/^DCAD-PARCEL-/i, "") || p?.id?.replace(/^DCAD-PARCEL-/i, "") || "";
+  
+  // Extract verified direct CAD and Accela links from data engine (source_links JSONB)
+  const verifiedDcadUrl = useMemo(() => {
+    const raw = p?.sourceLinks?.dcad || p?.cadUrl;
+    if (typeof raw === "string" && raw.startsWith("http")) return raw;
+    return null;
+  }, [p?.sourceLinks, p?.cadUrl]);
+
+  const verifiedAccelaUrl = useMemo(() => {
+    const raw = p?.sourceLinks?.accela || (p as any)?.accelaUrl;
+    if (typeof raw === "string" && raw.startsWith("http")) return raw;
+    return null;
+  }, [p?.sourceLinks, p]);
 
   const parsedSections = useMemo(() => {
     if (!p?.improvementSections) return [];
@@ -689,15 +699,17 @@ export function ParcelDossierView({
                       CAD appraisal record
                     </h3>
                     <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
-                      <a
-                        href={cadUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 font-medium transition-colors"
-                      >
-                        <span>Official CAD Roll</span>
-                        <ExternalLink className="size-3" />
-                      </a>
+                      {verifiedDcadUrl ? (
+                        <a
+                          href={verifiedDcadUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs text-sky-600 dark:text-sky-400 hover:underline inline-flex items-center gap-1.5 font-medium transition-colors"
+                        >
+                          <span>Official CAD Roll</span>
+                          <ExternalLink className="size-3" />
+                        </a>
+                      ) : null}
                       <button
                         type="button"
                         onClick={() => setCadRecordOpen(!cadRecordOpen)}
@@ -869,6 +881,18 @@ export function ParcelDossierView({
                                 {(p.permits?.length || 0) - roofPermitsCount}
                               </span>
                             </button>
+
+                            {verifiedAccelaUrl && (
+                              <a
+                                href={verifiedAccelaUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="ml-auto pb-2.5 pt-1 text-xs text-sky-600 dark:text-sky-400 hover:underline inline-flex items-center gap-1 font-medium transition-colors"
+                              >
+                                <span>Municipal Accela Record</span>
+                                <ExternalLink className="size-3" />
+                              </a>
+                            )}
                           </div>
 
                           {/* Permits Table */}
@@ -951,17 +975,8 @@ export function ParcelDossierView({
                             CAD structure
                           </h3>
 
-                          {/* Top-Right: Official CAD Link + Chevron Toggle Button */}
+                          {/* Top-Right: Chevron Toggle Button */}
                           <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
-                            <a
-                              href={cadUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 font-medium transition-colors"
-                            >
-                              <span>Official CAD Roll</span>
-                              <ExternalLink className="size-3" />
-                            </a>
                             <button
                               type="button"
                               onClick={() => setCadOpen(!cadOpen)}
@@ -1014,15 +1029,6 @@ export function ParcelDossierView({
                           <h3 className="text-base font-semibold tracking-tight text-foreground">
                             CAD Structural Improvement Sections
                           </h3>
-                          <a
-                            href={cadUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 font-medium transition-colors"
-                          >
-                            <span>Official CAD Roll</span>
-                            <ExternalLink className="size-3" />
-                          </a>
                         </div>
                         <div className="px-5 py-4">
                           <div className="grid gap-3 sm:grid-cols-2">

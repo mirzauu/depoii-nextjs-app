@@ -6,8 +6,8 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "Depoii",
     start_url: "/",
     display: "standalone",
-    background_color: "#0a0a0f",
-    theme_color: "#0a0a0f",
+    background_color: "#ffffff",
+    theme_color: "#ffffff",
     icons: [
       { src: "/favicon.ico", sizes: "any" },
       { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },

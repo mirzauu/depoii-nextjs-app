@@ -97,18 +97,18 @@ export function ApolloFilterDrawer({
   if (!isOpen) return null;
 
   return (
-    <aside className="w-64 shrink-0 border-r border-[rgba(250,250,248,0.08)] bg-[#171714] text-[#B9B9B2] flex flex-col h-full text-xs select-none">
+    <aside className="w-64 shrink-0 border-r border-border bg-sidebar text-sidebar-foreground flex flex-col h-full text-xs select-none">
       {/* 3-Tier Modality Scopes (Total / Net New / Claimed) */}
-      <div className="p-3 border-b border-[rgba(250,250,248,0.06)]">
-        <div className="flex rounded-lg bg-[#1F1F1B] p-0.5 border border-[rgba(250,250,248,0.08)]">
+      <div className="p-3 border-b border-border">
+        <div className="flex rounded-lg bg-muted p-0.5 border border-border">
           <button
             type="button"
             onClick={() => handleScopeChange("total")}
             className={cn(
               "flex-1 py-1.5 px-2 rounded-md text-[11px] font-medium text-center transition-colors cursor-pointer",
               filters.scope === "total"
-                ? "bg-[#262621] text-[#FAFAF8] shadow-xs"
-                : "text-[#7D7D75] hover:text-[#FAFAF8]"
+                ? "bg-background text-foreground shadow-xs"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Total <span className="text-[10px] opacity-70">({counts.total})</span>
@@ -119,8 +119,8 @@ export function ApolloFilterDrawer({
             className={cn(
               "flex-1 py-1.5 px-2 rounded-md text-[11px] font-medium text-center transition-colors cursor-pointer",
               filters.scope === "net_new"
-                ? "bg-[#262621] text-[#FAFAF8] shadow-xs"
-                : "text-[#7D7D75] hover:text-[#FAFAF8]"
+                ? "bg-background text-foreground shadow-xs"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Net New <span className="text-[10px] opacity-70">({counts.netNew})</span>
@@ -131,8 +131,8 @@ export function ApolloFilterDrawer({
             className={cn(
               "flex-1 py-1.5 px-2 rounded-md text-[11px] font-medium text-center transition-colors cursor-pointer",
               filters.scope === "claimed"
-                ? "bg-[#262621] text-[#FAFAF8] shadow-xs"
-                : "text-[#7D7D75] hover:text-[#FAFAF8]"
+                ? "bg-background text-foreground shadow-xs"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Claimed <span className="text-[10px] opacity-70">({counts.claimed})</span>
@@ -141,28 +141,28 @@ export function ApolloFilterDrawer({
       </div>
 
       {/* Filter Search Input */}
-      <div className="px-3 py-2 border-b border-[rgba(250,250,248,0.06)]">
+      <div className="px-3 py-2 border-b border-border">
         <div className="relative">
-          <Search className="size-3.5 absolute left-2.5 top-2 text-[#7D7D75]" />
+          <Search className="size-3.5 absolute left-2.5 top-2 text-muted-foreground" />
           <input
             value={filterSearch}
             onChange={(e) => setFilterSearch(e.target.value)}
             placeholder="Search filters..."
-            className="w-full h-7 pl-8 pr-2.5 bg-[#1F1F1B] rounded-md border border-[rgba(250,250,248,0.08)] text-[12px] text-[#FAFAF8] placeholder-[#7D7D75] outline-none focus:border-white/40"
+            className="w-full h-7 pl-8 pr-2.5 bg-muted/50 rounded-md border border-border text-[12px] text-foreground placeholder:text-muted-foreground outline-none focus:border-ring"
           />
         </div>
       </div>
 
       {/* Active Filter Clear & Badges */}
       {activeCount > 0 && (
-        <div className="px-3 py-2 border-b border-[rgba(250,250,248,0.06)] flex items-center justify-between">
-          <span className="text-[11px] font-semibold text-[#FAFAF8]">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <span className="text-[11px] font-semibold text-foreground">
             {activeCount} {activeCount === 1 ? "Filter" : "Filters"} Applied
           </span>
           <button
             type="button"
             onClick={clearAllFilters}
-            className="text-[11px] text-[#FAFAF8] hover:underline cursor-pointer"
+            className="text-[11px] text-foreground hover:underline cursor-pointer"
           >
             Clear all
           </button>
@@ -172,25 +172,25 @@ export function ApolloFilterDrawer({
       {/* Filter Accordion List */}
       <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
         {/* Accordion 1: Roof Age */}
-        <div className="border border-[rgba(250,250,248,0.04)] rounded-lg overflow-hidden bg-[#1C1C18]/60">
+        <div className="border border-border rounded-lg overflow-hidden bg-card">
           <button
             type="button"
             onClick={() => toggleSection("roofAge")}
-            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-[#FAFAF8] hover:bg-white/[0.04] transition-colors cursor-pointer"
+            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Clock className="size-3.5 text-[#FAFAF8]" />
+              <Clock className="size-3.5 text-foreground" />
               <span>Roof Age</span>
               {filters.roofAge.length > 0 && (
-                <span className="size-4 rounded-full bg-[#FAFAF8] text-[#1C1C18] font-bold text-[10px] flex items-center justify-center">
+                <span className="size-4 rounded-full bg-primary text-primary-foreground font-bold text-[10px] flex items-center justify-center">
                   {filters.roofAge.length}
                 </span>
               )}
             </div>
-            {expanded.roofAge ? <ChevronDown className="size-3 text-[#7D7D75]" /> : <ChevronRight className="size-3 text-[#7D7D75]" />}
+            {expanded.roofAge ? <ChevronDown className="size-3 text-muted-foreground" /> : <ChevronRight className="size-3 text-muted-foreground" />}
           </button>
           {expanded.roofAge && (
-            <div className="p-2 space-y-1 border-t border-[rgba(250,250,248,0.04)] bg-[#171714]/80">
+            <div className="p-2 space-y-1 border-t border-border bg-muted/30">
               {[
                 { label: "20+ Years (Replacement Imminent)", value: "20+" },
                 { label: "15 - 20 Years (Vulnerable)", value: "15-20" },
@@ -199,12 +199,12 @@ export function ApolloFilterDrawer({
               ].map((opt) => {
                 const checked = filters.roofAge.includes(opt.value);
                 return (
-                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-white/[0.04] cursor-pointer text-[12px] text-[#B9B9B2] hover:text-[#FAFAF8]">
+                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-accent cursor-pointer text-[12px] text-muted-foreground hover:text-foreground">
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleFilterItem("roofAge", opt.value)}
-                      className="size-3.5 rounded border-[rgba(250,250,248,0.2)] bg-[#1F1F1B] accent-[#FAFAF8]"
+                      className="size-3.5 rounded border-border bg-background accent-primary"
                     />
                     <span className="truncate">{opt.label}</span>
                   </label>
@@ -215,25 +215,25 @@ export function ApolloFilterDrawer({
         </div>
 
         {/* Accordion 2: Storm Impact */}
-        <div className="border border-[rgba(250,250,248,0.04)] rounded-lg overflow-hidden bg-[#1C1C18]/60">
+        <div className="border border-border rounded-lg overflow-hidden bg-card">
           <button
             type="button"
             onClick={() => toggleSection("stormImpact")}
-            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-[#FAFAF8] hover:bg-white/[0.04] transition-colors cursor-pointer"
+            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <ShieldAlert className="size-3.5 text-amber-400" />
+              <ShieldAlert className="size-3.5 text-amber-500 dark:text-amber-400" />
               <span>Storm Impact</span>
               {filters.stormImpact.length > 0 && (
-                <span className="size-4 rounded-full bg-[#FAFAF8] text-[#1C1C18] font-bold text-[10px] flex items-center justify-center">
+                <span className="size-4 rounded-full bg-primary text-primary-foreground font-bold text-[10px] flex items-center justify-center">
                   {filters.stormImpact.length}
                 </span>
               )}
             </div>
-            {expanded.stormImpact ? <ChevronDown className="size-3 text-[#7D7D75]" /> : <ChevronRight className="size-3 text-[#7D7D75]" />}
+            {expanded.stormImpact ? <ChevronDown className="size-3 text-muted-foreground" /> : <ChevronRight className="size-3 text-muted-foreground" />}
           </button>
           {expanded.stormImpact && (
-            <div className="p-2 space-y-1 border-t border-[rgba(250,250,248,0.04)] bg-[#171714]/80">
+            <div className="p-2 space-y-1 border-t border-border bg-muted/30">
               {[
                 { label: "Severe Hail (> 1.75\")", value: "severe_hail" },
                 { label: "Moderate Hail (1.25\" - 1.75\")", value: "mod_hail" },
@@ -242,12 +242,12 @@ export function ApolloFilterDrawer({
               ].map((opt) => {
                 const checked = filters.stormImpact.includes(opt.value);
                 return (
-                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-white/[0.04] cursor-pointer text-[12px] text-[#B9B9B2] hover:text-[#FAFAF8]">
+                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-accent cursor-pointer text-[12px] text-muted-foreground hover:text-foreground">
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleFilterItem("stormImpact", opt.value)}
-                      className="size-3.5 rounded border-[rgba(250,250,248,0.2)] bg-[#1F1F1B] accent-[#FAFAF8]"
+                      className="size-3.5 rounded border-border bg-background accent-primary"
                     />
                     <span className="truncate">{opt.label}</span>
                   </label>
@@ -258,25 +258,25 @@ export function ApolloFilterDrawer({
         </div>
 
         {/* Accordion 3: Square Footage */}
-        <div className="border border-[rgba(250,250,248,0.04)] rounded-lg overflow-hidden bg-[#1C1C18]/60">
+        <div className="border border-border rounded-lg overflow-hidden bg-card">
           <button
             type="button"
             onClick={() => toggleSection("sqft")}
-            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-[#FAFAF8] hover:bg-white/[0.04] transition-colors cursor-pointer"
+            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Layers className="size-3.5 text-blue-400" />
+              <Layers className="size-3.5 text-blue-500 dark:text-blue-400" />
               <span>Building Sq Ft</span>
               {filters.sqftRange.length > 0 && (
-                <span className="size-4 rounded-full bg-[#FAFAF8] text-[#1C1C18] font-bold text-[10px] flex items-center justify-center">
+                <span className="size-4 rounded-full bg-primary text-primary-foreground font-bold text-[10px] flex items-center justify-center">
                   {filters.sqftRange.length}
                 </span>
               )}
             </div>
-            {expanded.sqft ? <ChevronDown className="size-3 text-[#7D7D75]" /> : <ChevronRight className="size-3 text-[#7D7D75]" />}
+            {expanded.sqft ? <ChevronDown className="size-3 text-muted-foreground" /> : <ChevronRight className="size-3 text-muted-foreground" />}
           </button>
           {expanded.sqft && (
-            <div className="p-2 space-y-1 border-t border-[rgba(250,250,248,0.04)] bg-[#171714]/80">
+            <div className="p-2 space-y-1 border-t border-border bg-muted/30">
               {[
                 { label: "50,000+ Sq Ft (Enterprise)", value: "50k+" },
                 { label: "25,000 - 50,000 Sq Ft", value: "25k-50k" },
@@ -285,12 +285,12 @@ export function ApolloFilterDrawer({
               ].map((opt) => {
                 const checked = filters.sqftRange.includes(opt.value);
                 return (
-                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-white/[0.04] cursor-pointer text-[12px] text-[#B9B9B2] hover:text-[#FAFAF8]">
+                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-accent cursor-pointer text-[12px] text-muted-foreground hover:text-foreground">
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleFilterItem("sqftRange", opt.value)}
-                      className="size-3.5 rounded border-[rgba(250,250,248,0.2)] bg-[#1F1F1B] accent-[#FAFAF8]"
+                      className="size-3.5 rounded border-border bg-background accent-primary"
                     />
                     <span className="truncate">{opt.label}</span>
                   </label>
@@ -301,32 +301,32 @@ export function ApolloFilterDrawer({
         </div>
 
         {/* Accordion 4: Permits */}
-        <div className="border border-[rgba(250,250,248,0.04)] rounded-lg overflow-hidden bg-[#1C1C18]/60">
+        <div className="border border-border rounded-lg overflow-hidden bg-card">
           <button
             type="button"
             onClick={() => toggleSection("permits")}
-            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-[#FAFAF8] hover:bg-white/[0.04] transition-colors cursor-pointer"
+            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <FileText className="size-3.5 text-emerald-400" />
+              <FileText className="size-3.5 text-emerald-500 dark:text-emerald-400" />
               <span>Permit Activity</span>
             </div>
-            {expanded.permits ? <ChevronDown className="size-3 text-[#7D7D75]" /> : <ChevronRight className="size-3 text-[#7D7D75]" />}
+            {expanded.permits ? <ChevronDown className="size-3 text-muted-foreground" /> : <ChevronRight className="size-3 text-muted-foreground" />}
           </button>
           {expanded.permits && (
-            <div className="p-2 space-y-1 border-t border-[rgba(250,250,248,0.04)] bg-[#171714]/80">
+            <div className="p-2 space-y-1 border-t border-border bg-muted/30">
               {[
                 { label: "Recent Roof Permit (< 1 yr)", value: "permit_1yr" },
                 { label: "No Permit History", value: "no_permit" },
               ].map((opt) => {
                 const checked = filters.permitStatus.includes(opt.value);
                 return (
-                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-white/[0.04] cursor-pointer text-[12px] text-[#B9B9B2] hover:text-[#FAFAF8]">
+                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-accent cursor-pointer text-[12px] text-muted-foreground hover:text-foreground">
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleFilterItem("permitStatus", opt.value)}
-                      className="size-3.5 rounded border-[rgba(250,250,248,0.2)] bg-[#1F1F1B] accent-[#FAFAF8]"
+                      className="size-3.5 rounded border-border bg-background accent-primary"
                     />
                     <span className="truncate">{opt.label}</span>
                   </label>
@@ -337,20 +337,20 @@ export function ApolloFilterDrawer({
         </div>
 
         {/* Accordion 5: Property Type */}
-        <div className="border border-[rgba(250,250,248,0.04)] rounded-lg overflow-hidden bg-[#1C1C18]/60">
+        <div className="border border-border rounded-lg overflow-hidden bg-card">
           <button
             type="button"
             onClick={() => toggleSection("property")}
-            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-[#FAFAF8] hover:bg-white/[0.04] transition-colors cursor-pointer"
+            className="w-full h-8 px-2.5 flex items-center justify-between text-[12px] font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Building className="size-3.5 text-purple-400" />
+              <Building className="size-3.5 text-purple-500 dark:text-purple-400" />
               <span>Property Type</span>
             </div>
-            {expanded.property ? <ChevronDown className="size-3 text-[#7D7D75]" /> : <ChevronRight className="size-3 text-[#7D7D75]" />}
+            {expanded.property ? <ChevronDown className="size-3 text-muted-foreground" /> : <ChevronRight className="size-3 text-muted-foreground" />}
           </button>
           {expanded.property && (
-            <div className="p-2 space-y-1 border-t border-[rgba(250,250,248,0.04)] bg-[#171714]/80">
+            <div className="p-2 space-y-1 border-t border-border bg-muted/30">
               {[
                 { label: "Warehouse / Distribution", value: "warehouse" },
                 { label: "Retail Center / Mall", value: "retail" },
@@ -359,12 +359,12 @@ export function ApolloFilterDrawer({
               ].map((opt) => {
                 const checked = filters.propertyType.includes(opt.value);
                 return (
-                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-white/[0.04] cursor-pointer text-[12px] text-[#B9B9B2] hover:text-[#FAFAF8]">
+                  <label key={opt.value} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-accent cursor-pointer text-[12px] text-muted-foreground hover:text-foreground">
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleFilterItem("propertyType", opt.value)}
-                      className="size-3.5 rounded border-[rgba(250,250,248,0.2)] bg-[#1F1F1B] accent-[#FAFAF8]"
+                      className="size-3.5 rounded border-border bg-background accent-primary"
                     />
                     <span className="truncate">{opt.label}</span>
                   </label>

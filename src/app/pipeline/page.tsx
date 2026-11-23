@@ -80,7 +80,7 @@ function PipelineSkeletonRows() {
             </td>
 
             {/* 1. Address - Sticky Left Skeleton */}
-            <td className="sticky left-10 z-10 px-3 py-0 text-[12px] font-medium whitespace-nowrap bg-[#171714] group-hover:bg-[rgb(35,35,30)] text-[#FAFAF8]">
+            <td className="sticky left-10 z-10 px-3 py-0 text-[12px] font-medium whitespace-nowrap bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)] text-foreground">
               <div className="flex items-center gap-2">
                 <div
                   style={{ animationDelay: delay }}
@@ -525,14 +525,14 @@ export default function PipelinePage() {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-53px)] max-h-[calc(100dvh-53px)] flex-col bg-[#171714] text-[#FAFAF8] antialiased font-sans overflow-hidden">
+    <div className="flex h-[calc(100dvh-53px)] max-h-[calc(100dvh-53px)] flex-col bg-background text-foreground antialiased font-sans overflow-hidden">
       {/* Top Header Row - Fixed */}
-      <div data-tour="pipeline-header" className="shrink-0 border-b border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-3.5 z-20 text-[#FAFAF8]">
+      <div data-tour="pipeline-header" className="shrink-0 border-b border-border bg-background px-5 py-3.5 z-20 text-foreground">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-0.5">
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">Hot Sheet</h1>
-              <span className="rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700/50">
+              <h1 className="text-xl font-bold tracking-tight text-foreground">Hot Sheet</h1>
+              <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground border border-border">
                 {jurisdiction}
               </span>
             </div>
@@ -558,7 +558,7 @@ export default function PipelinePage() {
 
       {/* Claim Success Banner */}
       {claimSuccessMsg && (
-        <div className="shrink-0 flex items-center justify-between border-b border-[#B4E4D6]/30 bg-[#B4E4D6]/10 px-5 py-2 text-xs text-neutral-800 dark:text-neutral-200 z-20">
+        <div className="shrink-0 flex items-center justify-between border-b border-[#B4E4D6]/30 bg-[#B4E4D6]/10 px-5 py-2 text-xs text-foreground z-20">
           <div className="flex items-center gap-2">
             <Check className="size-3.5 text-emerald-600 dark:text-[#B4E4D6]" />
             <span>{claimSuccessMsg}</span>
@@ -566,12 +566,12 @@ export default function PipelinePage() {
           <div className="flex items-center gap-3">
             <Link
               href="/claims"
-              className="inline-flex items-center gap-1 rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800/80 px-2 py-0.5 text-[11px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
+              className="inline-flex items-center gap-1 rounded border border-border bg-background px-2 py-0.5 text-[11px] font-medium text-foreground hover:bg-muted transition-colors"
             >
               View in My Claims
-              <ChevronRight className="size-3 text-muted-foreground dark:text-neutral-400" />
+              <ChevronRight className="size-3 text-muted-foreground" />
             </Link>
-            <button onClick={() => setClaimSuccessMsg(null)} className="text-muted-foreground dark:text-neutral-400 hover:text-foreground dark:hover:text-white">
+            <button onClick={() => setClaimSuccessMsg(null)} className="text-muted-foreground hover:text-foreground">
               <X className="size-3.5" />
             </button>
           </div>
@@ -579,21 +579,21 @@ export default function PipelinePage() {
       )}
 
       {/* Action & Filter Sub-Bar - Fixed */}
-      <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-2.5 text-xs z-20 text-[#FAFAF8]">
+      <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/40 px-5 py-2.5 text-xs z-20 text-foreground">
         {/* Left Side: Toggle Sidebar & Search */}
         <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={() => setHideFilters((prev) => !prev)}
-            className="flex h-8 items-center gap-1.5 rounded-md border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-900/80 px-2.5 font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-colors"
+            className="flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-2.5 font-medium text-foreground hover:bg-muted transition-colors"
           >
-            <Filter className="size-3 text-muted-foreground dark:text-neutral-400" />
+            <Filter className="size-3 text-muted-foreground" />
             <span>{hideFilters ? "Show Filters" : "Hide Filters"}</span>
           </button>
 
           {/* Search Input */}
           <div className="relative min-w-[260px] sm:min-w-[340px]">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground dark:text-neutral-400" />
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
               value={searchQuery}
@@ -602,13 +602,13 @@ export default function PipelinePage() {
                 setPage(0);
               }}
               placeholder="Search address, owner, or parcel"
-              className="h-8 w-full rounded-md border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-[#16171d] pl-8 pr-3 text-xs text-foreground dark:text-neutral-200 placeholder-neutral-400 dark:placeholder-neutral-500 outline-none transition-colors focus:border-neutral-400 dark:focus:border-neutral-700 focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+              className="h-8 w-full rounded-md border border-border bg-background pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 <X className="size-3" />
               </button>
@@ -622,7 +622,7 @@ export default function PipelinePage() {
             <button
               type="button"
               onClick={clearAllFilters}
-              className="h-8 rounded-md border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-900/80 px-2.5 font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-colors"
+              className="h-8 rounded-md border border-border bg-background px-2.5 font-medium text-foreground hover:bg-muted transition-colors"
             >
               Reset filters ({activeFiltersCount})
             </button>
@@ -632,14 +632,14 @@ export default function PipelinePage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="h-8 appearance-none rounded-md border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-900/80 pl-2.5 pr-7 font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white outline-none cursor-pointer"
+              className="h-8 appearance-none rounded-md border border-border bg-background pl-2.5 pr-7 font-medium text-foreground hover:bg-muted outline-none cursor-pointer"
             >
               <option value="score">⇅ Relevance (Score)</option>
               <option value="sqft">⇅ Sq ft</option>
               <option value="value">⇅ Est. Value</option>
               <option value="hail">⇅ Hail</option>
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2 top-1/2 size-3 -translate-y-1/2 text-muted-foreground dark:text-neutral-500" />
+            <ChevronDown className="pointer-events-none absolute right-2 top-1/2 size-3 -translate-y-1/2 text-muted-foreground" />
           </div>
         </div>
       </div>
@@ -648,10 +648,10 @@ export default function PipelinePage() {
       <div data-tour="pipeline-content" className="flex flex-1 min-h-0 overflow-hidden">
         {/* Left Filter Sidebar - Fixed */}
         {!hideFilters && (
-          <aside className="w-80 shrink-0 border-r border-[rgba(250,250,248,0.08)] bg-[#171714] text-[#B9B9B2] flex flex-col justify-between overflow-hidden">
+          <aside className="w-80 shrink-0 border-r border-border bg-sidebar text-sidebar-foreground flex flex-col justify-between overflow-hidden">
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {/* Segmented Count Tabs (Original Titles: All, Unresolved, Saved) */}
-              <div className="grid grid-cols-3 gap-1 rounded-lg border border-[rgba(250,250,248,0.08)] bg-[#1F1F1B] p-0.5 text-center">
+              <div className="grid grid-cols-3 gap-1 rounded-lg border border-border bg-muted p-0.5 text-center">
                 <button
                   type="button"
                   onClick={() => {
@@ -661,8 +661,8 @@ export default function PipelinePage() {
                   className={cn(
                     "flex flex-col items-center rounded-md py-1.5 transition-colors border",
                     activeTab === "all"
-                      ? "bg-white dark:bg-white/10 text-neutral-900 dark:text-white border-neutral-300 dark:border-white/20 font-semibold shadow-sm"
-                      : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      ? "bg-background text-foreground border-border font-semibold shadow-sm"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
                   )}
                 >
                   <span className="text-[10px] uppercase font-bold tracking-wider">All</span>
@@ -678,8 +678,8 @@ export default function PipelinePage() {
                   className={cn(
                     "flex flex-col items-center rounded-md py-1.5 transition-colors border",
                     activeTab === "unresolved"
-                      ? "border-[#DE7272]/40 bg-[#DE7272]/15 text-[#DE7272] dark:text-[#DE7272] font-semibold shadow-sm"
-                      : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      ? "border-rose-500/40 bg-rose-500/15 text-rose-600 dark:text-[#DE7272] font-semibold shadow-sm"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
                   )}
                 >
                   <span className="text-[10px] uppercase font-bold tracking-wider">Unresolved</span>
@@ -696,7 +696,7 @@ export default function PipelinePage() {
                     "flex flex-col items-center rounded-md py-1.5 transition-colors border",
                     activeTab === "saved"
                       ? "border-[#B4E4D6]/50 bg-[#B4E4D6]/20 text-emerald-800 dark:text-[#B4E4D6] font-semibold shadow-sm"
-                      : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
                   )}
                 >
                   <span className="text-[10px] uppercase font-bold tracking-wider">Saved</span>
@@ -707,11 +707,11 @@ export default function PipelinePage() {
               {/* Accordion Filter Items with Exact Original Headings */}
               <div className="space-y-2.5">
                 {/* 1. Jurisdiction */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("jurisdiction")}
-                    className="flex w-full items-center justify-between text-neutral-800 dark:text-neutral-200 font-medium"
+                    className="flex w-full items-center justify-between text-foreground font-medium cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
                       <MapPin className="size-3.5 text-muted-foreground dark:text-neutral-400" />
@@ -764,11 +764,11 @@ export default function PipelinePage() {
                 </div>
 
                 {/* 2. Square feet */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("sqft")}
-                    className="flex w-full items-center justify-between text-neutral-800 dark:text-neutral-200 font-medium"
+                    className="flex w-full items-center justify-between text-foreground font-medium cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
                       <Building2 className="size-3.5 text-muted-foreground dark:text-neutral-400" />
@@ -807,11 +807,11 @@ export default function PipelinePage() {
                 </div>
 
                 {/* 3. Score */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("score")}
-                    className="flex w-full items-center justify-between text-neutral-800 dark:text-neutral-200 font-medium"
+                    className="flex w-full items-center justify-between text-foreground font-medium cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
                       <Zap className="size-3.5 text-amber-600 dark:text-[#FFCA88]" />
@@ -855,11 +855,11 @@ export default function PipelinePage() {
                 </div>
 
                 {/* 4. Owner */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("owner")}
-                    className="flex w-full items-center justify-between text-neutral-800 dark:text-neutral-200 font-medium"
+                    className="flex w-full items-center justify-between text-foreground font-medium cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
                       <UserCheck className="size-3.5 text-muted-foreground dark:text-neutral-400" />
@@ -885,11 +885,11 @@ export default function PipelinePage() {
                 </div>
 
                 {/* 5. Stage */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("stage")}
-                    className="flex w-full items-center justify-between text-neutral-800 dark:text-neutral-200 font-medium"
+                    className="flex w-full items-center justify-between text-foreground font-medium cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
                       <Briefcase className="size-3.5 text-muted-foreground dark:text-neutral-400" />
@@ -939,11 +939,11 @@ export default function PipelinePage() {
                 </div>
 
                 {/* 6. Assignee */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("assignee")}
-                    className="flex w-full items-center justify-between text-neutral-800 dark:text-neutral-200 font-medium"
+                    className="flex w-full items-center justify-between text-foreground font-medium cursor-pointer"
                   >
                     <span>Assignee</span>
                     {openSections.assignee ? <ChevronDown className="size-3 text-muted-foreground dark:text-neutral-500" /> : <ChevronRight className="size-3 text-muted-foreground dark:text-neutral-500" />}
@@ -968,11 +968,11 @@ export default function PipelinePage() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="border-t border-[rgba(250,250,248,0.08)] p-3 bg-[#171714]">
+            <div className="border-t border-border p-3 bg-sidebar">
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="w-full rounded-md border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-3 py-2 text-xs font-medium text-[#FAFAF8] hover:bg-[#23231E] transition-colors cursor-pointer select-none"
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer select-none"
               >
                 Clear All Filters
               </button>
@@ -981,7 +981,7 @@ export default function PipelinePage() {
         )}
 
         {/* Right Table Container with EXACT Original Column Titles */}
-        <main className="min-w-0 flex-1 flex flex-col justify-between overflow-x-auto bg-[#171714] text-[#FAFAF8]">
+        <main className="min-w-0 flex-1 flex flex-col justify-between overflow-x-auto bg-background text-foreground">
           {/* Territory Alert */}
           {brief.data?.noActiveTerritory && (
             <div className="m-3 rounded-lg border border-amber-500/40 dark:border-[#FFCA88]/30 bg-amber-500/10 dark:bg-[#FFCA88]/10 p-3 text-xs flex items-center justify-between">
@@ -1018,10 +1018,10 @@ export default function PipelinePage() {
               </div>
             ) : (
               <table className="w-full min-w-max text-left text-xs border-collapse">
-                <thead className="sticky top-0 z-20 bg-[#171714]">
+                <thead className="sticky top-0 z-20 bg-background dark:bg-[#171714]">
                   {/* EXACT ORIGINAL COLUMN HEADERS - Sticky Top */}
-                  <tr className="apollo-th h-[39px] border-b border-[rgba(250,250,248,0.08)] bg-[#171714] text-[11px] font-medium uppercase tracking-wider text-[#B9B9B2]">
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
+                  <tr className="apollo-th h-[39px] border-b border-border bg-background dark:bg-[#171714] text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
                       <input
                         type="checkbox"
                         checked={allSelected}
@@ -1030,8 +1030,8 @@ export default function PipelinePage() {
                         className="size-3.5 rounded border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sky-500 focus:ring-0 cursor-pointer disabled:opacity-40"
                       />
                     </th>
-                    <th className="sticky left-12 top-0 z-30 bg-[#171714] px-4 py-2.5 font-medium text-[#B9B9B2] whitespace-nowrap border-b border-[rgba(250,250,248,0.08)] uppercase text-[11px] tracking-wider min-w-[280px]">Address</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 whitespace-nowrap min-w-[90px] text-center">
+                    <th className="sticky left-12 top-0 z-30 bg-background dark:bg-[#171714] px-4 py-2.5 font-medium text-muted-foreground whitespace-nowrap border-b border-border uppercase text-[11px] tracking-wider min-w-[280px]">Address</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground whitespace-nowrap min-w-[90px] text-center">
                       <button
                         type="button"
                         onClick={() => { setSortBy(sortBy === "score" ? "sqft" : "score"); setPage(0); }}
@@ -1042,11 +1042,11 @@ export default function PipelinePage() {
                         {sortBy === "score" && <span className="text-[10px] text-amber-500">▼</span>}
                       </button>
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 whitespace-nowrap min-w-[260px]">Owner</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 whitespace-nowrap min-w-[280px]">Contact / Decision maker</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 whitespace-nowrap min-w-[240px]">Mailing address</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 whitespace-nowrap min-w-[130px]">City</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 text-right whitespace-nowrap min-w-[120px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground whitespace-nowrap min-w-[260px]">Owner</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground whitespace-nowrap min-w-[280px]">Contact / Decision maker</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground whitespace-nowrap min-w-[240px]">Mailing address</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground whitespace-nowrap min-w-[130px]">City</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground text-right whitespace-nowrap min-w-[120px]">
                       <button
                         type="button"
                         onClick={() => { setSortBy(sortBy === "sqft" ? "score" : "sqft"); setPage(0); }}
@@ -1057,11 +1057,11 @@ export default function PipelinePage() {
                         {sortBy === "sqft" && <span className="text-[10px] text-amber-500">▼</span>}
                       </button>
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 text-right whitespace-nowrap min-w-[110px]">Year built</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 text-right whitespace-nowrap min-w-[100px]">Hail</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 whitespace-nowrap min-w-[120px]">Warning</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 whitespace-nowrap min-w-[130px]">Permit</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 text-right whitespace-nowrap min-w-[140px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground text-right whitespace-nowrap min-w-[110px]">Year built</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground text-right whitespace-nowrap min-w-[100px]">Hail</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground whitespace-nowrap min-w-[120px]">Warning</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground whitespace-nowrap min-w-[130px]">Permit</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground text-right whitespace-nowrap min-w-[140px]">
                       <button
                         type="button"
                         onClick={() => { setSortBy(sortBy === "value" ? "sqft" : "value"); setPage(0); }}
@@ -1072,8 +1072,8 @@ export default function PipelinePage() {
                         {sortBy === "value" && <span className="text-[10px] text-amber-500">▼</span>}
                       </button>
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-neutral-800 dark:text-neutral-300 whitespace-nowrap min-w-[120px]">Stage</th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[160px]" />
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 font-semibold text-muted-foreground whitespace-nowrap min-w-[120px]">Stage</th>
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[160px]" />
                   </tr>
                 </thead>
 
@@ -1102,15 +1102,15 @@ export default function PipelinePage() {
                           }
                         }}
                         className={cn(
-                          "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-[rgba(250,250,248,0.06)]",
+                          "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-border",
                           isSelected
-                            ? "bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                            : "bg-[#171714] hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                            ? "bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.10)] text-foreground"
+                            : "bg-background hover:bg-muted/50 dark:bg-[#171714] dark:hover:bg-[rgb(35,35,30)] text-foreground"
                         )}
                       >
                         {/* Checkbox with active row indicator */}
                         <td
-                          className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)]"
+                          className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)]"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <input
@@ -1125,8 +1125,8 @@ export default function PipelinePage() {
                         <td className={cn(
                           "sticky left-12 z-10 px-4 py-2 h-14 align-middle text-[12px] font-medium whitespace-nowrap min-w-[280px] transition-colors duration-150",
                           isSelected
-                            ? "bg-[rgba(255,255,255,0.06)] group-hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                            : "bg-[#171714] group-hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                            ? "bg-[rgba(255,255,255,0.06)] group-hover:bg-[rgba(255,255,255,0.10)] text-foreground"
+                            : "bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)] text-foreground"
                         )}>
                           <div className="flex items-center gap-2">
                             <button
@@ -1138,7 +1138,7 @@ export default function PipelinePage() {
                                   setSelectedStormId(o.stormId || null);
                                 }
                               }}
-                              className="font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-amber-800 dark:group-hover:text-amber-300 hover:underline transition-colors text-left cursor-pointer"
+                              className="font-semibold text-foreground group-hover:text-amber-600 dark:group-hover:text-amber-300 hover:underline transition-colors text-left cursor-pointer"
                             >
                               {o.address}
                             </button>
@@ -1163,7 +1163,7 @@ export default function PipelinePage() {
                               <RealLogo url={o.logoUrl} alt={o.organizationName || o.owner} size={20} />
                             ) : null}
                             <div className="flex flex-col min-w-0">
-                              <span className="truncate font-medium text-neutral-900 dark:text-neutral-200 group-hover:text-neutral-950 dark:group-hover:text-white transition-colors">
+                              <span className="truncate font-medium text-foreground group-hover:text-foreground transition-colors">
                                 {o.organizationName || o.owner || "—"}
                               </span>
                               {o.websiteUrl ? (
@@ -1188,7 +1188,7 @@ export default function PipelinePage() {
                         <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[280px] whitespace-nowrap">
                           <div className="flex flex-col text-xs leading-tight gap-1.5">
                             <div className="flex items-center gap-1.5">
-                              <span className="font-medium text-neutral-900 dark:text-neutral-200 group-hover:text-neutral-950 dark:group-hover:text-white transition-colors truncate">
+                              <span className="font-medium text-foreground group-hover:text-foreground transition-colors truncate">
                                 {o.decisionMaker || "Property Contact"}
                               </span>
                             </div>
@@ -1355,20 +1355,20 @@ export default function PipelinePage() {
           </div>
 
           {/* Bottom Pagination Bar - Fixed */}
-          <div className="shrink-0 flex items-center justify-between border-t border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-3 text-xs text-[#B9B9B2] z-10">
+          <div className="shrink-0 flex items-center justify-between border-t border-border bg-background px-5 py-3 text-xs text-muted-foreground z-10">
             <div>
               {isLoading ? (
-                <div className="flex items-center gap-2 text-[#FAFAF8]">
+                <div className="flex items-center gap-2 text-foreground">
                   <span className="size-2 rounded-full bg-[#B4E4D6] animate-ping" />
                   <span className="font-medium text-xs">Streaming {jurisdiction} commercial pipeline opportunities...</span>
                 </div>
               ) : (
                 <>
                   <span>
-                    Showing <strong className="text-[#FAFAF8] font-medium">{from}–{to}</strong> of <strong className="text-[#FAFAF8] font-medium">{rows.length}</strong>
+                    Showing <strong className="text-foreground font-medium">{from}–{to}</strong> of <strong className="text-foreground font-medium">{rows.length}</strong>
                   </span>
                   {brief.data && brief.data.totalOpportunities > rows.length && (
-                    <span className="text-[#B9B9B2] ml-2">
+                    <span className="text-muted-foreground ml-2">
                       · {num(brief.data.totalOpportunities)} in this storm
                     </span>
                   )}
@@ -1377,14 +1377,14 @@ export default function PipelinePage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[#B9B9B2] mr-2">
+              <span className="text-muted-foreground mr-2">
                 Page {pageIndex + 1} of {pageCount}
               </span>
               <button
                 type="button"
                 disabled={isLoading || pageIndex === 0}
                 onClick={() => setPage(pageIndex - 1)}
-                className="rounded border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-2.5 py-1 text-[#FAFAF8] hover:bg-[#23231E] disabled:opacity-30 cursor-pointer select-none transition-colors"
+                className="rounded border border-border bg-background px-2.5 py-1 text-foreground hover:bg-muted disabled:opacity-30 cursor-pointer select-none transition-colors"
               >
                 Previous
               </button>
@@ -1392,7 +1392,7 @@ export default function PipelinePage() {
                 type="button"
                 disabled={isLoading || pageIndex >= pageCount - 1}
                 onClick={() => setPage(pageIndex + 1)}
-                className="rounded border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-2.5 py-1 text-[#FAFAF8] hover:bg-[#23231E] disabled:opacity-30 cursor-pointer select-none transition-colors"
+                className="rounded border border-border bg-background px-2.5 py-1 text-foreground hover:bg-muted disabled:opacity-30 cursor-pointer select-none transition-colors"
               >
                 Next
               </button>

@@ -98,4 +98,16 @@ data/permits_batch_*.json
 data/zone5_all_permits_audit.json
 data/remaining_40_leads.json
 
+# Root scratch & inspection artifacts
+/*.png
+/*.html
+inspect_*.js
+analyze_*.js
+parse_*.js
+next_data.json
+parsed_sections.json
+check_storm_details.mjs
+test_all_storms.mjs
+notion/
+
 .taste-skill/

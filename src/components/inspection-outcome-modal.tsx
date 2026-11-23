@@ -100,40 +100,40 @@ export function InspectionOutcomeModal({ target, onClose, onSuccess }: ModalProp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-xs animate-in fade-in duration-150">
       <div 
-        className="relative w-full max-w-lg rounded-xl border border-neutral-800 bg-[#0e0f14] p-5 shadow-2xl text-xs text-neutral-200 space-y-4"
+        className="relative w-full max-w-lg rounded-xl border border-border bg-card dark:bg-[#0e0f14] p-5 shadow-2xl text-xs text-foreground space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-neutral-800/80 pb-3">
+        <div className="flex items-start justify-between border-b border-border/80 pb-3">
           <div className="space-y-0.5">
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
+            <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
               <ClipboardCheck className="size-4 text-sky-400" />
               Record Field Inspection Outcome
             </h2>
-            <p className="text-[11px] text-neutral-400">
+            <p className="text-[11px] text-muted-foreground">
               Closed-loop verification. Physical results train and calibrate the predictive scoring model.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors"
+            className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
           >
             <X className="size-4" />
           </button>
         </div>
 
         {/* Property Summary Pill */}
-        <div className="rounded-lg border border-neutral-800 bg-[#14151c] p-3 space-y-1.5">
-          <div className="font-semibold text-white text-xs flex items-center justify-between">
+        <div className="rounded-lg border border-border bg-muted/50 dark:bg-[#14151c] p-3 space-y-1.5">
+          <div className="font-semibold text-foreground text-xs flex items-center justify-between">
             <span>{target.address || "Commercial Building"}</span>
             {target.buildingSqft ? (
-              <span className="text-[10px] text-neutral-400 font-mono">
+              <span className="text-[10px] text-muted-foreground font-mono">
                 {num(target.buildingSqft)} sq ft
               </span>
             ) : null}
           </div>
-          <div className="flex items-center gap-3 text-[11px] text-neutral-400">
+          <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
             <span className="flex items-center gap-1">
               <MapPin className="size-3 text-neutral-500" />
               {[target.city, target.state, target.zipCode].filter(Boolean).join(", ")}
@@ -157,7 +157,7 @@ export function InspectionOutcomeModal({ target, onClose, onSuccess }: ModalProp
         <form onSubmit={handleSubmit} className="space-y-3.5">
           {/* 1. Moisture & Physical Damage Verified */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Physical Storm / Moisture Damage Verified?
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -167,7 +167,7 @@ export function InspectionOutcomeModal({ target, onClose, onSuccess }: ModalProp
                 className={`flex items-center justify-center gap-1.5 rounded-md border py-2 text-xs font-semibold transition-colors ${
                   moisture
                     ? "border-[#B4E4D6]/50 bg-[#B4E4D6]/10 text-[#B4E4D6] ring-1 ring-[#B4E4D6]/30"
-                    : "border-neutral-800 bg-[#161720] text-neutral-400 hover:text-neutral-200"
+                    : "border-border bg-muted/40 dark:bg-[#161720] text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <CheckCircle2 className="size-3.5" />
@@ -178,8 +178,8 @@ export function InspectionOutcomeModal({ target, onClose, onSuccess }: ModalProp
                 onClick={() => setMoisture(false)}
                 className={`flex items-center justify-center gap-1.5 rounded-md border py-2 text-xs font-semibold transition-colors ${
                   !moisture
-                    ? "border-neutral-600 bg-neutral-800 text-neutral-200"
-                    : "border-neutral-800 bg-[#161720] text-neutral-400 hover:text-neutral-200"
+                    ? "border-border bg-muted text-foreground"
+                    : "border-border bg-muted/40 dark:bg-[#161720] text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <span>No Damage / Clean Roof</span>
@@ -189,13 +189,13 @@ export function InspectionOutcomeModal({ target, onClose, onSuccess }: ModalProp
 
           {/* 2. Approved Scope */}
           <div className="space-y-1">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Recommended / Approved Scope
             </label>
             <select
               value={scope}
               onChange={(e) => setScope(e.target.value as FieldOutcome["scope"])}
-              className="h-8 w-full rounded-md border border-neutral-800 bg-[#161720] px-2.5 text-xs text-white outline-none focus:border-neutral-700 cursor-pointer"
+              className="h-8 w-full rounded-md border border-border bg-background dark:bg-[#161720] px-2.5 text-xs text-foreground outline-none focus:border-ring cursor-pointer"
             >
               <option value="replacement">Full roof replacement approved</option>
               <option value="repair">Commercial repair / patch scope approved</option>
@@ -205,7 +205,7 @@ export function InspectionOutcomeModal({ target, onClose, onSuccess }: ModalProp
 
           {/* 3. Contract Value Awarded */}
           <div className="space-y-1">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Contract Value Awarded (USD)
             </label>
             <div className="relative">
@@ -218,14 +218,14 @@ export function InspectionOutcomeModal({ target, onClose, onSuccess }: ModalProp
                 value={contractValue}
                 onChange={(e) => setContractValue(e.target.value.replace(/[^\d.]/g, ""))}
                 placeholder="e.g. 175000 (leave blank or 0 if bid pending)"
-                className="h-8 w-full rounded-md border border-neutral-800 bg-[#161720] pl-6 pr-2.5 text-xs text-white outline-none placeholder:text-neutral-600 focus:border-neutral-700 font-mono"
+                className="h-8 w-full rounded-md border border-border bg-background dark:bg-[#161720] pl-6 pr-2.5 text-xs text-foreground outline-none placeholder:text-muted-foreground focus:border-ring font-mono"
               />
             </div>
           </div>
 
           {/* 4. Field Inspection Notes */}
           <div className="space-y-1">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Field & Inspection Notes
             </label>
             <textarea
@@ -233,19 +233,19 @@ export function InspectionOutcomeModal({ target, onClose, onSuccess }: ModalProp
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g. Infrared scan verified wet polyiso insulation around north drains; 1.5 inch hail strikes on metal flashing…"
               rows={2}
-              className="w-full rounded-md border border-neutral-800 bg-[#161720] p-2 text-xs text-white outline-none placeholder:text-neutral-600 focus:border-neutral-700"
+              className="w-full rounded-md border border-border bg-background dark:bg-[#161720] p-2 text-xs text-foreground outline-none placeholder:text-muted-foreground focus:border-ring"
             />
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-neutral-800/80">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/80">
             <Button
               type="button"
               variant="ghost"
               size="sm"
               onClick={onClose}
               disabled={submitting}
-              className="h-8 text-xs text-neutral-400 hover:text-white"
+              className="h-8 text-xs text-muted-foreground hover:text-foreground"
             >
               Cancel
             </Button>

@@ -1,0 +1,617 @@
+[
+  {
+    "empire_permit_number": "COM-ROOF-25-000089",
+    "normalized_address": "1415 N COCKRELL HILL RD",
+    "empire_work_date": "2025-08-26",
+    "empire_valuation": 0,
+    "roof_system": "Unspecified Commercial System",
+    "property_type": "DISTRIBUTION WAREHOUSE",
+    "building_sqft": "98120",
+    "owner_name": "LIT INDUSTRIAL LTD PS",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "COM-ROOF-25-000066",
+    "normalized_address": "5203 ALPHA RD",
+    "empire_work_date": "2025-07-23",
+    "empire_valuation": 0,
+    "roof_system": "Unspecified Commercial System",
+    "property_type": "RETAIL STRIP",
+    "building_sqft": "123747",
+    "owner_name": "BEL MUSE I LP &",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "COM-ROOF-25-000037",
+    "normalized_address": "4809 COLE AVE",
+    "empire_work_date": "2025-06-25",
+    "empire_valuation": 0,
+    "roof_system": "Unspecified Commercial System",
+    "property_type": "OFFICE BUILDING",
+    "building_sqft": "80000",
+    "owner_name": "RAIM COLE AVENUE LP",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "COM-ROOF-25-000033",
+    "normalized_address": "3500 MANOR WAY",
+    "empire_work_date": "2025-06-23",
+    "empire_valuation": 0,
+    "roof_system": "Unspecified Commercial System",
+    "property_type": "AUTOMOTIVE SERVICE",
+    "building_sqft": "105547",
+    "owner_name": "SEWELL CORPORATION",
+    "subsequent_roof_work": [
+      {
+        "permit_number": "COM-ROOF-25-000130",
+        "issue_date": "2025-09-23",
+        "contractor": "Claudine Cooper",
+        "valuation": 102600,
+        "description": "Commercial Roofing Permit: ROOF REPLACEMENT - 10,800 SF - TEAR OFF EXISTING ROOFING DOWN TO DECK. MECHANICALLY FASTEN ONE LAYER OF 2.2” ISO. INSTALL 1 PLY WHITE 60 MIL TPO ROOFING MEMBRANE.*NO STRUCTRUAL CHANGES*BUILDING IS OCCUPIED*"
+      },
+      {
+        "permit_number": "COM-ROOF-26-000280",
+        "issue_date": "2026-09-11",
+        "contractor": "Claudine Cooper",
+        "valuation": 149150,
+        "description": "Commercial Roofing Permit: ROOF REPLACEMENT - 15,700 SF - 1. TEAR OFF EXISTING ROOFING DOWN TO EXISTING DECK. 2. SWEEP DECK FREE OF GRAVEL, DIRT AND DEBRIS. 3. MECHANICALLY FASTEN ONE LAYER OF 4.3\" OF ISO (R-25 VALUE REQUIRED BY THE CITY) TO THE EXISTING DECK. 4. INSTALL 1 PLY WHITE 60 MIL TPO SINGLE PLY ROOFING MEMBRANE IN A FULLY ADHERED APPLICATION OVER NEW INSULATION. *NO STRUCTRUAL CHANGES*BUILDING IS OCCUPIED*"
+      },
+      {
+        "permit_number": "COM-ROOF-26-000280",
+        "issue_date": "2026-09-17",
+        "contractor": "On Municipal Record",
+        "valuation": 0,
+        "description": "ROOF REPLACEMENT - 15,700 SF - 1. TEAR OFF EXISTING ROOFING DOWN TO EXISTING DECK. 2. SWEEP DECK FREE OF GRAVEL, DIRT AND DEBRIS. 3. MECHANICALLY FASTEN ONE LAYER OF 4.3\" OF ISO (R-25 VALUE REQUIRED BY THE CITY) TO THE EXISTING DECK. 4. INSTALL 1 PLY WHITE 60 MIL TPO SINGLE PLY ROOFING MEMBRANE IN A FULLY ADHERED APPLICATION OVER NEW INSULATION. *NO STRUCTRUAL CHANGES*BUILDING IS OCCUPIED*"
+      }
+    ]
+  },
+  {
+    "empire_permit_number": "2503125004_198932311-001",
+    "normalized_address": "1701 N MARKET ST",
+    "empire_work_date": "2025-04-10",
+    "empire_valuation": 0,
+    "roof_system": "Unspecified Commercial System",
+    "property_type": "OFFICE BUILDING",
+    "building_sqft": "80000",
+    "owner_name": "HOBSON ELECTRIC LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2411015003_194060679-001",
+    "normalized_address": "3940 PIPESTONE RD",
+    "empire_work_date": "2024-11-01",
+    "empire_valuation": 982739.03,
+    "roof_system": "Unspecified Commercial System",
+    "property_type": "DISTRIBUTION WAREHOUSE",
+    "building_sqft": "118625",
+    "owner_name": "PRIM TURNPIKE PORTFOLIO",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2408295005",
+    "normalized_address": "11441 HILLGUARD RD, Dallas, TX 75243",
+    "empire_work_date": "2024-08-29",
+    "empire_valuation": 549429.1,
+    "roof_system": "Commercial Flat / Membrane",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "118125",
+    "owner_name": "HUB CENTRAL LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2408295007",
+    "normalized_address": "6505 BANDERA AVE, Dallas, TX 75225",
+    "empire_work_date": "2024-08-29",
+    "empire_valuation": 102176.44,
+    "roof_system": "Architectural Asphalt Shingle",
+    "property_type": null,
+    "building_sqft": null,
+    "owner_name": null,
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2407175003",
+    "normalized_address": "3300 W MOCKINGBIRD LN, Dallas, TX 75235",
+    "empire_work_date": "2024-07-17",
+    "empire_valuation": 324806.47,
+    "roof_system": "Commercial Flat / Membrane",
+    "property_type": "HOTEL",
+    "building_sqft": "160566",
+    "owner_name": "MOCKINGBIRD PARTNERS LP",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2407015004",
+    "normalized_address": "4101 BRYAN ST, Dallas, TX 75204",
+    "empire_work_date": "2024-07-01",
+    "empire_valuation": 162416.63,
+    "roof_system": "Commercial Flat / Membrane",
+    "property_type": "RETAIL STRIP",
+    "building_sqft": "8577",
+    "owner_name": "4101 BRYAN LP",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2403015003",
+    "normalized_address": "1610 S WESTMORELAND RD, Dallas, TX 75211",
+    "empire_work_date": "2024-03-01",
+    "empire_valuation": 786399,
+    "roof_system": "Commercial Flat / Membrane",
+    "property_type": null,
+    "building_sqft": null,
+    "owner_name": null,
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2312075002",
+    "normalized_address": "4445 ROCK QUARRY RD, Dallas, TX 75211",
+    "empire_work_date": "2023-12-07",
+    "empire_valuation": 1625360.74,
+    "roof_system": "Commercial Flat / Membrane",
+    "property_type": "DISTRIBUTION WAREHOUSE",
+    "building_sqft": "356400",
+    "owner_name": "TEACHERS INSURANCE &",
+    "subsequent_roof_work": [
+      {
+        "permit_number": "2312141071_186718258-001",
+        "issue_date": "2023-12-14",
+        "contractor": "On Municipal Record",
+        "valuation": 113503.05,
+        "description": "Commercial Alteration.  Installation of non-penetrating rooftop guardrail and warning line systems. A small hand-cranked davit that is adhered to the parapet or the side of the building will also be installed. A fully guarded access platform will be installed so workers can operate the hoist. A fall protection system will be installed on the ladder to provide fall protection to be compliant with OSHA requirements. **No Plumbing, No Mechanical, No Electrical work will be performed**"
+      },
+      {
+        "permit_number": "2401041101_186718258-002",
+        "issue_date": "2024-01-26",
+        "contractor": "On Municipal Record",
+        "valuation": 113503.05,
+        "description": "Commercial Alteration.  Installation of non-penetrating rooftop guardrail and warning line systems. A small hand-cranked davit that is adhered to the parapet or the side of the building will also be installed. A fully guarded access platform will be installed so workers can operate the hoist. A fall protection system will be installed on the ladder to provide fall protection to be compliant with OSHA requirements. **No Plumbing, No Mechanical, No Electrical work will be performed**"
+      }
+    ]
+  },
+  {
+    "empire_permit_number": "2312065007",
+    "normalized_address": "4105 ROCK QUARRY RD, Dallas, TX 75211",
+    "empire_work_date": "2023-12-06",
+    "empire_valuation": 1032642.03,
+    "roof_system": "Commercial Flat / Membrane",
+    "property_type": "DISTRIBUTION WAREHOUSE",
+    "building_sqft": "247570",
+    "owner_name": "TEACHERS INSURANCE &",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2312045007",
+    "normalized_address": "3138 QUEBEC ST, Dallas, TX 75247",
+    "empire_work_date": "2023-12-04",
+    "empire_valuation": 356434.18,
+    "roof_system": "Commercial Flat / Membrane",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "49040",
+    "owner_name": "ALP ARC V GDI QUEBEC PROPERTY",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2101065005",
+    "normalized_address": "2600 N STEMMONS FWY",
+    "empire_work_date": "2021-01-06",
+    "empire_valuation": 408790,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "OFFICE/SHOWROOM",
+    "building_sqft": "94622",
+    "owner_name": "POLLOCK REALTY CORP",
+    "subsequent_roof_work": [
+      {
+        "permit_number": "2110265007",
+        "issue_date": "2021-10-26",
+        "contractor": "On Municipal Record",
+        "valuation": 459502,
+        "description": "Building 2   Building (BU)  1001-REMOVE EXISTING ROOF AND INSTALL NEW ROOF"
+      }
+    ]
+  },
+  {
+    "empire_permit_number": "2101065004",
+    "normalized_address": "10024 MONROE DR",
+    "empire_work_date": "2021-01-06",
+    "empire_valuation": 180735,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "OFFICE/SHOWROOM",
+    "building_sqft": "25972",
+    "owner_name": "HUGHES FELDER NO 2",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2012235004",
+    "normalized_address": "10940 SHADY TRL",
+    "empire_work_date": "2020-12-23",
+    "empire_valuation": 217901,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "18132",
+    "owner_name": "SIGMA STAR IMPORT INC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2010215002",
+    "normalized_address": "2630 BRENNER DR",
+    "empire_work_date": "2020-10-21",
+    "empire_valuation": 84196,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "12876",
+    "owner_name": "FELDER NEIL",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2010135004",
+    "normalized_address": "3015 OAK LAWN AVE",
+    "empire_work_date": "2020-10-13",
+    "empire_valuation": 493690,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "HOTEL",
+    "building_sqft": "167348",
+    "owner_name": "WARWICK MELROSE DALLAS",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2008255002",
+    "normalized_address": "2472 SOUTHWELL RD",
+    "empire_work_date": "2020-08-25",
+    "empire_valuation": 66387,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "OFFICE/SHOWROOM",
+    "building_sqft": "11000",
+    "owner_name": "FELDER NEIL E &",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2007105001",
+    "normalized_address": "11300 N CENTRAL EXPY",
+    "empire_work_date": "2020-07-10",
+    "empire_valuation": 96592,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "OFFICE BUILDING",
+    "building_sqft": "73584",
+    "owner_name": "DALLAS ROYAL CENTRAL TOWER LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2007095008",
+    "normalized_address": "4707 BRONZE WAY",
+    "empire_work_date": "2020-07-09",
+    "empire_valuation": 549205,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "DISTRIBUTION WAREHOUSE",
+    "building_sqft": "153000",
+    "owner_name": "MDH F1 DFW BRONZE WAY LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2007085007",
+    "normalized_address": "6627 MAPLE AVE",
+    "empire_work_date": "2020-07-09",
+    "empire_valuation": 615792,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "42585",
+    "owner_name": "6627 MAPLE AVENUE LLC",
+    "subsequent_roof_work": [
+      {
+        "permit_number": "2401291136_187363507-001",
+        "issue_date": "2024-01-29",
+        "contractor": "Licensed Commercial Contractor",
+        "valuation": 85000,
+        "description": "Commercial Alteration Addition Permit: Installation of non-penetrating rooftop guardrail and warning line systems. A small hand-cranked davit that is adhered to the parapet or the side of the building will also be installed. A fully guarded access platform will be installed so workers can operate the hoist. A fall protection system will be installed on the ladder to provide fall protection to be compliant with OSHA requirements. **No Plumbing, No Mechanical, No Electrical work will be performed**"
+      },
+      {
+        "permit_number": "2401311089_187363507-002",
+        "issue_date": "2024-02-09",
+        "contractor": "On Municipal Record",
+        "valuation": 78504.86,
+        "description": "Installation of non-penetrating rooftop guardrail and warning line systems. A small hand-cranked davit that is adhered to the parapet or the side of the building will also be installed. A fully guarded access platform will be installed so workers can operate the hoist. A fall protection system will be installed on the ladder to provide fall protection to be compliant with OSHA requirements. **No Plumbing, No Mechanical, No Electrical work will be performed**"
+      }
+    ]
+  },
+  {
+    "empire_permit_number": "2006265004",
+    "normalized_address": "2971 WALNUT HILL LN",
+    "empire_work_date": "2020-06-26",
+    "empire_valuation": 104516,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "RETAIL STRIP",
+    "building_sqft": "4281",
+    "owner_name": "HUGHES FELDER NO 2",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2006175001",
+    "normalized_address": "2500 N HASKELL AVE",
+    "empire_work_date": "2020-06-17",
+    "empire_valuation": 107873,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "BANK",
+    "building_sqft": "5312",
+    "owner_name": "2500 N HASKELL VENTURES LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2006105004",
+    "normalized_address": "2340 LOMBARDY LN",
+    "empire_work_date": "2020-06-10",
+    "empire_valuation": 110173,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "AUTOMOTIVE SERVICE",
+    "building_sqft": "11376",
+    "owner_name": "JVM DUNCANVILLE LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2005265008",
+    "normalized_address": "2838 ANODE LN",
+    "empire_work_date": "2020-05-26",
+    "empire_valuation": 299250,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "67360",
+    "owner_name": "CT2 ANODE LLC",
+    "subsequent_roof_work": [
+      {
+        "permit_number": "2307175001",
+        "issue_date": "2023-07-17",
+        "contractor": "On Municipal Record",
+        "valuation": 198119,
+        "description": "Building (BU)  1001-REMOVE EXISTING ROOF AND INSTALL NEW ROOF"
+      }
+    ]
+  },
+  {
+    "empire_permit_number": "2005135002",
+    "normalized_address": "5380 RED BIRD CENTER DR",
+    "empire_work_date": "2020-05-13",
+    "empire_valuation": 213159,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "18400",
+    "owner_name": "SEALY EXECUTIVE CENTER LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2003255006",
+    "normalized_address": "3870 LA REUNION PKWY",
+    "empire_work_date": "2020-03-25",
+    "empire_valuation": 903420,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "DISTRIBUTION WAREHOUSE",
+    "building_sqft": "255080",
+    "owner_name": "PRIM TURNPIKE PORTFOLIO",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2001315002",
+    "normalized_address": "6535 SKILLMAN ST",
+    "empire_work_date": "2020-01-31",
+    "empire_valuation": 81782,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "BANK",
+    "building_sqft": "2825",
+    "owner_name": "WORLD SAVINGS & LOAN ASSN",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2001145005",
+    "normalized_address": "5525 L B J FWY",
+    "empire_work_date": "2020-01-14",
+    "empire_valuation": 291148,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "OFFICE BUILDING",
+    "building_sqft": "246481",
+    "owner_name": "SAI GALLERIA LODGING LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "2001085007",
+    "normalized_address": "9301 WEISS ST",
+    "empire_work_date": "2020-01-08",
+    "empire_valuation": 520441,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "HANGAR",
+    "building_sqft": "200368",
+    "owner_name": "MLT DEVELOPMENT CO",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1912115005",
+    "normalized_address": "10704 COMPOSITE DR",
+    "empire_work_date": "2019-12-11",
+    "empire_valuation": 351990,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "27174",
+    "owner_name": "FRG X AP TX LP",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1909305012",
+    "normalized_address": "1341 W MOCKINGBIRD LN",
+    "empire_work_date": "2019-09-30",
+    "empire_valuation": 569526,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "DRIVE-IN BANK",
+    "building_sqft": "240",
+    "owner_name": "BROOKHOLLOW NATL BANK",
+    "subsequent_roof_work": [
+      {
+        "permit_number": "COM-ELC-26-004139",
+        "issue_date": "2026-09-03",
+        "contractor": "On Municipal Record",
+        "valuation": 0,
+        "description": "Provide electrical connections to Mechanical equipment (Commercial Refrigeration and Process cooling as heating systems) on 7th floor and 8th floor and rooftop of East Mockingbird Tower for Fortrea CRU LP at 1341 Mockingbird Ln Dallas TX 75247 for TXRE Properties."
+      }
+    ]
+  },
+  {
+    "empire_permit_number": "1909055004",
+    "normalized_address": "600 N PEARL ST",
+    "empire_work_date": "2019-09-09",
+    "empire_valuation": 2093066,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "PARKING GARAGE",
+    "building_sqft": "6362804",
+    "owner_name": "SGP POTA LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1909095017",
+    "normalized_address": "2636 IRVING BLVD",
+    "empire_work_date": "2019-09-09",
+    "empire_valuation": 412302,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "13800",
+    "owner_name": "MR SERVICE LP",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1908215007",
+    "normalized_address": "208 N MARKET ST",
+    "empire_work_date": "2019-08-29",
+    "empire_valuation": 75944,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "OFFICE BUILDING",
+    "building_sqft": "60000",
+    "owner_name": "208 N MARKET LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1907185003",
+    "normalized_address": "5401 N CENTRAL EXPY",
+    "empire_work_date": "2019-07-18",
+    "empire_valuation": 281755,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "OFFICE BUILDING",
+    "building_sqft": "77203",
+    "owner_name": "SOUTHERN METHODIST UNIVERSITY",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1907125008",
+    "normalized_address": "3631 W DAVIS ST",
+    "empire_work_date": "2019-07-12",
+    "empire_valuation": 915083,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "DISTRIBUTION WAREHOUSE",
+    "building_sqft": "330000",
+    "owner_name": "PINNACLE A LLC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1907095001",
+    "normalized_address": "2700 FOREST LN",
+    "empire_work_date": "2019-07-09",
+    "empire_valuation": 221801,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "15130",
+    "owner_name": "CINCO DE MAYO PS",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1904095009",
+    "normalized_address": "13657 JUPITER RD",
+    "empire_work_date": "2019-04-09",
+    "empire_valuation": 293787,
+    "roof_system": "Commercial Roof System",
+    "property_type": "OFFICE/SHOWROOM",
+    "building_sqft": "81012",
+    "owner_name": "GRANT PRPERTIES TX LLC &",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1904055002",
+    "normalized_address": "3912 CEDAR SPRINGS RD",
+    "empire_work_date": "2019-04-05",
+    "empire_valuation": 244401,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "RETAIL STRIP",
+    "building_sqft": "25590",
+    "owner_name": "RSA INC",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1811165003",
+    "normalized_address": "3131 TURTLE CREEK BLVD",
+    "empire_work_date": "2018-11-16",
+    "empire_valuation": 166757,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "OFFICE BUILDING",
+    "building_sqft": "260808",
+    "owner_name": "STRS OHIO TX REAL ESTATE",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1808015001",
+    "normalized_address": "151 REGAL ROW",
+    "empire_work_date": "2018-08-01",
+    "empire_valuation": 1286480,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "222256",
+    "owner_name": "SECURITY CAPITAL",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1808015001",
+    "normalized_address": "151 REGAL ROW",
+    "empire_work_date": "2018-08-01",
+    "empire_valuation": 1286480,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "222256",
+    "owner_name": "SECURITY CAPITAL",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1805115010",
+    "normalized_address": "3901 PIPESTONE RD",
+    "empire_work_date": "2018-05-14",
+    "empire_valuation": 274840,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "STORAGE WAREHOUSE",
+    "building_sqft": "176274",
+    "owner_name": "PRIM TURNPIKE PORTFOLIO",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1803235001",
+    "normalized_address": "39680 L B J FWY",
+    "empire_work_date": "2018-03-23",
+    "empire_valuation": 235565,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "AUTOMOTIVE DISPLAY",
+    "building_sqft": "32996",
+    "owner_name": "OMEGA AUTOMOTIVE REAL",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1801125005",
+    "normalized_address": "8301 WESTCHESTER DR",
+    "empire_work_date": "2018-01-12",
+    "empire_valuation": 577133,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "SHOPPING CENTER",
+    "building_sqft": "380228",
+    "owner_name": "ALPINE PRESTON CENTER LP",
+    "subsequent_roof_work": null
+  },
+  {
+    "empire_permit_number": "1801055002",
+    "normalized_address": "2100 ROSS AVE",
+    "empire_work_date": "2018-01-05",
+    "empire_valuation": 170014,
+    "roof_system": "Commercial Low-Slope / Flat",
+    "property_type": "OFFICE BUILDING",
+    "building_sqft": "1142350",
+    "owner_name": "DALLAS 2100 ROSS LP",
+    "subsequent_roof_work": null
+  }
+]

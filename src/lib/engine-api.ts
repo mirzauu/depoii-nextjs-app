@@ -118,6 +118,82 @@ export function mapPermitSearch(body: unknown): PermitPage {
   };
 }
 
+
+export interface ContractorBuilding {
+  id: string;
+  parcelAccount: string;
+  address: string;
+  city: string;
+  state: string;
+  owner: string | null;
+  ownerAddress: string | null;
+  sqft: number;
+  yearBuilt: number | null;
+  propertyType: string | null;
+  lat: number | null;
+  lng: number | null;
+  permitCount: number;
+  totalValuation: number;
+  latestPermitDate: string;
+  workType: string;
+  roofSystem: string;
+  isCommercial: boolean;
+  permits: string[];
+}
+
+export interface ContractorBuildingsPage {
+  contractor: string;
+  filter: "commercial" | "all";
+  total: number;
+  allCount: number;
+  commercialCount: number;
+  count: number;
+  offset: number;
+  limit: number;
+  buildings: ContractorBuilding[];
+}
+
+export function mapContractorBuildings(body: unknown): ContractorBuildingsPage {
+  const b = (body ?? {}) as Row;
+  const rawList = Array.isArray(b.buildings) ? b.buildings : [];
+  const buildings: ContractorBuilding[] = rawList.map((row): ContractorBuilding => {
+    const r = (row ?? {}) as Row;
+    return {
+      id: str(r, ["id"]),
+      parcelAccount: str(r, ["parcelAccount", "parcel_account"]),
+      address: str(r, ["address"], "Address not specified"),
+      city: str(r, ["city"]),
+      state: str(r, ["state"], "TX"),
+      owner: r.owner != null && r.owner !== "" ? String(r.owner) : null,
+      ownerAddress: r.ownerAddress != null && r.ownerAddress !== "" ? String(r.ownerAddress) : null,
+      sqft: num(r, ["sqft"]),
+      yearBuilt: r.yearBuilt != null ? Number(r.yearBuilt) : null,
+      propertyType: r.propertyType != null && r.propertyType !== "" ? String(r.propertyType) : null,
+      lat: r.lat != null ? Number(r.lat) : null,
+      lng: r.lng != null ? Number(r.lng) : null,
+      permitCount: num(r, ["permitCount", "permit_count"]) || 1,
+      totalValuation: num(r, ["totalValuation", "total_valuation"]),
+      latestPermitDate: str(r, ["latestPermitDate", "latest_permit_date"]),
+      workType: str(r, ["workType", "work_type"], "Roofing"),
+      roofSystem: str(r, ["roofSystem", "roof_system"]),
+      isCommercial: Boolean(r.isCommercial ?? r.is_commercial),
+      permits: Array.isArray(r.permits) ? r.permits.map(String) : [],
+    };
+  });
+
+  return {
+    contractor: str(b, ["contractor"]),
+    filter: (str(b, ["filter"]) as "commercial" | "all") || "commercial",
+    total: num(b, ["total"]),
+    allCount: num(b, ["allCount", "all_count"]),
+    commercialCount: num(b, ["commercialCount", "commercial_count"]),
+    count: buildings.length,
+    offset: num(b, ["offset"]),
+    limit: num(b, ["limit"]),
+    buildings,
+  };
+}
+
 export interface ContractorProfile {
   id: string;
   name: string;
@@ -500,9 +576,20 @@ export interface EngineParcel {
   source: string;
   lat: number | null;
   lng: number | null;
+  sourceLinks?: {
+    dcad?: string;
+    accela?: string;
+    tad?: string;
+    [key: string]: string | undefined;
+  };
+  cadUrl?: string;
+  accelaUrl?: string;
 }
 
 export function mapParcel(row: Row): EngineParcel {
+  const rawLinks = (row.sourceLinks || row.source_links || {}) as Record<string, unknown>;
+  const dcad = typeof rawLinks.dcad === "string" && rawLinks.dcad.startsWith("http") ? rawLinks.dcad : (str(row, ["cadUrl", "cad_url"]) || undefined);
+  const accela = typeof rawLinks.accela === "string" && rawLinks.accela.startsWith("http") ? rawLinks.accela : (str(row, ["accelaUrl", "accela_url"]) || undefined);
   return {
     id: str(row, ["id", "parcelId", "parcel_id"]),
     address: str(row, ["address"]),
@@ -517,6 +604,13 @@ export function mapParcel(row: Row): EngineParcel {
     source: str(row, ["data_source", "dataSource"]),
     lat: coord(row, ["latitude"]),
     lng: coord(row, ["longitude"]),
+    sourceLinks: {
+      ...(typeof rawLinks === "object" ? (rawLinks as Record<string, string>) : {}),
+      ...(dcad ? { dcad } : {}),
+      ...(accela ? { accela } : {}),
+    },
+    cadUrl: dcad,
+    accelaUrl: accela,
   };
 }
 
@@ -599,10 +693,20 @@ export interface BrowseParcel {
   sources?: BrowseSource[];
   mapsUrl?: string;
   cadUrl?: string;
+  accelaUrl?: string;
+  sourceLinks?: {
+    dcad?: string;
+    accela?: string;
+    tad?: string;
+    [key: string]: string | undefined;
+  };
   permitPortalUrl?: string;
 }
 
 export function mapBrowseParcel(row: Row): BrowseParcel {
+  const rawLinks = (row.sourceLinks || row.source_links || {}) as Record<string, unknown>;
+  const dcad = typeof rawLinks.dcad === "string" && rawLinks.dcad.startsWith("http") ? rawLinks.dcad : (str(row, ["cadUrl", "cad_url"]) || undefined);
+  const accela = typeof rawLinks.accela === "string" && rawLinks.accela.startsWith("http") ? rawLinks.accela : (str(row, ["accelaUrl", "accela_url"]) || undefined);
   return {
     id: str(row, ["id", "parcelId", "parcel_id"]),
     address: str(row, ["address"]),
@@ -627,6 +731,13 @@ export function mapBrowseParcel(row: Row): BrowseParcel {
     improvementSections: str(row, ["improvement_sections", "improvementSections"]) || undefined,
     lastReroofDate: str(row, ["last_reroof_date", "lastReroofDate"]) || undefined,
     lastReroofPermitNo: str(row, ["last_reroof_permit_no", "lastReroofPermitNo"]) || undefined,
+    sourceLinks: {
+      ...(typeof rawLinks === "object" ? (rawLinks as Record<string, string>) : {}),
+      ...(dcad ? { dcad } : {}),
+      ...(accela ? { accela } : {}),
+    },
+    cadUrl: dcad,
+    accelaUrl: accela,
   };
 }
 

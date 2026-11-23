@@ -185,9 +185,9 @@ export default function PermitsPage() {
   const place = all ? "All Locations" : jurisdiction;
 
   return (
-    <div className="flex h-[calc(100dvh-53px)] max-h-[calc(100dvh-53px)] flex-col bg-[#171714] text-[#FAFAF8] antialiased font-sans overflow-hidden">
+    <div className="flex h-[calc(100dvh-53px)] max-h-[calc(100dvh-53px)] flex-col bg-background text-foreground antialiased font-sans overflow-hidden">
       {/* Top Header Row - Fixed */}
-      <div className="shrink-0 border-b border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-3 z-20 shrink-0 text-[#FAFAF8]">
+      <div className="shrink-0 border-b border-border bg-background px-5 py-3 z-20 shrink-0 text-foreground">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-0.5">
             <div className="flex items-center gap-3">
@@ -210,7 +210,7 @@ export default function PermitsPage() {
       </div>
 
       {/* Action & Filter Sub-Bar - Fixed */}
-      <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-2.5 text-xs z-20 shrink-0 text-[#FAFAF8]">
+      <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background px-5 py-2.5 text-xs z-20 shrink-0 text-foreground">
         {/* Left Side: Toggle Sidebar & Search */}
         <div className="flex items-center gap-2.5">
           <button
@@ -286,10 +286,10 @@ export default function PermitsPage() {
       <div className="flex flex-1 min-h-0 overflow-hidden">
         {/* Left Filter Sidebar - Hot Sheet Style */}
         {!hideFilters && (
-          <aside className="w-80 shrink-0 border-r border-[rgba(250,250,248,0.08)] bg-[#171714] text-[#B9B9B2] flex flex-col justify-between overflow-hidden">
+          <aside className="w-80 shrink-0 border-r border-border bg-background text-muted-foreground flex flex-col justify-between overflow-hidden">
             <div className="flex-1 overflow-y-auto p-4 space-y-4 [scrollbar-width:thin]">
               {/* Segmented Count Tabs: All, Jobsites, Phases */}
-              <div className="grid grid-cols-3 gap-1 rounded-lg border border-[rgba(250,250,248,0.08)] bg-[#1F1F1B] p-0.5 text-center">
+              <div className="grid grid-cols-3 gap-1 rounded-lg border border-border bg-muted/60 p-0.5 text-center">
                 <button
                   type="button"
                   onClick={() => {
@@ -345,7 +345,7 @@ export default function PermitsPage() {
               {/* Accordion Filter Cards */}
               <div className="space-y-2.5">
                 {/* 1. Jurisdiction */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("jurisdiction")}
@@ -414,7 +414,7 @@ export default function PermitsPage() {
                 </div>
 
                 {/* 2. Contractor */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("contractor")}
@@ -444,7 +444,7 @@ export default function PermitsPage() {
                 </div>
 
                 {/* 3. Roof System */}
-                <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                <div className="rounded-lg border border-border bg-card p-2.5">
                   <button
                     type="button"
                     onClick={() => toggleSection("roof")}
@@ -486,7 +486,7 @@ export default function PermitsPage() {
 
                 {/* 4. Category */}
                 {view === "all" && (
-                  <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                  <div className="rounded-lg border border-border bg-card p-2.5">
                     <button
                       type="button"
                       onClick={() => toggleSection("category")}
@@ -529,7 +529,7 @@ export default function PermitsPage() {
 
                 {/* 5. Status & Intelligence */}
                 {view === "all" && (
-                  <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                  <div className="rounded-lg border border-border bg-card p-2.5">
                     <button
                       type="button"
                       onClick={() => toggleSection("intelligence")}
@@ -593,7 +593,7 @@ export default function PermitsPage() {
 
                 {/* 6. Valuation & Storm Window */}
                 {view === "all" && (
-                  <div className="rounded-lg border border-[rgba(250,250,248,0.04)] bg-[#1C1C18]/60 p-2.5">
+                  <div className="rounded-lg border border-border bg-card p-2.5">
                     <button
                       type="button"
                       onClick={() => toggleSection("valuation")}
@@ -670,11 +670,11 @@ export default function PermitsPage() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="border-t border-[rgba(250,250,248,0.08)] p-3 bg-[#171714]">
+            <div className="border-t border-border p-3 bg-sidebar">
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="w-full rounded-md border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-3 py-2 text-xs font-medium text-[#FAFAF8] hover:bg-[#23231E] transition-colors cursor-pointer select-none"
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer select-none"
               >
                 Clear All Filters
               </button>
@@ -683,14 +683,14 @@ export default function PermitsPage() {
         )}
 
         {/* Right Table Container */}
-        <main className="min-w-0 flex-1 flex flex-col justify-between overflow-x-auto bg-[#171714] text-[#FAFAF8]">
+        <main className="min-w-0 flex-1 flex flex-col justify-between overflow-x-auto bg-background text-foreground">
           {/* Table Scroll Area */}
           <div className="min-w-0 flex-1 overflow-auto relative">
             {view === "jobsites" ? (
               <table className="w-full min-w-max text-left text-xs border-collapse">
-                <thead className="sticky top-0 z-20 bg-[#171714]">
-                  <tr className="apollo-th h-[39px] border-b border-[rgba(250,250,248,0.08)] bg-[#171714] text-[11px] font-medium uppercase tracking-wider text-[#B9B9B2]">
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
+                <thead className="sticky top-0 z-20 bg-background dark:bg-[#171714]">
+                  <tr className="apollo-th h-[39px] border-b border-border bg-background text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
                       <input
                         type="checkbox"
                         checked={allSelected}
@@ -700,19 +700,19 @@ export default function PermitsPage() {
                         className="size-3.5 rounded border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground dark:text-white focus:ring-0 cursor-pointer disabled:opacity-40"
                       />
                     </th>
-                    <th className="sticky left-12 top-0 z-30 bg-[#171714] px-4 py-2.5 font-medium text-[#B9B9B2] whitespace-nowrap border-b border-[rgba(250,250,248,0.08)] uppercase text-[11px] tracking-wider min-w-[240px]">
+                    <th className="sticky left-12 top-0 z-30 bg-background dark:bg-[#171714] px-4 py-2.5 font-medium text-muted-foreground whitespace-nowrap border-b border-border uppercase text-[11px] tracking-wider min-w-[240px]">
                       Permit
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[300px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[300px]">
                       Address
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[260px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[260px]">
                       Contractor
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 text-right whitespace-nowrap min-w-[120px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 text-right whitespace-nowrap min-w-[120px]">
                       Days Open
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[130px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[130px]">
                       Value
                     </th>
                   </tr>
@@ -746,14 +746,14 @@ export default function PermitsPage() {
                         lng: j.lng,
                       })}
                       className={cn(
-                        "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-[rgba(250,250,248,0.06)]",
+                        "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-border",
                         isRowSelected
-                          ? "bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                          : "bg-[#171714] hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                          ? "bg-muted/80 hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                          : "bg-background hover:bg-muted/50 dark:bg-[#171714] dark:hover:bg-[rgb(35,35,30)] text-foreground"
                       )}
                     >
                       {/* Checkbox with active row indicator */}
-                      <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)]">
+                      <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)]">
                         <input
                           type="checkbox"
                           checked={isRowSelected}
@@ -768,23 +768,23 @@ export default function PermitsPage() {
                       <td className={cn(
                         "sticky left-12 z-10 px-4 py-2 h-14 align-middle text-[12px] font-medium whitespace-nowrap min-w-[240px] transition-colors duration-150",
                         isRowSelected
-                          ? "bg-[rgba(255,255,255,0.06)] group-hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                          : "bg-[#171714] group-hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                          ? "bg-muted/80 group-hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:group-hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                          : "bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)] text-foreground"
                       )}>
-                        <span className="font-semibold text-[#FAFAF8] group-hover:text-amber-300 transition-colors">{j.permitNumber}</span>
-                        <span className="block text-[11px] text-[#B9B9B2]">{j.issued ? shortDate(j.issued) : "Issue date blank"}</span>
+                        <span className="font-semibold text-foreground group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors">{j.permitNumber}</span>
+                        <span className="block text-[11px] text-muted-foreground">{j.issued ? shortDate(j.issued) : "Issue date blank"}</span>
                       </td>
                       <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[300px] whitespace-nowrap">
-                        <span className="block truncate text-[#FAFAF8] group-hover:text-white">{j.address || "Address not published"}</span>
-                        <span className="block text-[11px] text-[#B9B9B2]">{j.jurisdiction}</span>
+                        <span className="block truncate text-foreground group-hover:text-foreground">{j.address || "Address not published"}</span>
+                        <span className="block text-[11px] text-muted-foreground">{j.jurisdiction}</span>
                       </td>
                       <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[260px] whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                         <ContractorLink name={j.contractor} />
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[120px] text-right font-mono tabular-nums whitespace-nowrap text-[#B9B9B2]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[120px] text-right font-mono tabular-nums whitespace-nowrap text-muted-foreground">
                         {daysSince(j.issued) ?? "—"}
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[130px] pr-4 text-right font-mono tabular-nums whitespace-nowrap font-medium text-[#FAFAF8]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[130px] pr-4 text-right font-mono tabular-nums whitespace-nowrap font-medium text-foreground">
                         {j.valuation ? usd(j.valuation, true) : "—"}
                       </td>
                     </tr>
@@ -794,9 +794,9 @@ export default function PermitsPage() {
               </table>
             ) : view === "phases" ? (
               <table className="w-full min-w-max text-left text-xs border-collapse">
-                <thead className="sticky top-0 z-20 bg-[#171714]">
-                  <tr className="apollo-th h-[39px] border-b border-[rgba(250,250,248,0.08)] bg-[#171714] text-[11px] font-medium uppercase tracking-wider text-[#B9B9B2]">
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
+                <thead className="sticky top-0 z-20 bg-background dark:bg-[#171714]">
+                  <tr className="apollo-th h-[39px] border-b border-border bg-background text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
                       <input
                         type="checkbox"
                         checked={allSelected}
@@ -806,16 +806,16 @@ export default function PermitsPage() {
                         className="size-3.5 rounded border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground dark:text-white focus:ring-0 cursor-pointer disabled:opacity-40"
                       />
                     </th>
-                    <th className="sticky left-12 top-0 z-30 bg-[#171714] px-4 py-2.5 font-medium text-[#B9B9B2] whitespace-nowrap border-b border-[rgba(250,250,248,0.08)] uppercase text-[11px] tracking-wider min-w-[280px]">
+                    <th className="sticky left-12 top-0 z-30 bg-background dark:bg-[#171714] px-4 py-2.5 font-medium text-muted-foreground whitespace-nowrap border-b border-border uppercase text-[11px] tracking-wider min-w-[280px]">
                       Campus
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 text-right whitespace-nowrap min-w-[110px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 text-right whitespace-nowrap min-w-[110px]">
                       Phases
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[260px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[260px]">
                       Contractors
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[130px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[130px]">
                       Value
                     </th>
                   </tr>
@@ -827,14 +827,14 @@ export default function PermitsPage() {
                     <tr
                       key={c.id}
                       className={cn(
-                        "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-[rgba(250,250,248,0.06)]",
+                        "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-border",
                         isRowSelected
-                          ? "bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                          : "bg-[#171714] hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                          ? "bg-muted/80 hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                          : "bg-background hover:bg-muted/50 dark:bg-[#171714] dark:hover:bg-[rgb(35,35,30)] text-foreground"
                       )}
                     >
                       {/* Checkbox with active row indicator */}
-                      <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)]">
+                      <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)]">
                         <input
                           type="checkbox"
                           checked={isRowSelected}
@@ -849,13 +849,13 @@ export default function PermitsPage() {
                       <td className={cn(
                         "sticky left-12 z-10 px-4 py-2 h-14 align-middle text-[12px] font-medium whitespace-nowrap min-w-[280px] transition-colors duration-150",
                         isRowSelected
-                          ? "bg-[rgba(255,255,255,0.06)] group-hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                          : "bg-[#171714] group-hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                          ? "bg-muted/80 group-hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:group-hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                          : "bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)] text-foreground"
                       )}>
-                        <span className="font-semibold text-[#FAFAF8] group-hover:text-amber-300 transition-colors">{c.name}</span>
-                        <span className="block text-[11px] text-[#B9B9B2]">{c.jurisdiction}</span>
+                        <span className="font-semibold text-foreground group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors">{c.name}</span>
+                        <span className="block text-[11px] text-muted-foreground">{c.jurisdiction}</span>
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[110px] text-right font-mono tabular-nums whitespace-nowrap text-[#B9B9B2]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[110px] text-right font-mono tabular-nums whitespace-nowrap text-muted-foreground">
                         {c.phases}
                       </td>
                       <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[260px] whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
@@ -869,7 +869,7 @@ export default function PermitsPage() {
                           "—"
                         )}
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[130px] pr-4 text-right font-mono tabular-nums whitespace-nowrap font-medium text-[#FAFAF8]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[130px] pr-4 text-right font-mono tabular-nums whitespace-nowrap font-medium text-foreground">
                         {c.valuation ? usd(c.valuation, true) : "—"}
                       </td>
                     </tr>
@@ -879,9 +879,9 @@ export default function PermitsPage() {
               </table>
             ) : (
               <table className="w-full min-w-max text-left text-xs border-collapse">
-                <thead className="sticky top-0 z-20 bg-[#171714]">
-                  <tr className="apollo-th h-[39px] border-b border-[rgba(250,250,248,0.08)] bg-[#171714] text-[11px] font-medium uppercase tracking-wider text-[#B9B9B2]">
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
+                <thead className="sticky top-0 z-20 bg-background dark:bg-[#171714]">
+                  <tr className="apollo-th h-[39px] border-b border-border bg-background text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider w-12 px-4 py-2.5 text-center">
                       <input
                         type="checkbox"
                         checked={allSelected}
@@ -891,25 +891,25 @@ export default function PermitsPage() {
                         className="size-3.5 rounded border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground dark:text-white focus:ring-0 cursor-pointer disabled:opacity-40"
                       />
                     </th>
-                    <th className="sticky left-12 top-0 z-30 bg-[#171714] px-4 py-2.5 font-medium text-[#B9B9B2] whitespace-nowrap border-b border-[rgba(250,250,248,0.08)] uppercase text-[11px] tracking-wider min-w-[240px]">
+                    <th className="sticky left-12 top-0 z-30 bg-background dark:bg-[#171714] px-4 py-2.5 font-medium text-muted-foreground whitespace-nowrap border-b border-border uppercase text-[11px] tracking-wider min-w-[240px]">
                       Permit
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[300px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[300px]">
                       Address
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[260px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[260px]">
                       Contractor
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[240px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[240px]">
                       Roof System
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[180px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[180px]">
                       Category
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[160px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 whitespace-nowrap min-w-[160px]">
                       Status
                     </th>
-                    <th className="sticky top-0 z-20 bg-[#171714] border-b border-[rgba(250,250,248,0.08)] text-[#B9B9B2] uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[130px]">
+                    <th className="sticky top-0 z-20 bg-background dark:bg-[#171714] border-b border-border text-muted-foreground uppercase text-[11px] font-medium tracking-wider px-4 py-2.5 pr-4 text-right whitespace-nowrap min-w-[130px]">
                       Value
                     </th>
                   </tr>
@@ -922,14 +922,14 @@ export default function PermitsPage() {
                       key={p.id}
                       onClick={() => setSelectedPermit(p)}
                       className={cn(
-                        "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-[rgba(250,250,248,0.06)]",
+                        "apollo-row h-14 group transition-colors duration-150 cursor-pointer border-b border-border",
                         isRowSelected
-                          ? "bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                          : "bg-[#171714] hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                          ? "bg-muted/80 hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                          : "bg-background hover:bg-muted/50 dark:bg-[#171714] dark:hover:bg-[rgb(35,35,30)] text-foreground"
                       )}
                     >
                       {/* Checkbox with active row indicator */}
-                      <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-[#171714] group-hover:bg-[rgb(35,35,30)]">
+                      <td className="w-12 px-4 py-0 text-center sticky left-0 z-10 bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)]">
                         <input
                           type="checkbox"
                           checked={isRowSelected}
@@ -944,11 +944,11 @@ export default function PermitsPage() {
                       <td className={cn(
                         "sticky left-12 z-10 px-4 py-2 h-14 align-middle text-[12px] font-medium whitespace-nowrap min-w-[240px] transition-colors duration-150",
                         isRowSelected
-                          ? "bg-[rgba(255,255,255,0.06)] group-hover:bg-[rgba(255,255,255,0.10)] text-[#FAFAF8]"
-                          : "bg-[#171714] group-hover:bg-[rgb(35,35,30)] text-[#FAFAF8]"
+                          ? "bg-muted/80 group-hover:bg-muted text-foreground dark:bg-[rgba(255,255,255,0.06)] dark:group-hover:bg-[rgba(255,255,255,0.10)] dark:text-foreground"
+                          : "bg-background group-hover:bg-muted/50 dark:bg-[#171714] dark:group-hover:bg-[rgb(35,35,30)] text-foreground"
                       )}>
-                        <span className="font-semibold text-[#FAFAF8] group-hover:text-amber-300 transition-colors">{p.permitNumber}</span>
-                        <span className="block text-[11px] text-[#B9B9B2]">
+                        <span className="font-semibold text-foreground group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors">{p.permitNumber}</span>
+                        <span className="block text-[11px] text-muted-foreground">
                           {p.isPrePermit && p.appliedDate
                             ? `Applied ${shortDate(p.appliedDate)}`
                             : p.issued
@@ -958,20 +958,20 @@ export default function PermitsPage() {
                         </span>
                       </td>
                       <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[300px] whitespace-nowrap">
-                        <span className="block truncate text-[#FAFAF8] group-hover:text-white">{p.address || "Address not published"}</span>
-                        <span className="block text-[11px] text-[#B9B9B2]">{p.jurisdiction || [p.city, p.state].filter(Boolean).join(", ")}</span>
+                        <span className="block truncate text-foreground group-hover:text-foreground">{p.address || "Address not published"}</span>
+                        <span className="block text-[11px] text-muted-foreground">{p.jurisdiction || [p.city, p.state].filter(Boolean).join(", ")}</span>
                       </td>
                       <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[260px] whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                         {p.isPrePermit && (!p.contractor || p.contractor.toLowerCase().includes("file") || p.contractor.toLowerCase().includes("licensed")) ? (
-                          <span className="text-xs text-[#B9B9B2] italic">Contractor not selected</span>
+                          <span className="text-xs text-muted-foreground italic">Contractor not selected</span>
                         ) : (
                           <ContractorLink name={p.contractor} />
                         )}
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[240px] whitespace-nowrap text-[#FAFAF8]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[240px] whitespace-nowrap text-foreground">
                         {p.roofSystem || "—"}
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[180px] whitespace-nowrap text-[#B9B9B2]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[180px] whitespace-nowrap text-muted-foreground">
                         {p.category || "—"}
                       </td>
                       <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[160px] whitespace-nowrap">
@@ -980,10 +980,10 @@ export default function PermitsPage() {
                             {p.bidWindowStatus || p.status || "In Review"}
                           </span>
                         ) : (
-                          <span className="text-[#B9B9B2]">{p.status || "—"}</span>
+                          <span className="text-muted-foreground">{p.status || "—"}</span>
                         )}
                       </td>
-                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[130px] pr-4 text-right font-mono tabular-nums whitespace-nowrap font-medium text-[#FAFAF8]">
+                      <td className="px-4 py-2 h-14 align-middle text-[12px] min-w-[130px] pr-4 text-right font-mono tabular-nums whitespace-nowrap font-medium text-foreground">
                         {p.valuation ? usd(p.valuation, true) : "—"}
                       </td>
                     </tr>
@@ -995,22 +995,22 @@ export default function PermitsPage() {
           </div>
 
           {/* Bottom Fixed Pagination Bar */}
-          <div className="shrink-0 flex items-center justify-between border-t border-[rgba(250,250,248,0.08)] bg-[#171714] px-5 py-3 text-xs text-[#B9B9B2] z-10">
+          <div className="shrink-0 flex items-center justify-between border-t border-border bg-background px-5 py-3 text-xs text-muted-foreground z-10">
             <div>
               <span>
-                Showing <strong className="text-[#FAFAF8] font-medium">{from}–{to}</strong> of <strong className="text-[#FAFAF8] font-medium">{num(currentTotal)}</strong> records
+                Showing <strong className="text-foreground font-medium">{from}–{to}</strong> of <strong className="text-foreground font-medium">{num(currentTotal)}</strong> records
               </span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[#B9B9B2] mr-2">
+              <span className="text-muted-foreground mr-2">
                 Page {pageIndex + 1} of {pageCount}
               </span>
               <button
                 type="button"
                 disabled={offset === 0}
                 onClick={() => setOffset(Math.max(0, offset - LIMIT))}
-                className="rounded border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-2.5 py-1 text-[#FAFAF8] hover:bg-[#23231E] disabled:opacity-30 cursor-pointer select-none transition-colors"
+                className="rounded border border-border bg-background px-2.5 py-1 text-foreground hover:bg-muted disabled:opacity-30 cursor-pointer select-none transition-colors"
               >
                 Previous
               </button>
@@ -1018,7 +1018,7 @@ export default function PermitsPage() {
                 type="button"
                 disabled={offset + LIMIT >= currentTotal}
                 onClick={() => setOffset(offset + LIMIT)}
-                className="rounded border border-[rgba(250,250,248,0.12)] bg-[#1C1C18] px-2.5 py-1 text-[#FAFAF8] hover:bg-[#23231E] disabled:opacity-30 cursor-pointer select-none transition-colors"
+                className="rounded border border-border bg-background px-2.5 py-1 text-foreground hover:bg-muted disabled:opacity-30 cursor-pointer select-none transition-colors"
               >
                 Next
               </button>

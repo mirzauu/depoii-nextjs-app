@@ -12,7 +12,8 @@ const READ_PATHS = [
   /^parcels(\/(search|dallas|tarrant|dark-market\/overdue|browse))?$/,
   /^parcels\/browse\/[^/]+$/,
   /^parcels\/[^/]+$/,
-  /^contractors\/(leaderboard|directory|profile)$/,
+  /^contractors\/(leaderboard|directory|profile|buildings)$/,
+  /^owners(\/(directory|profile|[^/]+))?$/,
   /^storms\/(active-swaths|live-alerts|hail-events)$/,
   /^intelligence\/unresolved-exposure$/,
   /^intelligence\/leads\/ranked$/,
@@ -55,6 +56,10 @@ async function localGet(path: string[], q: URLSearchParams, user?: AuthUser | nu
     case "contractors/leaderboard":
     case "contractors/directory": return wh.contractors(q);
     case "contractors/profile": return wh.contractorProfile(q);
+    case "contractors/buildings": return wh.contractorBuildings(q);
+    case "owners":
+    case "owners/directory": return wh.queryOwnersDirectory(q);
+    case "owners/profile": return wh.ownerProfile(q.get("id") || q.get("name") || "");
     case "locations/hierarchy": return wh.locations("hierarchy");
     case "locations/states": return wh.locations("states");
     case "locations/cities": return wh.locations("cities");
@@ -78,6 +83,10 @@ async function localGet(path: string[], q: URLSearchParams, user?: AuthUser | nu
     case "intelligence/leads/ranked": return intel.rankedLeads(q, user ?? undefined);
     case "brief": return intel.mondayBrief(q, user ?? undefined);
     case "verifications/stats": return intel.verificationStats();
+  }
+  if (path[0] === "owners" && path[1] && path[1] !== "directory" && path[1] !== "profile") {
+    const ownerId = decodeURIComponent(path[1]);
+    return (await wh.ownerProfile(ownerId)) ?? notFound();
   }
   if (path[0] === "permits" && path[1] === "parcels" && path[2]) {
     const parcelId = decodeURIComponent(path[2]);

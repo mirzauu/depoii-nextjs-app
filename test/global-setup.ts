@@ -33,6 +33,11 @@ export async function setup() {
   const client = new Client({ connectionString: url });
   await client.connect();
 
+  await client.query(`
+    create or replace function ST_MakePoint(x double precision, y double precision) returns text language sql as $$ select 'POINT(' || x || ' ' || y || ')' $$;
+    create or replace function ST_SetSRID(geom text, srid integer) returns text language sql as $$ select geom $$;
+  `);
+
   const migrationsDir = path.join(process.cwd(), "supabase/migrations");
   const migrationFiles = fs
     .readdirSync(migrationsDir)

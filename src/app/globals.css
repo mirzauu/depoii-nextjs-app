@@ -7,7 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), var(--font-geist-sans), sans-serif;
+  --font-sans: var(--font-plus-jakarta), var(--font-inter), sans-serif;
+  --font-heading: var(--font-plus-jakarta), sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -81,9 +82,9 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --scrollbar-thumb: #ffffff;
-  --scrollbar-thumb-hover: #e4e4e7;
-  --scrollbar-thumb-border: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb: #d4d4d8;
+  --scrollbar-thumb-hover: #a1a1aa;
+  --scrollbar-thumb-border: rgba(0, 0, 0, 0.08);
   --scrollbar-track: transparent;
   color-scheme: light;
 }
@@ -115,9 +116,9 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --scrollbar-thumb: #ffffff;
-  --scrollbar-thumb-hover: #e4e4e7;
-  --scrollbar-thumb-border: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb: #d4d4d8;
+  --scrollbar-thumb-hover: #a1a1aa;
+  --scrollbar-thumb-border: rgba(0, 0, 0, 0.08);
   --scrollbar-track: transparent;
   color-scheme: light;
 }
@@ -169,8 +170,8 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #B9B9B2;
-  border-bottom: 1px solid rgba(250, 250, 248, 0.08);
+  color: var(--muted-foreground);
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 
@@ -178,27 +179,56 @@
   height: 40px;
   padding: 0 12px;
   font-size: 12px;
-  color: #FAFAF8;
-  border-bottom: 1px solid rgba(250, 250, 248, 0.06);
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 
 .apollo-row {
   height: 56px;
   min-height: 56px;
-  background-color: #171714;
+  background-color: var(--background);
+  color: var(--foreground);
   transition: background-color 120ms ease;
 }
 
 .apollo-row:hover {
-  background-color: rgb(35, 35, 30);
+  background-color: var(--accent);
 }
 
 .apollo-row.selected {
+  background-color: var(--muted);
+}
+
+html.dark .apollo-th,
+.dark .apollo-th {
+  color: #B9B9B2;
+  border-bottom: 1px solid rgba(250, 250, 248, 0.08);
+}
+
+html.dark .apollo-td,
+.dark .apollo-td {
+  color: #FAFAF8;
+  border-bottom: 1px solid rgba(250, 250, 248, 0.06);
+}
+
+html.dark .apollo-row,
+.dark .apollo-row {
+  background-color: #171714;
+  color: #FAFAF8;
+}
+
+html.dark .apollo-row:hover,
+.dark .apollo-row:hover {
+  background-color: rgb(35, 35, 30);
+}
+
+html.dark .apollo-row.selected,
+.dark .apollo-row.selected {
   background-color: rgba(255, 255, 255, 0.06);
 }
 
-/* Custom scrollbar styling: light in light mode, black in dark mode */
+/* Custom scrollbar styling: subtle gray in light mode, dark in dark mode */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
@@ -213,12 +243,12 @@ html.dark *,
 
 html:not(.dark),
 html:not(.dark) * {
-  scrollbar-color: #ffffff transparent;
+  scrollbar-color: #d4d4d8 transparent;
 }
 
 .landing-light,
 .landing-light * {
-  scrollbar-color: #ffffff transparent;
+  scrollbar-color: #d4d4d8 transparent;
 }
 
 /* WebKit & Blink browsers (Chrome, Edge, Safari) */
@@ -231,15 +261,15 @@ html:not(.dark) * {
   background: transparent;
 }
 
-/* Light mode: light/white scroll */
+/* Light mode: subtle gray scroll */
 ::-webkit-scrollbar-thumb {
-  background-color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: #d4d4d8;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #e4e4e7;
+  background-color: #a1a1aa;
 }
 
 ::-webkit-scrollbar-corner {
@@ -271,13 +301,13 @@ html.dark::-webkit-scrollbar-thumb:hover,
 /* Explicit light mode overrides */
 .landing-light ::-webkit-scrollbar-thumb,
 .landing-light::-webkit-scrollbar-thumb {
-  background-color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: #d4d4d8;
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .landing-light ::-webkit-scrollbar-thumb:hover,
 .landing-light::-webkit-scrollbar-thumb:hover {
-  background-color: #e4e4e7;
+  background-color: #a1a1aa;
 }
 
 @layer base {

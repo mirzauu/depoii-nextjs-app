@@ -77,13 +77,53 @@ export async function persistLive(payload: LivePayload): Promise<void> {
     await client.query("begin");
     try {
       for (const parcel of payload.parcels) {
+        const cleanId = parcel.id.replace(/^(DCAD:|TAD:)/, "");
+        const cleanAcc = cleanId.replace(/^(DCAD-PARCEL-|TAD-PARCEL-)/, "");
+        const isTad = parcel.id.startsWith("TAD:") || parcel.id.startsWith("TAD-");
         await client.query(
-          `insert into warehouse.live_parcels (account, owner, address, city, year_built, sqft, lat, lng, owner_address, record_url, updated_at)
-           values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
-           on conflict (account) do update set owner=excluded.owner, address=excluded.address, city=excluded.city,
-             year_built=excluded.year_built, sqft=excluded.sqft, lat=excluded.lat, lng=excluded.lng,
-             owner_address=excluded.owner_address, record_url=excluded.record_url, updated_at=excluded.updated_at`,
-          [parcel.id, parcel.owner, parcel.address, parcel.city, parcel.yearBuilt, parcel.sqft, parcel.lat, parcel.lng, parcel.ownerAddress, parcel.recordUrl, payload.fetchedAt],
+          `insert into warehouse.parcels (
+             id, account_number, jurisdiction_id, jurisdiction, address, city, county, state,
+             building_sqft, year_built, owner_name, owner_address, latitude, longitude,
+             geom_point, data_source, is_mock, record_url, is_live, live_synced_at, live_account_id
+           ) values (
+             $1, $2, $3, $4, $5, $6, $7, 'TX',
+             $8, $9, $10, $11, $12, $13,
+             case when $12::float is not null and $13::float is not null then ST_SetSRID(ST_MakePoint($13::float, $12::float), 4326) else null end,
+             $14, false, $15, true, $16::timestamptz, $17
+           )
+           on conflict (id) do update set
+             owner_name = coalesce(excluded.owner_name, warehouse.parcels.owner_name),
+             address = coalesce(excluded.address, warehouse.parcels.address),
+             city = coalesce(excluded.city, warehouse.parcels.city),
+             year_built = coalesce(excluded.year_built, warehouse.parcels.year_built),
+             building_sqft = coalesce(excluded.building_sqft, warehouse.parcels.building_sqft),
+             latitude = coalesce(excluded.latitude, warehouse.parcels.latitude),
+             longitude = coalesce(excluded.longitude, warehouse.parcels.longitude),
+             geom_point = coalesce(excluded.geom_point, warehouse.parcels.geom_point),
+             owner_address = coalesce(excluded.owner_address, warehouse.parcels.owner_address),
+             record_url = coalesce(excluded.record_url, warehouse.parcels.record_url),
+             is_live = true,
+             live_synced_at = excluded.live_synced_at,
+             live_account_id = excluded.live_account_id`,
+          [
+            cleanId,
+            cleanAcc,
+            isTad ? "TAD" : "DCAD",
+            isTad ? "Fort Worth, TX" : "Dallas, TX",
+            parcel.address,
+            parcel.city,
+            isTad ? "Tarrant" : "Dallas",
+            parcel.sqft,
+            parcel.yearBuilt,
+            parcel.owner,
+            parcel.ownerAddress,
+            parcel.lat,
+            parcel.lng,
+            isTad ? "Tarrant Appraisal District (TAD)" : "Dallas County Appraisal District (DCAD)",
+            parcel.recordUrl,
+            payload.fetchedAt,
+            parcel.id,
+          ],
         );
       }
       for (const permit of [...payload.permits, ...payload.developments]) {
@@ -201,7 +241,26 @@ export async function clearOutcomes(orgId?: string): Promise<void> {
 }
 
 export async function parcelByAccount(account: string): Promise<ParcelRow | undefined> {
-  return queryOne<ParcelRow>(`select * from warehouse.live_parcels where account = $1`, [account]);
+  const cleanId = account.replace(/^(DCAD:|TAD:)/, "");
+  const cleanAcc = cleanId.replace(/^(DCAD-PARCEL-|TAD-PARCEL-)/, "");
+  return queryOne<ParcelRow>(
+    `select 
+       coalesce(live_account_id, id) as account,
+       owner_name as owner,
+       address,
+       city,
+       year_built,
+       building_sqft as sqft,
+       latitude as lat,
+       longitude as lng,
+       owner_address,
+       coalesce(record_url, '') as record_url,
+       coalesce(live_synced_at::text, enriched_at::text, created_at::text) as updated_at
+     from warehouse.parcels 
+     where id = $1 or account_number = $1 or live_account_id = $1 or id = $2 or account_number = $3
+     limit 1`,
+    [account, cleanId, cleanAcc],
+  );
 }
 
 export async function permitsForAccount(account: string): Promise<PermitRow[]> {
