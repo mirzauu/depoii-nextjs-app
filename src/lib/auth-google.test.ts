@@ -2,12 +2,16 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   googleAuthConfigured,
   signInWithGoogleProfile,
+  completeOnboarding,
   createUser,
 } from "@/lib/auth";
 import {
   createGoogleOAuthState,
   verifyGoogleOAuthState,
+  createOnboardingToken,
+  verifyOnboardingToken,
   buildGoogleAuthorizeUrl,
+  verifyGoogleIdToken,
   safeNext,
 } from "@/lib/auth-google";
 import { query } from "@/lib/pg";
@@ -160,8 +164,8 @@ describe("Google Profile Authentication & Auto-Provisioning", () => {
     expect(inviteRows[0]?.status).toBe("accepted");
   });
 
-  it("rejects an unknown user when open signup is disabled", async () => {
-    delete process.env.GOOGLE_ALLOW_OPEN_SIGNUP;
+  it("rejects an unknown user when open signup is explicitly disabled", async () => {
+    process.env.GOOGLE_ALLOW_OPEN_SIGNUP = "false";
 
     const result = await signInWithGoogleProfile({
       email: "google-stranger@example.com",
@@ -175,20 +179,141 @@ describe("Google Profile Authentication & Auto-Provisioning", () => {
     }
   });
 
-  it("provisions a new workspace and account when open signup is enabled", async () => {
-    process.env.GOOGLE_ALLOW_OPEN_SIGNUP = "true";
+  it("triggers onboarding for a new user with Google", async () => {
+    delete process.env.GOOGLE_ALLOW_OPEN_SIGNUP;
 
     const result = await signInWithGoogleProfile({
       email: "google-auto@example.com",
-      name: "Auto Provisioned User",
+      name: "New Roofer",
       googleId: "google-auto-id-888",
+    });
+
+    expect("needsOnboarding" in result).toBe(true);
+    if ("needsOnboarding" in result) {
+      expect(result.profile.email).toBe("google-auto@example.com");
+      expect(result.profile.name).toBe("New Roofer");
+    }
+  });
+
+  it("creates onboarding token and verifies it correctly", () => {
+    const token = createOnboardingToken({
+      email: "test-onboarding@example.com",
+      name: "Test User",
+      googleId: "gid-123",
+      next: "/crm",
+    });
+
+    const check = verifyOnboardingToken(token);
+    expect(check.valid).toBe(true);
+    if (check.valid) {
+      expect(check.data.email).toBe("test-onboarding@example.com");
+      expect(check.data.next).toBe("/crm");
+    }
+  });
+
+  it("completes onboarding with custom company name, website, and role title", async () => {
+    const result = await completeOnboarding({
+      email: "google-auto@example.com",
+      name: "New Roofer",
+      googleId: "google-auto-id-888",
+      orgName: "Summit Commercial Roofing",
+      website: "https://summitroofing.com",
+      roleTitle: "Lead Estimator",
     });
 
     expect("user" in result).toBe(true);
     if ("user" in result) {
       expect(result.user.email).toBe("google-auto@example.com");
+      expect(result.user.orgName).toBe("Summit Commercial Roofing");
       expect(result.user.role).toBe("owner");
-      expect(result.user.orgName).toBe("Auto Provisioned User's Org");
+
+      // Verify org website was stored
+      const orgRows = await query<{ website: string }>(`select website from app.orgs where id = $1`, [result.user.orgId]);
+      expect(orgRows[0]?.website).toBe("https://summitroofing.com");
+
+      // Verify user title was stored
+      const userRows = await query<{ title: string }>(`select title from app.users where id = $1`, [result.user.id]);
+      expect(userRows[0]?.title).toBe("Lead Estimator");
     }
+  });
+
+  describe("Google ID token verification (One Tap)", () => {
+    const originalFetch = globalThis.fetch;
+
+    afterEach(() => {
+      globalThis.fetch = originalFetch;
+    });
+
+    it("rejects missing or empty token", async () => {
+      const result = await verifyGoogleIdToken("");
+      expect("error" in result).toBe(true);
+    });
+
+    it("rejects token with audience mismatch", async () => {
+      globalThis.fetch = async () =>
+        new Response(
+          JSON.stringify({
+            aud: "wrong-client-id.apps.googleusercontent.com",
+            iss: "https://accounts.google.com",
+            sub: "12345",
+            email: "user@example.com",
+            email_verified: "true",
+          }),
+          { status: 200 },
+        );
+
+      const result = await verifyGoogleIdToken("valid-format-jwt");
+      expect("error" in result).toBe(true);
+      if ("error" in result) {
+        expect(result.error).toContain("was not issued for this application");
+      }
+    });
+
+    it("rejects token with unverified email", async () => {
+      globalThis.fetch = async () =>
+        new Response(
+          JSON.stringify({
+            aud: process.env.GOOGLE_CLIENT_ID,
+            iss: "https://accounts.google.com",
+            sub: "12345",
+            email: "user@example.com",
+            email_verified: "false",
+          }),
+          { status: 200 },
+        );
+
+      const result = await verifyGoogleIdToken("valid-jwt");
+      expect("error" in result).toBe(true);
+      if ("error" in result) {
+        expect(result.error).toContain("not verified");
+      }
+    });
+
+    it("successfully verifies valid Google ID token", async () => {
+      globalThis.fetch = async () =>
+        new Response(
+          JSON.stringify({
+            aud: process.env.GOOGLE_CLIENT_ID,
+            iss: "https://accounts.google.com",
+            sub: "google-onetap-user-999",
+            email: "onetap@example.com",
+            name: "OneTap User",
+            picture: "https://lh3.googleusercontent.com/avatar.jpg",
+            email_verified: "true",
+            exp: String(Math.floor(Date.now() / 1000) + 3600),
+          }),
+          { status: 200 },
+        );
+
+      const result = await verifyGoogleIdToken("valid-token");
+      expect("user" in result).toBe(true);
+      if ("user" in result) {
+        expect(result.user.email).toBe("onetap@example.com");
+        expect(result.user.name).toBe("OneTap User");
+        expect(result.user.sub).toBe("google-onetap-user-999");
+        expect(result.user.picture).toBe("https://lh3.googleusercontent.com/avatar.jpg");
+        expect(result.user.email_verified).toBe(true);
+      }
+    });
   });
 });

@@ -282,7 +282,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     navReady && me?.platformRole === "superadmin"
       ? [...FLAT_NAV, { href: "/admin", label: "Super Admin", match: ["/admin"] }]
       : FLAT_NAV;
-  if (path === "/login" || path === "/welcome") return <main className="min-h-screen">{children}</main>;
+  if (path === "/login" || path?.startsWith("/onboarding")) {
+    return <main className="min-h-screen">{children}</main>;
+  }
   return (
     <WalkthroughProvider>
       <div className="flex min-h-screen bg-background text-foreground print:block">

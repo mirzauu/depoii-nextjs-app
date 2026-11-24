@@ -89,40 +89,6 @@
   color-scheme: light;
 }
 
-.landing-light {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --scrollbar-thumb: #d4d4d8;
-  --scrollbar-thumb-hover: #a1a1aa;
-  --scrollbar-thumb-border: rgba(0, 0, 0, 0.08);
-  --scrollbar-track: transparent;
-  color-scheme: light;
-}
-
 .dark {
   --background: #171714;
   --foreground: #FAFAF8;
@@ -246,11 +212,6 @@ html:not(.dark) * {
   scrollbar-color: #d4d4d8 transparent;
 }
 
-.landing-light,
-.landing-light * {
-  scrollbar-color: #d4d4d8 transparent;
-}
-
 /* WebKit & Blink browsers (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
   width: 8px;
@@ -298,18 +259,6 @@ html.dark::-webkit-scrollbar-thumb:hover,
   background-color: #3b3b39;
 }
 
-/* Explicit light mode overrides */
-.landing-light ::-webkit-scrollbar-thumb,
-.landing-light::-webkit-scrollbar-thumb {
-  background-color: #d4d4d8;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.landing-light ::-webkit-scrollbar-thumb:hover,
-.landing-light::-webkit-scrollbar-thumb:hover {
-  background-color: #a1a1aa;
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -322,39 +271,6 @@ html.dark::-webkit-scrollbar-thumb:hover,
   }
 }
 
-/* Landing desktop: mock + caption share the viewport (overridden by JS on resize) */
-html {
-  --landing-pad: 2rem;
-  --landing-gap: 1.5rem;
-  --landing-mock-w: min(50rem, 58vw);
-  --landing-caption-w: min(24rem, 34vw);
-}
-
-/* Landing: snap on each product-tour stop (four full-viewport panels) */
-html:has(.landing-snap) {
-  scroll-snap-type: y proximity;
-}
-.landing-snap .landing-snap-panel {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  min-height: 100dvh;
-  height: 100dvh;
-}
-@media (max-width: 1023px) {
-  html:has(.landing-snap) {
-    scroll-snap-type: y proximity;
-  }
-  /* Mobile tour is stacked: caption panel, then phone panel — no overlay */
-  .landing-snap .landing-snap-panel {
-    scroll-snap-stop: normal;
-    height: auto;
-    min-height: auto;
-  }
-  .landing-snap .landing-mock-panel {
-    scroll-snap-align: start;
-    scroll-snap-stop: normal;
-  }
-}
 .depoii-pin {
   width: 14px;
   height: 14px;
@@ -421,39 +337,6 @@ html:has(.landing-snap) {
   0%, 100% { opacity: 0.15; }
   45%, 70% { opacity: 1; }
 }
-/* Landing AI engine diagram */
-@keyframes landing-engine-orb {
-  0%, 100% { box-shadow: 0 0 48px 12px rgba(200, 240, 0, 0.28); transform: scale(1); }
-  45% { box-shadow: 0 0 72px 22px rgba(200, 240, 0, 0.48); transform: scale(1.04); }
-}
-@keyframes landing-engine-dash {
-  to { stroke-dashoffset: -24; }
-}
-@keyframes landing-engine-ring {
-  0%, 100% { opacity: 0.12; }
-  50% { opacity: 0.28; }
-}
-@keyframes landing-engine-lead {
-  0%, 55% { opacity: 0.35; transform: translateY(10px); }
-  70%, 92% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0.55; transform: translateY(4px); }
-}
-.landing-engine-active .landing-engine-orb {
-  animation: landing-engine-orb 7s ease-in-out infinite;
-}
-.landing-engine-active .landing-engine-dash {
-  animation: landing-engine-dash 1.2s linear infinite;
-}
-.landing-engine-active .landing-engine-ring {
-  animation: landing-engine-ring 7s ease-in-out infinite;
-}
-.landing-engine-active .landing-engine-lead {
-  animation: landing-engine-lead 7s ease-in-out infinite;
-}
-.landing-engine-static .landing-engine-lead {
-  opacity: 1;
-  transform: none;
-}
 
 /* Fluid Shimmer Skeleton Wave */
 @keyframes shimmer-slide {
@@ -502,12 +385,6 @@ html:has(.landing-snap) {
 @media (prefers-reduced-motion: reduce) {
   .depoii-pin::after { animation: none; }
   .depoii-spin, .depoii-block { animation: none; }
-  .landing-engine-orb,
-  .landing-engine-dash,
-  .landing-engine-ring,
-  .landing-engine-lead {
-    animation: none !important;
-  }
 }
 @media print {
   body { background: white; color: black; }

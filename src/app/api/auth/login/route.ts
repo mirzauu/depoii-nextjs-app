@@ -7,6 +7,7 @@ import {
   sessionToken,
   verifyLoginOtp,
 } from "@/lib/auth";
+import { createOnboardingToken, ONBOARDING_COOKIE } from "@/lib/auth-google";
 
 export const dynamic = "force-dynamic";
 
@@ -52,6 +53,28 @@ export async function POST(req: Request) {
       ? 401
       : 400;
     return Response.json({ error: result.error }, { status });
+  }
+
+  if ("needsOnboarding" in result) {
+    const onboardingToken = createOnboardingToken({
+      email: result.email,
+      name: result.email.split("@")[0],
+      googleId: "email-otp",
+      next: "/",
+    });
+
+    const res = Response.json({
+      ok: true,
+      step: "onboarding",
+      next: "/onboarding",
+    });
+
+    const isSecure = req.headers.get("x-forwarded-proto") === "https" || req.url.startsWith("https:");
+    res.headers.append(
+      "Set-Cookie",
+      `${ONBOARDING_COOKIE}=${onboardingToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=3600${isSecure ? "; Secure" : ""}`,
+    );
+    return res;
   }
 
   const user = result.user;

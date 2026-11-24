@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/welcome", "/login", "/icon.svg", "/landing/*"],
+        allow: ["/", "/login", "/icon.svg"],
         disallow: [
           "/admin",
           "/admin/*",
@@ -19,6 +19,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: "https://depoii.com/sitemap.xml",
+    sitemap: "https://app.depoii.com/sitemap.xml",
   };
 }
