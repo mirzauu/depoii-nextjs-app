@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookieMaxAge, cookieName, sessionToken, signInWithGoogleProfile } from "@/lib/auth";
 import {
+  createOnboardingToken,
   exchangeGoogleCode,
   fetchGoogleProfile,
   getGoogleCallbackUrl,
   GOOGLE_OAUTH_COOKIE,
+  ONBOARDING_COOKIE,
   safeNext,
   verifyGoogleOAuthState,
 } from "@/lib/auth-google";
@@ -97,13 +99,45 @@ export async function GET(req: NextRequest) {
     return redirectToLogin({ error: "google_unverified" });
   }
 
-  // 5. Look up user / auto-accept pending invite / sign in
+  // 5. Look up user / auto-accept pending invite / trigger onboarding for new users
   const signInResult = await signInWithGoogleProfile({
     email: profile.email,
     name: profile.name,
     googleId: profile.sub,
     avatarUrl: profile.picture,
   });
+
+  if ("needsOnboarding" in signInResult) {
+    const onboardingToken = createOnboardingToken({
+      ...signInResult.profile,
+      next: nextDestination,
+    });
+
+    const destUrl = new URL("/onboarding", url.origin);
+    const res = NextResponse.redirect(destUrl);
+
+    res.cookies.set({
+      name: ONBOARDING_COOKIE,
+      value: onboardingToken,
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: isSecure,
+      maxAge: 3600, // 1 hour
+    });
+
+    res.cookies.set({
+      name: GOOGLE_OAUTH_COOKIE,
+      value: "",
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: isSecure,
+      maxAge: 0,
+    });
+
+    return res;
+  }
 
   if ("error" in signInResult) {
     if (signInResult.error.toLowerCase().includes("no depoii account found")) {

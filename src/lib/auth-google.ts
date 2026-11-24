@@ -4,7 +4,73 @@ import { googleAuthConfigured, signAuthPayload, verifyAuthPayload } from "@/lib/
 export { googleAuthConfigured };
 
 export const GOOGLE_OAUTH_COOKIE = "depoii_oauth_state";
+export const ONBOARDING_COOKIE = "depoii_onboarding";
 const OAUTH_STATE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const ONBOARDING_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+export type OnboardingTokenPayload = {
+  email: string;
+  name?: string;
+  googleId: string;
+  avatarUrl?: string;
+  next: string;
+  iat: number;
+};
+
+export function createOnboardingToken(data: {
+  email: string;
+  name?: string;
+  googleId: string;
+  avatarUrl?: string;
+  next?: string | null;
+}): string {
+  const payload: OnboardingTokenPayload = {
+    email: data.email,
+    name: data.name,
+    googleId: data.googleId,
+    avatarUrl: data.avatarUrl,
+    next: safeNext(data.next),
+    iat: Date.now(),
+  };
+
+  const payloadStr = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const mac = signAuthPayload(payloadStr);
+  return `${payloadStr}.${mac}`;
+}
+
+export function verifyOnboardingToken(
+  token?: string | null,
+): { valid: true; data: OnboardingTokenPayload } | { valid: false; error: string } {
+  if (!token) {
+    return { valid: false, error: "Missing onboarding token." };
+  }
+
+  const [payloadStr, mac] = token.split(".");
+  if (!payloadStr || !mac) {
+    return { valid: false, error: "Malformed onboarding token." };
+  }
+
+  if (!verifyAuthPayload(payloadStr, mac)) {
+    return { valid: false, error: "Invalid onboarding signature." };
+  }
+
+  let data: OnboardingTokenPayload;
+  try {
+    data = JSON.parse(Buffer.from(payloadStr, "base64url").toString("utf8"));
+  } catch {
+    return { valid: false, error: "Corrupted onboarding payload." };
+  }
+
+  if (!data.email || !data.googleId || typeof data.iat !== "number") {
+    return { valid: false, error: "Incomplete onboarding payload." };
+  }
+
+  if (Date.now() - data.iat > ONBOARDING_TTL_MS) {
+    return { valid: false, error: "Onboarding token has expired. Please sign in again." };
+  }
+
+  return { valid: true, data };
+}
 
 export function safeNext(value: string | null | undefined): string {
   if (!value || typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) {
@@ -197,5 +263,79 @@ export async function fetchGoogleProfile(
   } catch (err) {
     console.error("[auth-google] userinfo request error:", err);
     return { error: "Failed to fetch user info from Google." };
+  }
+}
+
+export function getGoogleClientId(): string | null {
+  return process.env.GOOGLE_CLIENT_ID?.trim() || null;
+}
+
+export async function verifyGoogleIdToken(
+  idToken: string,
+): Promise<{ user: GoogleUserInfo } | { error: string }> {
+  if (!idToken || typeof idToken !== "string") {
+    return { error: "Missing Google ID token." };
+  }
+
+  const clientId = getGoogleClientId();
+  if (!clientId) {
+    return { error: "Google OAuth is not configured." };
+  }
+
+  try {
+    const res = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken.trim())}`);
+    const data = (await res.json().catch(() => ({}))) as {
+      iss?: string;
+      aud?: string;
+      sub?: string;
+      email?: string;
+      email_verified?: string | boolean;
+      name?: string;
+      picture?: string;
+      exp?: string;
+      error?: string;
+      error_description?: string;
+    };
+
+    if (!res.ok || data.error || !data.sub || !data.email) {
+      console.warn("[auth-google] tokeninfo verification failed:", data);
+      return { error: data.error_description || data.error || "Invalid Google ID token." };
+    }
+
+    // Security check 1: Audience must match our client ID
+    if (data.aud !== clientId) {
+      console.warn("[auth-google] ID token audience mismatch:", data.aud, "expected:", clientId);
+      return { error: "Google token was not issued for this application." };
+    }
+
+    // Security check 2: Issuer must be Google accounts
+    if (data.iss !== "https://accounts.google.com" && data.iss !== "accounts.google.com") {
+      console.warn("[auth-google] ID token issuer invalid:", data.iss);
+      return { error: "Invalid Google token issuer." };
+    }
+
+    // Security check 3: Expiration
+    if (data.exp && Number(data.exp) * 1000 < Date.now()) {
+      return { error: "Google ID token has expired." };
+    }
+
+    // Security check 4: Email verified
+    const isVerified = data.email_verified === "true" || data.email_verified === true;
+    if (!isVerified) {
+      return { error: "Google account email is not verified." };
+    }
+
+    return {
+      user: {
+        sub: data.sub,
+        email: data.email,
+        email_verified: true,
+        name: data.name,
+        picture: data.picture,
+      },
+    };
+  } catch (err) {
+    console.error("[auth-google] tokeninfo request error:", err);
+    return { error: "Failed to connect to Google token verification service." };
   }
 }
